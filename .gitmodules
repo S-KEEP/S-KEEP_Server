@@ -1,0 +1,3 @@
+[submodule "skeep-properties"]
+	path = skeep-properties
+	url = https://github.com/S-KEEP/skeep-properties.git
