@@ -44,6 +44,7 @@ jobs:
           mode: md2jira
 
       - name: Create Issue
+        id: create
         uses: atlassian/gajira-create@v3
         with:
           project: SKP
