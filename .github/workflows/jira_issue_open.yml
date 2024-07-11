@@ -37,7 +37,7 @@ jobs:
         id: md2jira
         with:
           input-text: |
-            ### Github Issue Link
+            ### 🔗 Github Issue Link
             - ${{ github.event.issue.html_url }}
             
             ${{ github.event.issue.body }}
