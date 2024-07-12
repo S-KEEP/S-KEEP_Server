@@ -1,7 +1,7 @@
 ---
 name: Custom Issue Template
 about: 이슈 생성용 템플릿입니다.
-title: ''
+title: '[Server] '
 labels: ''
 assignees: ''
 
