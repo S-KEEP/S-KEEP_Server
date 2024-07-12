@@ -57,5 +57,5 @@ jobs:
         with:
           actions: 'update-issue'
           token: ${{ secrets.GIT_TOKEN }}
-          title: '[${{ steps.create.outputs.issue }}] ${{ github.event.issue.title }}'
+          title: '(${{ steps.create.outputs.issue }}) ${{ github.event.issue.title }}'
 
