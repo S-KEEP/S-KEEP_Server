@@ -8,7 +8,6 @@ import org.springframework.util.StringUtils;
 import java.util.Optional;
 
 public class HeaderUtil {
-
     public static Optional<String> refineHeader(
             HttpServletRequest request,
             String headerName,
