@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum EProvider {
-
     KAKAO("KAKAO"),
     APPLE("APPLE");
 

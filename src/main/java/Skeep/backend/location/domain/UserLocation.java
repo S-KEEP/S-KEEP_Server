@@ -16,7 +16,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "users_location")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserLocation extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
