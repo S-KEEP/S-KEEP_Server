@@ -18,19 +18,14 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserPrincipal loadUserByUsername(
-            String username
-    ) throws UsernameNotFoundException {
-        UserRepository.UserSecurityForm userSecurityForm = userRepository
-                .findUserSecurityFromBySerialId(username)
-                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
+    public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserRepository.UserSecurityForm userSecurityForm = userRepository.findUserSecurityFromByAppleSerialId(username).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
         log.info(("아이디 기반 조회 성공"));
         return UserPrincipal.create(userSecurityForm);
     }
 
     public UserPrincipal loadUserById(Long id) {
-        UserRepository.UserSecurityForm userSecurityForm = userRepository.findUserSecurityFromById(id)
-                .orElseThrow(() -> new BaseException(UserErrorCode.NOT_FOUND_USER));
+        UserRepository.UserSecurityForm userSecurityForm = userRepository.findUserSecurityFromById(id).orElseThrow(() -> new BaseException(UserErrorCode.NOT_FOUND_USER));
         log.info("user id 기반 조회 성공");
 
         return UserPrincipal.create(userSecurityForm);

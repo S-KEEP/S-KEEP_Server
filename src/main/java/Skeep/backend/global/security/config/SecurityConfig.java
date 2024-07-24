@@ -23,7 +23,6 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final CustomLogoutProcessHandler customLogoutProcessHandler;
     private final CustomLogoutResultHandler customLogoutResultHandler;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -33,7 +32,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -46,14 +44,16 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
-                .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
-                        .addLogoutHandler(customLogoutProcessHandler)
-                        .logoutSuccessHandler(customLogoutResultHandler)
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/api/auth/logout")
+                                .addLogoutHandler(customLogoutProcessHandler)
+                                .logoutSuccessHandler(customLogoutResultHandler)
                 )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(customAccessDeniedHandler)
-                        .authenticationEntryPoint(customAuthenticationEntryPointHandler)
+                .exceptionHandling(exception ->
+                        exception
+                                .accessDeniedHandler(customAccessDeniedHandler)
+                                .authenticationEntryPoint(customAuthenticationEntryPointHandler)
                 )
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtUtil, jwtAuthenticationManager), LogoutFilter.class
