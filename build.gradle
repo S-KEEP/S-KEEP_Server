@@ -17,6 +17,12 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE'
+	}
+}
+
 dependencies {
 	// database
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -49,6 +55,9 @@ dependencies {
 
 	// WebClient
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// feign client
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 task copyGitSubmodule(type: Copy) {
