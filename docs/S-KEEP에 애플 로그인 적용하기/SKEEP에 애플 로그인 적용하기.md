@@ -286,6 +286,8 @@ public String createClientSecret() {
 > 7️⃣ refresh_token와 user 정보를 DB에 저장한다.  
 > 8️⃣ 우리 서비스의 JWT 토큰을 발급한다. => Access Token을 주고 Refresh Token은 레디스에 저장한다.
 
+🚨 **하지만, 더 알아보니 우리는 서비스 자체 토큰을 발급하기 때문에 회원가입의 5~7단계는 필요 없는 것 같다.** 🚨  
+
 ### 참고 블로그
 https://hwannny.tistory.com/71  
 https://velog.io/@byeongju/Apple-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0  
