@@ -10,6 +10,21 @@
 ![img_2.png](img_2.png)  
 (출처: https://hwannny.tistory.com/71)
 
+### 0) 기본 설정
+```yml
+apple:
+  auth:
+    token-url: https://appleid.apple.com/auth/token 
+    public-key-url: https://appleid.apple.com/auth/keys
+  redirect-uri: ${APPLE_REDIRECT_URL} # 설정한 redirect-uri
+  iss: https://appleid.apple.com
+  aud: ${APPLE_CLIENT_ID} # Services의 Identifier
+  team-id: ${APPLE_TEAM_ID} # App ID의 Prefix
+  key:
+    id: ${APPLE_KEY_ID} # Key ID
+    path: classpath:/apple/AuthKey_${APPLE_KEY_ID}.p8
+```
+
 ### 1) 어플리케이션에서 로그인을 성공한 이후 다음과 같은 정보를 가지고 있는다.
 ![img.png](img.png)
 ```json
@@ -33,6 +48,8 @@
   - Public Key로 사용자 식별값을 추출한다.
 - authorizationCode
   - 이 code와 다른 추가적인 정보를 이용하여 refresh_token, access_token을 발급받는다.
+- user
+  - 여기서 user에 대한 데이터는 처음 로그인 할 때만 주기 때문에 저장할 계획이 있다면 처음에 잘 받아서 저장해야 한다.
 
 ### 2) idendtityToken을 검증하기 위한 Public Key를 발급받는다.
 발급받기 위해서 Apple identityToken에서 **암호화 알고리즘인 ALG와 키 아이디인 KID 헤더**를 추출해야 한다.  
@@ -256,7 +273,7 @@ public String createClientSecret() {
 ### ⭐️ 정리
 그렇다면, 내가 구현해야하는 코드는 ...
 > 1️⃣ identity_token, authorzation_code를 클라이언트로부터 받는다.  
-> 2️⃣ identity_token에서 ALG, KID를 추출한다.
+> 2️⃣ identity_token에서 ALG, KID를 추출한다.  
 > 3️⃣ Public Key를 발급받는다.  
 > 4️⃣ identity_token을 Publike Key를 이용해 사용자 식별 값을 추출한다.  
 >
@@ -270,6 +287,8 @@ public String createClientSecret() {
 > 8️⃣ 우리 서비스의 JWT 토큰을 발급한다. => Access Token을 주고 Refresh Token은 레디스에 저장한다.
 
 ### 참고 블로그
-https://hwannny.tistory.com/71
-https://velog.io/@byeongju/Apple-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
-https://whitepaek.tistory.com/61
+https://hwannny.tistory.com/71  
+https://velog.io/@byeongju/Apple-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0  
+https://whitepaek.tistory.com/61  
+https://velog.io/@komment/Spring-Boot-OAuth-2.0-JWT%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%86%8C%EC%85%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84-2-%EC%95%A0%ED%94%8C%ED%8E%B8  
+

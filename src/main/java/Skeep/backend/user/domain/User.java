@@ -19,8 +19,11 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "serial_id", nullable = false, unique = true)
-    private String serialId;
+    @Column(name = "apple_serial_id", nullable = false, unique = true)
+    private String appleSerialId;
+
+    @Column(name = "apple_refresh_token", unique = true)
+    private String appleRefreshToken;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -35,11 +38,11 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(
-            final String serialId,
+            final String appleSerialId,
             final String name,
             final EProvider provider
     ) {
-        this.serialId = serialId;
+        this.appleSerialId = appleSerialId;
         this.name = name;
         this.provider = provider;
         this.status = EStatus.ACTIVATED;
