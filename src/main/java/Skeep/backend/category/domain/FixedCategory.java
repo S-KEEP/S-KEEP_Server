@@ -14,7 +14,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "fixed_category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FixedCategory extends BaseTimeEntity {
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

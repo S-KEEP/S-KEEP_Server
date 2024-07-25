@@ -15,7 +15,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "friend")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Friend extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

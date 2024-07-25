@@ -11,10 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AuthenticationResponse {
-
-    public static void makeSuccessResponse(
-            HttpServletResponse response
-    ) throws IOException {
+    public static void makeSuccessResponse(HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpStatus.OK.value());
@@ -27,10 +24,7 @@ public class AuthenticationResponse {
         response.getWriter().write(JSONValue.toJSONString(body));
     }
 
-    public static void makeFailureResponse(
-            HttpServletResponse response,
-            ErrorCode errorCode
-    ) throws IOException {
+    public static void makeFailureResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(errorCode.getStatus().value());

@@ -10,7 +10,6 @@ import java.util.Arrays;
 @Getter
 @RequiredArgsConstructor
 public enum ECategory {
-
     EXCITING("익사이팅"),
     PARK_NATURE("공원/자연"),
     REST("휴식"),

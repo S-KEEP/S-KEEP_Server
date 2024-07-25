@@ -9,16 +9,14 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    // @Query
+    @Query("select u.id as id from User u where u.appleSerialId = :appleSerialId")
+    Optional<UserSecurityForm> findUserSecurityFromByAppleSerialId(String appleSerialId);
 
-    @Query("select u.id as id from User u where u.serialId = :serialId")
-    Optional<UserSecurityForm> findUserSecurityFromBySerialId(String serialId);
     @Query("select u.id as id from User u where u.id = :id")
     Optional<UserSecurityForm> findUserSecurityFromById(Long id);
-    @Modifying(clearAutomatically = true)
-    Optional<User> findById(Long userId);
 
     interface UserSecurityForm {
-
         Long getId();
 
         static UserSecurityForm invoke(User user){
@@ -30,4 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             };
         }
     }
+
+    // query method
+    Optional<User> findByAppleSerialId(String appleSerialId);
 }
