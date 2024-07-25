@@ -37,14 +37,14 @@ public class User extends BaseTimeEntity {
     private EStatus status;
 
     @Builder
-    public User(
-            final String appleSerialId,
-            final String name,
-            final EProvider provider
-    ) {
+    private User(String appleSerialId, String name, EProvider provider) {
         this.appleSerialId = appleSerialId;
         this.name = name;
         this.provider = provider;
         this.status = EStatus.ACTIVATED;
+    }
+
+    public static User createAppleUser(String appleSerialId, String name) {
+        return new User(appleSerialId, name, EProvider.APPLE);
     }
 }
