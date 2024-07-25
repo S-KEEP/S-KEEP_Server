@@ -1,6 +1,5 @@
 package Skeep.backend.global.security.info;
 
-import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.dto.UserSecurityForm;
 import lombok.Builder;
 import lombok.Getter;
