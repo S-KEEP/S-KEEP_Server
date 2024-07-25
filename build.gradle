@@ -35,6 +35,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	// jwt
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -43,9 +46,6 @@ dependencies {
 
 	// json
 	implementation 'net.minidev:json-smart:2.4.7'
-
-	// s3
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	// WebClient
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
