@@ -24,10 +24,17 @@ dependencyManagement {
 }
 
 dependencies {
-	// database
+	// db
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.h2database:h2'
+
+	// Querydsl
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 	// spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -37,9 +44,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Lombok
+	compileOnly("org.projectlombok:lombok")
+	testImplementation ('org.projectlombok:lombok')
+	testCompileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
+
+	// Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'io.findify:s3mock_2.13:0.2.6'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// jwt
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
@@ -58,6 +76,9 @@ dependencies {
 
 	// feign client
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.3'
+
+	// API Docs
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 }
 
 task copyGitSubmodule(type: Copy) {

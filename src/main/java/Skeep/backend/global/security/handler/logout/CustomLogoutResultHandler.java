@@ -2,7 +2,6 @@ package Skeep.backend.global.security.handler.logout;
 
 import Skeep.backend.global.security.info.AuthenticationResponse;
 import Skeep.backend.user.exception.UserErrorCode;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

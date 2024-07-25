@@ -2,8 +2,6 @@ package Skeep.backend.global.util;
 
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.dto.JwtDto;
-import Skeep.backend.global.exception.BaseException;
-import Skeep.backend.global.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -14,9 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
 
 import java.security.Key;
 import java.security.PublicKey;

@@ -13,9 +13,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Long saveAppleUser(String appleSerialId, String name) {
-        return userRepository.save(User.builder()
-                        .appleSerialId(appleSerialId)
-                        .name(name)
-                        .build()).getId();
+        return userRepository.save(User.createAppleUser(appleSerialId, name)).getId();
     }
 }

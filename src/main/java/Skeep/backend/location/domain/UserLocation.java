@@ -34,11 +34,7 @@ public class UserLocation extends BaseTimeEntity {
     private UserCategory userCategory;
 
     @Builder
-    public UserLocation(
-            final User user,
-            final Location location,
-            final UserCategory userCategory
-    ) {
+    public UserLocation(final User user, final Location location, final UserCategory userCategory) {
         this.user = user;
         this.location = location;
         this.userCategory = userCategory;

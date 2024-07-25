@@ -28,8 +28,15 @@ public class Location extends BaseTimeEntity {
     private FixedCategory fixedCategory;
 
     @Builder
-    public Location(final String kakaoMapId, final FixedCategory fixedCategory) {
+    private Location(final String kakaoMapId, final FixedCategory fixedCategory) {
         this.kakaoMapId = kakaoMapId;
         this.fixedCategory = fixedCategory;
+    }
+
+    public static Location createLocation(String kakaoMapId, FixedCategory fixedCategory) {
+        return Location.builder()
+                .kakaoMapId(kakaoMapId)
+                .fixedCategory(fixedCategory)
+                .build();
     }
 }
