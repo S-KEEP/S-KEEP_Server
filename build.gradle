@@ -52,6 +52,12 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testAnnotationProcessor("org.projectlombok:lombok")
 
+	// Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'io.findify:s3mock_2.13:0.2.6'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 	// jwt
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
