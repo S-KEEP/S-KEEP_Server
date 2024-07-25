@@ -13,13 +13,10 @@ import java.io.IOException;
 
 @Component
 public class CustomAuthenticationEntryPointHandler implements AuthenticationEntryPoint {
-
     @Override
-    public void commence(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException authenticationException
-    ) throws IOException {
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         AuthenticationException authenticationException) throws IOException {
         ErrorCode errorCode = (ErrorCode) request.getAttribute("exception");
         if (errorCode == null) {
             AuthenticationResponse.makeFailureResponse(response, GlobalErrorCode.VALIDATION_ERROR);

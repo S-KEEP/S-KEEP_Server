@@ -16,7 +16,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "users_location")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserLocation extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -35,11 +34,7 @@ public class UserLocation extends BaseTimeEntity {
     private UserCategory userCategory;
 
     @Builder
-    public UserLocation(
-            final User user,
-            final Location location,
-            final UserCategory userCategory
-    ) {
+    public UserLocation(final User user, final Location location, final UserCategory userCategory) {
         this.user = user;
         this.location = location;
         this.userCategory = userCategory;

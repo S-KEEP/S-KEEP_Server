@@ -17,13 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-
     private final CustomUserDetailService customUserDetailService;
 
     @Override
-    public Authentication authenticate(
-            Authentication authentication
-    ) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         log.info("AuthenticationProvider 진입 성공");
         if (!authentication.getPrincipal().getClass().equals(String.class)) {
             log.info("로그인 한 사용자 검증 과정");
@@ -34,7 +31,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
-    private Authentication authOfAfterLogin(JwtUserInfo userInfo){
+    private Authentication authOfAfterLogin(JwtUserInfo userInfo) {
         UserPrincipal userPrincipal = customUserDetailService.loadUserById(userInfo.userId());
         return new UsernamePasswordAuthenticationToken(userPrincipal, null);
     }

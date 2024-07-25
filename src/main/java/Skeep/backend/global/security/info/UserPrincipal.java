@@ -1,6 +1,6 @@
 package Skeep.backend.global.security.info;
 
-import Skeep.backend.user.domain.UserRepository;
+import Skeep.backend.user.dto.UserSecurityForm;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,10 @@ import java.util.Collections;
 @Builder
 @RequiredArgsConstructor
 public class UserPrincipal implements UserDetails {
-
     private final Long userId;
     private final String password;
 
-    public static UserPrincipal create(UserRepository.UserSecurityForm securityForm) {
+    public static UserPrincipal create(UserSecurityForm securityForm) {
         return UserPrincipal.builder()
                 .userId(securityForm.getId())
                 .build();
