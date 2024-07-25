@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("[Domain Test] User")
-public class UserTest {
+class UserTest {
     @Test
     void APPLE_유저_생성에_성공하다() {
         User user = User.createAppleUser("1234567890", "Chaerin Yang");
