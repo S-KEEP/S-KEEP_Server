@@ -1,4 +1,4 @@
-package fixture;
+package Skeep.backend.fixture;
 
 public class TokenFixture {
     public static final String BEARER_TOKEN = "Bearer";
