@@ -67,10 +67,7 @@ public class JwtUtil implements InitializingBean {
     }
 
     public JwtDto generateTokens(Long id) {
-        return JwtDto.of(
-                generateToken(id, accessExpiration),
-                generateToken(id, refreshExpiration)
-        );
+        return new JwtDto(generateToken(id, accessExpiration), generateToken(id, refreshExpiration));
     }
 
     public Map<String, String> parseHeaders(String token) throws JsonProcessingException {
