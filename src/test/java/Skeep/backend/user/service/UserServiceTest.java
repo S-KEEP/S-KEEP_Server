@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisplayName("[Service Test] -> UserService")
 class UserServiceTest extends ServiceTest {
     @Autowired
-    UserRepository userRepository;
+    private UserService userService;
 
     @Nested
     @DisplayName("Apple 유저 생성")
