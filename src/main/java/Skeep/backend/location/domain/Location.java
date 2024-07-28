@@ -1,6 +1,6 @@
 package Skeep.backend.location.domain;
 
-import Skeep.backend.category.domain.FixedCategory;
+import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.global.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,17 +23,17 @@ public class Location extends BaseTimeEntity {
     @Column(name = "kakao_map_id", nullable = false)
     private String kakaoMapId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fixed_category_id", nullable = false)
-    private FixedCategory fixedCategory;
+    @Column(name = "fixed_category", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ECategory fixedCategory;
 
     @Builder
-    private Location(final String kakaoMapId, final FixedCategory fixedCategory) {
+    private Location(final String kakaoMapId, final ECategory fixedCategory) {
         this.kakaoMapId = kakaoMapId;
         this.fixedCategory = fixedCategory;
     }
 
-    public static Location createLocation(String kakaoMapId, FixedCategory fixedCategory) {
+    public static Location createLocation(String kakaoMapId, ECategory fixedCategory) {
         return Location.builder()
                 .kakaoMapId(kakaoMapId)
                 .fixedCategory(fixedCategory)
