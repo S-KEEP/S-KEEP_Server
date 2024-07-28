@@ -3,7 +3,6 @@ package Skeep.backend.auth.apple.dto;
 import Skeep.backend.auth.exception.OAuthErrorCode;
 import Skeep.backend.global.exception.BaseException;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 
 public record ApplePublicKeys (

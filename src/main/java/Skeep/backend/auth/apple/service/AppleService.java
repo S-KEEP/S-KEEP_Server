@@ -6,15 +6,11 @@ import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.AuthenticationException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 
 @Service
@@ -26,6 +22,7 @@ public class AppleService {
     private final ApplePublicKeyGenerator applePublicKeyGenerator;
     private final AppleAuthClient appleAuthClient;
     private final JwtUtil jwtUtil;
+    private final AppleTokenUtil appleTokenUtil;
 
     public JwtDto login(AppleLoginRequest request) {
         String appleSerialId = getAppleSerialId(request.id_token());
@@ -46,10 +43,10 @@ public class AppleService {
     }
 
     public String getAppleSerialId(String identityToken) {
-        Map<String, String> headers = jwtUtil.parseHeaders(identityToken);
+        Map<String, String> headers = appleTokenUtil.parseHeaders(identityToken);
         ApplePublicKeys applePublicKeys = appleAuthClient.getAppleAuthPublicKey();
         PublicKey publicKey = applePublicKeyGenerator.generatePublicKey(headers, applePublicKeys);
 
-        return jwtUtil.getTokenClaims(identityToken, publicKey).getSubject();
+        return appleTokenUtil.getTokenClaims(identityToken, publicKey).getSubject();
     }
 }

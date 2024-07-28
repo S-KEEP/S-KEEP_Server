@@ -4,7 +4,6 @@ import Skeep.backend.global.ServiceTest;
 import Skeep.backend.user.domain.EProvider;
 import Skeep.backend.user.domain.EStatus;
 import Skeep.backend.user.domain.User;
-import Skeep.backend.user.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
