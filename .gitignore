@@ -236,4 +236,8 @@ gradle-app.setting
 ### QueryDSL ###
 /src/main/generated/
 
+### Test ###
+# 보안을 위해서 특정 테스트를 github에 업로드하지않는다.
+/src/test/java/Skeep/backend/auth/apple/service/AppleServiceTest.java
+
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij,macos,windows
