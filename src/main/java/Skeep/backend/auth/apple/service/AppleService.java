@@ -2,19 +2,16 @@ package Skeep.backend.auth.apple.service;
 
 import Skeep.backend.auth.apple.dto.AppleLoginRequest;
 import Skeep.backend.auth.apple.dto.ApplePublicKeys;
+import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.AuthenticationException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
 
 @Service
@@ -26,7 +23,10 @@ public class AppleService {
     private final ApplePublicKeyGenerator applePublicKeyGenerator;
     private final AppleAuthClient appleAuthClient;
     private final JwtUtil jwtUtil;
+    private final AppleTokenUtil appleTokenUtil;
+    private final JwtTokenService jwtTokenService;
 
+    @Transactional
     public JwtDto login(AppleLoginRequest request) {
         String appleSerialId = getAppleSerialId(request.id_token());
 
@@ -37,7 +37,9 @@ public class AppleService {
             userId = signUp(appleSerialId, request.user());
         }
 
-        return jwtUtil.generateTokens(userId);
+        JwtDto jwtDto = jwtUtil.generateTokens(userId);
+        jwtTokenService.updateRefreshToken(userId, jwtDto.refreshToken());
+        return jwtDto;
     }
 
     @Transactional
@@ -46,10 +48,10 @@ public class AppleService {
     }
 
     public String getAppleSerialId(String identityToken) {
-        Map<String, String> headers = jwtUtil.parseHeaders(identityToken);
+        Map<String, String> headers = appleTokenUtil.parseHeaders(identityToken);
         ApplePublicKeys applePublicKeys = appleAuthClient.getAppleAuthPublicKey();
         PublicKey publicKey = applePublicKeyGenerator.generatePublicKey(headers, applePublicKeys);
 
-        return jwtUtil.getTokenClaims(identityToken, publicKey).getSubject();
+        return appleTokenUtil.getTokenClaims(identityToken, publicKey).getSubject();
     }
 }

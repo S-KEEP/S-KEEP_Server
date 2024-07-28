@@ -1,9 +1,8 @@
 package Skeep.backend.auth.apple.dto;
 
-import Skeep.backend.auth.exception.OAuthErrorCode;
+import Skeep.backend.auth.exception.AuthErrorCode;
 import Skeep.backend.global.exception.BaseException;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 
 public record ApplePublicKeys (
@@ -13,6 +12,6 @@ public record ApplePublicKeys (
         return keys.stream()
                 .filter(key -> key.kid().equals(kid) && key.alg().equals(alg))
                 .findAny()
-                .orElseThrow(() -> new BaseException(OAuthErrorCode.NOT_MATCHED_PUBLIC_KEY));
+                .orElseThrow(() -> new BaseException(AuthErrorCode.NOT_MATCHED_PUBLIC_KEY));
     }
 }

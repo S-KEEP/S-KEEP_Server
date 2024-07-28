@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@DisplayName("[Domain Test] User")
+@DisplayName("[Domain Layer] User")
 class UserTest {
     @Test
     void APPLE_유저_생성에_성공하다() {
