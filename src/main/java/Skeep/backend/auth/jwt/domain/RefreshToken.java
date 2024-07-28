@@ -23,4 +23,12 @@ public class RefreshToken {
         this.id = id;
         this.token = token;
     }
+
+    public static RefreshToken issueRefreshToken(final Long userId, final String refreshToken) {
+        return new RefreshToken(userId, refreshToken);
+    }
+
+    public void updateRefreshToken(final String refreshToken) {
+        this.token = refreshToken;
+    }
 }

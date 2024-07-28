@@ -1,6 +1,7 @@
 package Skeep.backend.auth.jwt.service;
 
 import Skeep.backend.auth.exception.AuthErrorCode;
+import Skeep.backend.auth.jwt.domain.RefreshToken;
 import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.exception.BaseException;
@@ -8,12 +9,13 @@ import Skeep.backend.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class TokenReissueService {
+public class JwtTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
@@ -37,5 +39,14 @@ public class TokenReissueService {
         return refreshTokenRepository.findById(userId)
                 .map(token -> Objects.equals(token.getToken(), refreshToken))
                 .orElse(false);
+    }
+
+    @Transactional
+    public void updateRefreshToken(Long userId, String refreshToken) {
+        refreshTokenRepository.findById(userId)
+                .ifPresentOrElse(
+                        findRefreshToken -> findRefreshToken.updateRefreshToken(refreshToken),
+                        () -> refreshTokenRepository.save(RefreshToken.issueRefreshToken(userId, refreshToken))
+                );
     }
 }

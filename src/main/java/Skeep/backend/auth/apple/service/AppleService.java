@@ -2,6 +2,7 @@ package Skeep.backend.auth.apple.service;
 
 import Skeep.backend.auth.apple.dto.AppleLoginRequest;
 import Skeep.backend.auth.apple.dto.ApplePublicKeys;
+import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.service.UserFindService;
@@ -23,6 +24,7 @@ public class AppleService {
     private final AppleAuthClient appleAuthClient;
     private final JwtUtil jwtUtil;
     private final AppleTokenUtil appleTokenUtil;
+    private final JwtTokenService jwtTokenService;
 
     public JwtDto login(AppleLoginRequest request) {
         String appleSerialId = getAppleSerialId(request.id_token());
@@ -34,7 +36,9 @@ public class AppleService {
             userId = signUp(appleSerialId, request.user());
         }
 
-        return jwtUtil.generateTokens(userId);
+        JwtDto jwtDto = jwtUtil.generateTokens(userId);
+        jwtTokenService.updateRefreshToken(userId, jwtDto.refreshToken());
+        return jwtDto;
     }
 
     @Transactional
