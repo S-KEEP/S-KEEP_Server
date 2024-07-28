@@ -26,6 +26,7 @@ public class AppleService {
     private final AppleTokenUtil appleTokenUtil;
     private final JwtTokenService jwtTokenService;
 
+    @Transactional
     public JwtDto login(AppleLoginRequest request) {
         String appleSerialId = getAppleSerialId(request.id_token());
 

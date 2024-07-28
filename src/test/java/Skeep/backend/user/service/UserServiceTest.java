@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@DisplayName("[Service Test] -> UserService")
+@DisplayName("[Service Layer] -> UserService")
 class UserServiceTest extends ServiceTest {
     @Autowired
     private UserService userService;

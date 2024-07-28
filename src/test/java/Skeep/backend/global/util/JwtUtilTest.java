@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DisplayName("[Service Test] -> JwtUtil")
+@DisplayName("[Service Layer] -> JwtUtil")
 class JwtUtilTest extends ServiceTest {
     @Autowired
     private JwtUtil jwtUtil;

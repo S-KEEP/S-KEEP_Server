@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,7 +15,7 @@ public class TokenReissueApiController {
     private final JwtTokenService jwtTokenService;
 
     @PostMapping
-    public ResponseEntity<String> reissueToken(String refreshToken) {
+    public ResponseEntity<String> reissueToken(@RequestParam("refreshToken") String refreshToken) {
         String newAccessToken = jwtTokenService.reissueAccessToken(refreshToken);
         return ResponseEntity.ok(newAccessToken);
     }

@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("[Controller Test] -> AppleController")
+@DisplayName("[Controller Layer] -> AppleController")
 class AppleControllerTest extends ControllerTest {
     @Nested
     @DisplayName("로그인 API [POST /api/auth/apple/login]")
