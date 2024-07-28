@@ -1,6 +1,6 @@
-package Skeep.backend.auth.domain;
+package Skeep.backend.auth.jwt.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +12,6 @@ import org.springframework.data.redis.core.index.Indexed;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RedisHash(value = "token", timeToLive = 60 * 60 * 24 * 14)
 public class RefreshToken {
-
     @Id
     private Long id;
 
