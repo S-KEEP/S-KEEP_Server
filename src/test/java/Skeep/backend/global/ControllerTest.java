@@ -5,6 +5,7 @@ import Skeep.backend.auth.apple.service.AppleAuthClient;
 import Skeep.backend.auth.apple.service.ApplePublicKeyGenerator;
 import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.auth.apple.service.AppleTokenUtil;
+import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.security.config.SecurityConfig;
 import Skeep.backend.global.security.filter.JwtAuthenticationFilter;
 import Skeep.backend.global.security.filter.JwtExceptionFilter;
@@ -87,4 +88,7 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ApplePublicKeyGenerator applePublicKeyGenerator;
+
+    @MockBean
+    protected JwtTokenService jwtTokenService;
 }

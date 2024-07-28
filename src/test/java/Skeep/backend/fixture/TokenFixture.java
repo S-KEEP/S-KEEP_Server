@@ -2,6 +2,6 @@ package Skeep.backend.fixture;
 
 public class TokenFixture {
     public static final String BEARER_TOKEN = "Bearer";
-    public static final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiaWF0IjoxNjc3OTM3MjI0LCJleHAiOjE2Nzc5NDQ0MjR9.t61tw4gDEBuXBn_DnCwiPIDaI-KcN9Zkn3QJSEK7fag";
-    public static final String REFRESH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiaWF0IjoxNjc3OTM3MjI0LCJleHAiOjE2Nzg1NDIwMjR9.doqGa5Hcq6chjER1y5brJEv81z0njcJqeYxJb159ZX4";
+    public static final String ACCESS_TOKEN = "eyJKV1QiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1dWlkIjoxLCJpYXQiOjE3MjIxODkyMzYsImV4cCI6MTcyMjI3NTYzNn0.-ztxcRSYUlD1wU5-mbxsq_j93C_fwQUSiO5jErKts9eaKu1WcCpi0l2rIJRxRjzxRHFJy2RZkL7MB8UaXhEScg";
+    public static final String REFRESH_TOKEN = "eyJKV1QiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1dWlkIjoxLCJpYXQiOjE3MjIxODkyMzYsImV4cCI6MTcyMjc5NDAzNn0.MjFq1w4N0pVLjS7ZtZ6WfC2s63SnD2wyEWpU6u6C7dNGHh1I2dj47L4Qh9LIPckGq9-YgCvPgtOQ3xTR24nm-w";
 }
