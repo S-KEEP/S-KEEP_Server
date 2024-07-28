@@ -1,9 +1,9 @@
 package Skeep.backend.auth.apple.controller;
 
 import Skeep.backend.auth.apple.dto.AppleLoginRequest;
+import Skeep.backend.fixture.TokenFixture;
 import Skeep.backend.global.ControllerTest;
 import Skeep.backend.global.dto.JwtDto;
-import fixture.TokenFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
