@@ -1,11 +1,7 @@
 package Skeep.backend.global.util;
 
-import Skeep.backend.auth.exception.OAuthErrorCode;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.dto.JwtDto;
-import Skeep.backend.global.exception.BaseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -17,29 +13,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.security.PublicKey;
-import java.util.Base64;
 import java.util.Date;
-import java.util.Map;
 
 @Component
 public class JwtUtil implements InitializingBean {
     @Value("${jwt.secret}")
     private String secretKey;
-
     @Value("${jwt.access-token.expiration}")
     @Getter
     private Integer accessExpiration;
-
     @Value("${jwt.refresh-token.expiration}")
     @Getter
     private Integer refreshExpiration;
-
     private Key key;
-
-    private static final String TOKEN_VALUE_DELIMITER = "\\.";
-    private static final int HEADER_INDEX = 0;
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -70,24 +56,5 @@ public class JwtUtil implements InitializingBean {
 
     public JwtDto generateTokens(Long id) {
         return new JwtDto(generateToken(id, accessExpiration), generateToken(id, refreshExpiration));
-    }
-
-    public Map<String, String> parseHeaders(String token) {
-        String encodedHeader = token.split(TOKEN_VALUE_DELIMITER)[HEADER_INDEX];
-        String decodedHeader = new String(Base64.getUrlDecoder().decode(encodedHeader));
-
-        try {
-            return OBJECT_MAPPER.readValue(decodedHeader, Map.class);
-        } catch (JsonProcessingException e) {
-            throw new BaseException(OAuthErrorCode.CANNOT_JSON_PROCESS);
-        }
-    }
-
-    public Claims getTokenClaims(String token, PublicKey publicKey) {
-        return Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
     }
 }
