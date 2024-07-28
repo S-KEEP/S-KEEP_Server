@@ -54,7 +54,7 @@ public enum GlobalErrorCode implements ErrorCode {
     private final String errorCode;
     private final String message;
 
-    GlobalErrorCode(HttpStatus status, String errorCode, String message) { //BaseResponseStatus 에서 각 해당하는 코드를 생성자로 맵핑
+    GlobalErrorCode(HttpStatus status, String errorCode, String message) {
         this.status = status;
         this.errorCode = errorCode;
         this.message = message;

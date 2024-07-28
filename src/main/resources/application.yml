@@ -7,3 +7,10 @@ spring.config.activate.on-profile: local
 ---
 
 spring.config.activate.on-profile: prod
+
+---
+
+spring:
+  config:
+    import:
+      - classpath:/application-oauth.yml

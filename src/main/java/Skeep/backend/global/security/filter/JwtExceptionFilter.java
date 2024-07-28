@@ -19,9 +19,16 @@ import java.io.IOException;
 @Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return Constants.NO_NEED_AUTH.stream().anyMatch(request.getRequestURI()::startsWith);
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("url =" + request.getRequestURI());
+
         try {
             filterChain.doFilter(request, response);
         } catch (SecurityException e) {
@@ -56,11 +63,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             log.error("FilterException throw Exception Exception : {}", e.getMessage());
             request.setAttribute("exception", GlobalErrorCode.INTERNAL_SERVER_ERROR);
             filterChain.doFilter(request, response);
+        } finally {
+            filterChain.doFilter(request, response);
         }
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return Constants.NO_NEED_AUTH.contains(request.getRequestURI());
     }
 }

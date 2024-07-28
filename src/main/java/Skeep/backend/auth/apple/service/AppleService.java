@@ -1,6 +1,7 @@
 package Skeep.backend.auth.apple.service;
 
 import Skeep.backend.auth.apple.dto.AppleLoginRequest;
+import Skeep.backend.auth.apple.dto.ApplePublicKeys;
 import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.service.UserFindService;
@@ -26,7 +27,7 @@ public class AppleService {
     private final AppleAuthClient appleAuthClient;
     private final JwtUtil jwtUtil;
 
-    public JwtDto login(AppleLoginRequest request) throws JsonProcessingException, AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public JwtDto login(AppleLoginRequest request) {
         String appleSerialId = getAppleSerialId(request.id_token());
 
         Long userId;
@@ -39,13 +40,15 @@ public class AppleService {
         return jwtUtil.generateTokens(userId);
     }
 
-    private Long signUp(String appleSerialId, AppleLoginRequest.AppleUser user) {
+    @Transactional
+    public Long signUp(String appleSerialId, AppleLoginRequest.AppleUser user) {
         return userService.saveAppleUser(appleSerialId, user.name().firstName() + user.name().lastName());
     }
 
-    public String getAppleSerialId(String identityToken) throws JsonProcessingException, AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public String getAppleSerialId(String identityToken) {
         Map<String, String> headers = jwtUtil.parseHeaders(identityToken);
-        PublicKey publicKey = applePublicKeyGenerator.generatePublicKey(headers, appleAuthClient.getAppleAuthPublicKey());
+        ApplePublicKeys applePublicKeys = appleAuthClient.getAppleAuthPublicKey();
+        PublicKey publicKey = applePublicKeyGenerator.generatePublicKey(headers, applePublicKeys);
 
         return jwtUtil.getTokenClaims(identityToken, publicKey).getSubject();
     }

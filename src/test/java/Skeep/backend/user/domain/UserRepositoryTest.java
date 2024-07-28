@@ -11,7 +11,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@DisplayName("[User Repository] -> UserRepository 테스트")
+@DisplayName("[Repository Test] -> UserRepository 테스트")
 class UserRepositoryTest extends RepositoryTest {
     @Autowired
     private UserRepository userRepository;

@@ -1,7 +1,9 @@
 package Skeep.backend.global.util;
 
+import Skeep.backend.auth.exception.OAuthErrorCode;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.dto.JwtDto;
+import Skeep.backend.global.exception.BaseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -67,17 +69,18 @@ public class JwtUtil implements InitializingBean {
     }
 
     public JwtDto generateTokens(Long id) {
-        return JwtDto.of(
-                generateToken(id, accessExpiration),
-                generateToken(id, refreshExpiration)
-        );
+        return new JwtDto(generateToken(id, accessExpiration), generateToken(id, refreshExpiration));
     }
 
-    public Map<String, String> parseHeaders(String token) throws JsonProcessingException {
+    public Map<String, String> parseHeaders(String token) {
         String encodedHeader = token.split(TOKEN_VALUE_DELIMITER)[HEADER_INDEX];
         String decodedHeader = new String(Base64.getUrlDecoder().decode(encodedHeader));
 
-        return OBJECT_MAPPER.readValue(decodedHeader, Map.class);
+        try {
+            return OBJECT_MAPPER.readValue(decodedHeader, Map.class);
+        } catch (JsonProcessingException e) {
+            throw new BaseException(OAuthErrorCode.CANNOT_JSON_PROCESS);
+        }
     }
 
     public Claims getTokenClaims(String token, PublicKey publicKey) {

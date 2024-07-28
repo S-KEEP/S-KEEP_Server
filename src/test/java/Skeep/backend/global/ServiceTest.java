@@ -1,5 +1,6 @@
 package Skeep.backend.global;
 
+import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class ServiceTest {
     private DatabaseCleaner databaseCleaner;
 
     @Autowired
-    protected UserService userService;
+    protected UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
