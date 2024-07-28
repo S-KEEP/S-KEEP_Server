@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class RedisUtils {
+public class RedisUtil {
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisUtils(RedisTemplate<String, Object> redisTemplate) {
+    public RedisUtil(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

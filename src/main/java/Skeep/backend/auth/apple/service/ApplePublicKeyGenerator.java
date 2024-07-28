@@ -2,7 +2,7 @@ package Skeep.backend.auth.apple.service;
 
 import Skeep.backend.auth.apple.dto.ApplePublicKey;
 import Skeep.backend.auth.apple.dto.ApplePublicKeys;
-import Skeep.backend.auth.exception.OAuthErrorCode;
+import Skeep.backend.auth.exception.AuthErrorCode;
 import Skeep.backend.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -35,13 +35,13 @@ public class ApplePublicKeyGenerator {
         try {
             keyFactory = KeyFactory.getInstance(publicKey.kty());
         } catch (NoSuchAlgorithmException e) {
-            throw new BaseException(OAuthErrorCode.NOT_FOUND_ALGORITHM);
+            throw new BaseException(AuthErrorCode.NOT_FOUND_ALGORITHM);
         }
 
         try {
             return keyFactory.generatePublic(publicKeySpec);
         } catch (InvalidKeySpecException e) {
-            throw new BaseException(OAuthErrorCode.NOT_SUPPORTED_ALGORITHM);
+            throw new BaseException(AuthErrorCode.NOT_SUPPORTED_ALGORITHM);
         }
     }
 }

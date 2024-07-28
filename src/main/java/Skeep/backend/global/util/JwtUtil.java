@@ -28,7 +28,7 @@ public class JwtUtil implements InitializingBean {
     private Key key;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -41,7 +41,7 @@ public class JwtUtil implements InitializingBean {
                 .getBody();
     }
 
-    public String generateToken(Long id, Integer expiration) {
+    public String generateAccessToken(Long id) {
         Claims claims = Jwts.claims();
         claims.put(Constants.CLAIM_USER_ID, id);
 
@@ -49,12 +49,25 @@ public class JwtUtil implements InitializingBean {
                 .setHeaderParam(Header.JWT_TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
+                .signWith(key)
+                .compact();
+    }
+
+    public String generateRefreshToken(Long id) {
+        Claims claims = Jwts.claims();
+        claims.put(Constants.CLAIM_USER_ID, id);
+
+        return Jwts.builder()
+                .setHeaderParam(Header.JWT_TYPE, Header.JWT_TYPE)
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(key)
                 .compact();
     }
 
     public JwtDto generateTokens(Long id) {
-        return new JwtDto(generateToken(id, accessExpiration), generateToken(id, refreshExpiration));
+        return new JwtDto(generateAccessToken(id), generateRefreshToken(id));
     }
 }

@@ -1,6 +1,6 @@
 package Skeep.backend.auth.apple.service;
 
-import Skeep.backend.auth.exception.OAuthErrorCode;
+import Skeep.backend.auth.exception.AuthErrorCode;
 import Skeep.backend.global.exception.BaseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,7 @@ public class AppleTokenUtil {
         try {
             return OBJECT_MAPPER.readValue(decodedHeader, Map.class);
         } catch (JsonProcessingException e) {
-            throw new BaseException(OAuthErrorCode.CANNOT_JSON_PROCESS);
+            throw new BaseException(AuthErrorCode.CANNOT_JSON_PROCESS);
         }
     }
 
