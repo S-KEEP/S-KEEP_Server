@@ -8,6 +8,7 @@
 # Credentials
 src/main/resources/application-prod.yml
 src/main/resources/application-local.yml
+src/main/resources/application-oauth.yml
 
 .idea
 HELP.md
