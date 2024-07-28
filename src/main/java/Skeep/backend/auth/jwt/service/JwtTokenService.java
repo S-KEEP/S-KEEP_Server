@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class JwtTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
@@ -45,7 +46,10 @@ public class JwtTokenService {
     public void updateRefreshToken(Long userId, String refreshToken) {
         refreshTokenRepository.findById(userId)
                 .ifPresentOrElse(
-                        findRefreshToken -> findRefreshToken.updateRefreshToken(refreshToken),
+                        existingToken -> {
+                            refreshTokenRepository.deleteById(userId);
+                            refreshTokenRepository.save(RefreshToken.issueRefreshToken(userId, refreshToken));
+                        },
                         () -> refreshTokenRepository.save(RefreshToken.issueRefreshToken(userId, refreshToken))
                 );
     }

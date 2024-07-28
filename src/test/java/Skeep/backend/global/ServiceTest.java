@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ServiceTest {
     @Autowired
-    private DatabaseCleaner databaseCleaner;
+    public DatabaseCleaner databaseCleaner;
 
     @Autowired
     protected UserRepository userRepository;
@@ -22,5 +22,6 @@ public class ServiceTest {
     @BeforeEach
     void setUp() {
         databaseCleaner.execute();
+        databaseCleaner.flushAndClear();
     }
 }

@@ -14,7 +14,7 @@ public class TokenReissueApiController {
     private final JwtTokenService jwtTokenService;
 
     @PostMapping
-    public ResponseEntity<String> reissueTokens(String refreshToken) {
+    public ResponseEntity<String> reissueToken(String refreshToken) {
         String newAccessToken = jwtTokenService.reissueAccessToken(refreshToken);
         return ResponseEntity.ok(newAccessToken);
     }
