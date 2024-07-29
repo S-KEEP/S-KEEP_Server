@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
     private final UserFindService userFindService;
 
-    @PostMapping
+    @PostMapping("/withdrawal")
     public ResponseEntity<Void> withdrawalUser(@UserId Long userId) {
         userService.withdrawalUser(userId);
         return ResponseEntity.ok().build();
