@@ -25,6 +25,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Embedded
+    private Email email;
+
     @Column(name = "provider", nullable = false)
     @Enumerated(EnumType.STRING)
     private EProvider provider;
@@ -34,22 +37,24 @@ public class User extends BaseTimeEntity {
     private EStatus status;
 
     @Builder
-    private User(final String appleSerialId, final String name, final EProvider provider) {
+    private User(final String appleSerialId, final String name, final Email email, final EProvider provider) {
         this.appleSerialId = appleSerialId;
         this.name = name;
+        this.email = email;
         this.provider = provider;
         this.status = EStatus.ACTIVATED;
     }
 
-    public static User createAppleUser(String appleSerialId, String name) {
+    public static User createAppleUser(final String appleSerialId, final String name, final Email email) {
         return User.builder()
                 .appleSerialId(appleSerialId)
                 .name(name)
+                .email(email)
                 .provider(EProvider.APPLE)
                 .build();
     }
 
-    public void updateStatus(EStatus status) {
+    public void updateStatus(final EStatus status) {
         this.status = status;
     }
 }

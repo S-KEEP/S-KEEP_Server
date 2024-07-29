@@ -2,6 +2,7 @@ package Skeep.backend.location.domain;
 
 import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.category.domain.UserCategory;
+import Skeep.backend.user.domain.Email;
 import Skeep.backend.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class UserLocationTest {
     @Test
     void UserLocation_객체_생성에_성공하다() {
-        User user = User.createAppleUser("1234567890", "Chaerin Yang");
+        User user = User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"));
         Location location = Location.builder()
                 .kakaoMapId("kakaoMapIdTestId")
                 .fixedCategory(ECategory.EXCITING)
