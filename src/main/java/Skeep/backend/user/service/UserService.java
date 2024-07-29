@@ -1,8 +1,8 @@
 package Skeep.backend.user.service;
 
-import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.user.domain.EStatus;
+import Skeep.backend.user.domain.Email;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ public class UserService {
     private final JwtTokenService jwtTokenService;
 
     @Transactional
-    public Long saveAppleUser(String appleSerialId, String name) {
-        return userRepository.save(User.createAppleUser(appleSerialId, name)).getId();
+    public Long saveAppleUser(String appleSerialId, String name, String email) {
+        return userRepository.save(User.createAppleUser(appleSerialId, name, Email.createEmail(email))).getId();
     }
 
     @Transactional

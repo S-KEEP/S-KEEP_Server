@@ -57,7 +57,7 @@ public class AppleService {
 
     @Transactional
     public Long signUp(String appleSerialId, AppleLoginRequest.AppleUser user) {
-        return userService.saveAppleUser(appleSerialId, user.name().firstName() + user.name().lastName());
+        return userService.saveAppleUser(appleSerialId, user.name().firstName() + user.name().lastName(), user.email());
     }
 
     public String getAppleSerialId(String identityToken) {
