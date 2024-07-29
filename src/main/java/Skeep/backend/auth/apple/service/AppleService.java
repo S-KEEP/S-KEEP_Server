@@ -3,13 +3,17 @@ package Skeep.backend.auth.apple.service;
 import Skeep.backend.auth.apple.dto.AppleAuthTokenResponse;
 import Skeep.backend.auth.apple.dto.AppleLoginRequest;
 import Skeep.backend.auth.apple.dto.ApplePublicKeys;
+import Skeep.backend.auth.exception.AuthErrorCode;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.dto.JwtDto;
+import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +69,10 @@ public class AppleService {
         String clientSecret = appleOAuthManager.createClientSecret();
         String refreshToken = getAppleRefreshToken(request.code(), clientSecret);
 
-        appleRevokeClient.revokeToken(clientSecret, refreshToken, appleOAuthManager.aud);
+        ResponseEntity<Void> response = appleRevokeClient.revokeToken(clientSecret, refreshToken, appleOAuthManager.aud);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new BaseException(AuthErrorCode.APPLE_REVOKE_ERROR);
+        }
     }
 
     public String getAppleRefreshToken(String code, String clientSecret) {
