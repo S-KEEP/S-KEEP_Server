@@ -1,6 +1,5 @@
 package Skeep.backend.global.security.handler.logout;
 
-import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.exception.BaseException;

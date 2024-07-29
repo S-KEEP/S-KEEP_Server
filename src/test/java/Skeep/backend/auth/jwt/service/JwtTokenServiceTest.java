@@ -7,15 +7,17 @@ import Skeep.backend.global.ServiceTest;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.util.JwtUtil;
-import org.antlr.v4.runtime.Token;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("[Service Layer] -> JwtTokenService")
 class JwtTokenServiceTest extends ServiceTest {
