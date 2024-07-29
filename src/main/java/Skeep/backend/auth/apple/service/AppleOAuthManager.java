@@ -38,16 +38,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AppleOAuthManager {
     @Value("${apple.team-id}")
-    public String teamId;
+    private String teamId;
 
     @Value("${apple.key.id}")
-    public String keyId;
+    private String keyId;
 
     @Value("${apple.key.path}")
-    public String keyPath;
+    private String keyPath;
 
     @Value("${apple.aud}")
-    public String aud;
+    private String aud;
 
     public PublicKey generatePublicKey(Map<String, String> tokenHeaders, ApplePublicKeys applePublicKeys) {
         ApplePublicKey publicKey = applePublicKeys.getMatchedKey(tokenHeaders.get("kid"), tokenHeaders.get("alg"));

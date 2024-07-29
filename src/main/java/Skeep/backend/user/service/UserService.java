@@ -16,7 +16,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserFindService userFindService;
     private final JwtTokenService jwtTokenService;
-    private final AppleService appleService;
 
     @Transactional
     public Long saveAppleUser(String appleSerialId, String name) {
