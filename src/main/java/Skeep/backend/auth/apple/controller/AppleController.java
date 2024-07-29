@@ -22,7 +22,7 @@ public class AppleController {
     private final AppleService appleService;
 
     @PostMapping("/login")
-    private JwtDto login(@RequestBody @Valid AppleLoginRequest request) throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException, JsonProcessingException {
+    private JwtDto login(@RequestBody @Valid AppleLoginRequest request) {
         return appleService.login(request);
     }
 }

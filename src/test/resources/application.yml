@@ -18,6 +18,16 @@ spring:
         format_sql: true
         default_batch_fetch_size: 50
 
+  data:
+    redis:
+      lettuce:
+        pool:
+          min-idle: 0
+          max-idle: 8
+          max-active: 8
+      port: 6379
+      host: localhost
+
 jwt:
   secret: secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey
   access-token:

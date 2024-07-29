@@ -22,9 +22,6 @@ public class User extends BaseTimeEntity {
     @Column(name = "apple_serial_id", nullable = false, unique = true)
     private String appleSerialId;
 
-    @Column(name = "apple_refresh_token", unique = true)
-    private String appleRefreshToken;
-
     @Column(name = "name", nullable = false)
     private String name;
 
