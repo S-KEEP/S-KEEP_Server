@@ -3,7 +3,6 @@ package Skeep.backend.user.service;
 import Skeep.backend.global.ServiceTest;
 import Skeep.backend.user.domain.EProvider;
 import Skeep.backend.user.domain.EStatus;
-import Skeep.backend.user.domain.Email;
 import Skeep.backend.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
