@@ -1,5 +1,6 @@
 package Skeep.backend.global.security.config;
 
+import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.security.filter.JwtAuthenticationFilter;
 import Skeep.backend.global.security.filter.JwtExceptionFilter;
@@ -34,6 +35,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
     public CustomUserDetailService customUserDetailService() {
@@ -62,7 +64,7 @@ public class SecurityConfig {
 
     @Bean
     public CustomLogoutProcessHandler customLogoutProcessHandler() {
-        return new CustomLogoutProcessHandler();
+        return new CustomLogoutProcessHandler(refreshTokenRepository, jwtUtil);
     }
 
     @Bean

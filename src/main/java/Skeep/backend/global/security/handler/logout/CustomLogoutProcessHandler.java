@@ -31,7 +31,8 @@ public class CustomLogoutProcessHandler implements LogoutHandler {
         }
 
         String accessToken = HeaderUtil.refineHeader(request, Constants.PREFIX_AUTH, Constants.PREFIX_BEARER)
-                .orElseThrow(() -> new BaseException(GlobalErrorCode.INVALID_JWT));
+                .orElseThrow(() -> new BaseException(GlobalErrorCode.INVALID_HEADER_VALUE));
+
         Claims claims = jwtUtil.validateToken(accessToken);
         refreshTokenRepository.deleteById(claims.get(Constants.CLAIM_USER_ID, Long.class));
     }
