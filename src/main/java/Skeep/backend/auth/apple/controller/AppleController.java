@@ -22,7 +22,12 @@ public class AppleController {
     private final AppleService appleService;
 
     @PostMapping("/login")
-    private JwtDto login(@RequestBody @Valid AppleLoginRequest request) {
+    public JwtDto login(@RequestBody @Valid AppleLoginRequest request) {
         return appleService.login(request);
+    }
+
+    @PostMapping("/revoke")
+    public void revoke(@RequestBody @Valid AppleLoginRequest request) {
+        appleService.revokeAppleUser(request);
     }
 }

@@ -1,6 +1,8 @@
 package Skeep.backend.user.service;
 
+import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
+import Skeep.backend.user.domain.EProvider;
 import Skeep.backend.user.domain.EStatus;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.domain.UserRepository;
@@ -15,6 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserFindService userFindService;
     private final JwtTokenService jwtTokenService;
+    private final AppleService appleService;
 
     @Transactional
     public Long saveAppleUser(String appleSerialId, String name) {
