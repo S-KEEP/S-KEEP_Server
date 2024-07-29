@@ -48,4 +48,8 @@ public class User extends BaseTimeEntity {
                 .provider(EProvider.APPLE)
                 .build();
     }
+
+    public void updateStatus(EStatus status) {
+        this.status = status;
+    }
 }

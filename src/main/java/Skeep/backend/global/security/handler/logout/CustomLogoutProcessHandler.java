@@ -1,6 +1,7 @@
 package Skeep.backend.global.security.handler.logout;
 
 import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
+import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CustomLogoutProcessHandler implements LogoutHandler {
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtTokenService jwtTokenService;
     private final JwtUtil jwtUtil;
 
     @Override
@@ -34,6 +35,6 @@ public class CustomLogoutProcessHandler implements LogoutHandler {
                 .orElseThrow(() -> new BaseException(GlobalErrorCode.INVALID_HEADER_VALUE));
 
         Claims claims = jwtUtil.validateToken(accessToken);
-        refreshTokenRepository.deleteById(claims.get(Constants.CLAIM_USER_ID, Long.class));
+        jwtTokenService.deleteRefreshToken(claims.get(Constants.CLAIM_USER_ID, Long.class));
     }
 }
