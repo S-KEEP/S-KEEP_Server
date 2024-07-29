@@ -4,7 +4,6 @@ import Skeep.backend.global.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 @DisplayName("[Controller Layer] -> TokenReissueApiController")
 class TokenReissueApiControllerTest extends ControllerTest {
