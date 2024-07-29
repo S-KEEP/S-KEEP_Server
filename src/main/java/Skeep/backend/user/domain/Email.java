@@ -22,7 +22,7 @@ public class Email {
             "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
             "A-Z]{2,7}$";
 
-    @Column(name = "email")
+    @Column(name = "email", updatable = false)
     private String email;
 
     @Builder

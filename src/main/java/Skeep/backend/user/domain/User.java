@@ -19,16 +19,16 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "apple_serial_id", nullable = false, unique = true)
+    @Column(name = "apple_serial_id", nullable = false, unique = true, updatable = false)
     private String appleSerialId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, updatable = false)
     private String name;
 
     @Embedded
     private Email email;
 
-    @Column(name = "provider", nullable = false)
+    @Column(name = "provider", nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private EProvider provider;
 
