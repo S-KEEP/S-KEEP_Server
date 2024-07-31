@@ -1,7 +1,8 @@
-package Skeep.backend.location.domain;
+package Skeep.backend.location.userLocation.domain;
 
 import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.category.domain.UserCategory;
+import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +26,6 @@ public class UserLocationTest {
                 .build();
         UserLocation userLocation = UserLocation.builder()
                 .user(user)
-                .location(location)
-                .userCategory(userCategory)
                 .build();
         assertAll(
                 () -> assertThat(userLocation.getUser()).isEqualTo(user),

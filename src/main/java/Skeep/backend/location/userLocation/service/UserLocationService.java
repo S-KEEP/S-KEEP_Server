@@ -1,6 +1,6 @@
-package Skeep.backend.location.service;
+package Skeep.backend.location.userLocation.service;
 
-import Skeep.backend.location.domain.UserLocation;
+import Skeep.backend.location.userLocation.domain.UserLocation;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
 import Skeep.backend.screenshot.service.ScreenshotService;
 import Skeep.backend.user.domain.User;

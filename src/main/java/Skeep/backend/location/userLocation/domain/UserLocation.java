@@ -1,7 +1,8 @@
-package Skeep.backend.location.domain;
+package Skeep.backend.location.userLocation.domain;
 
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.global.base.BaseTimeEntity;
+import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

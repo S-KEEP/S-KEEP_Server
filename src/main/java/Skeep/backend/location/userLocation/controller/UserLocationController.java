@@ -1,7 +1,7 @@
-package Skeep.backend.location.controller;
+package Skeep.backend.location.userLocation.controller;
 
 import Skeep.backend.global.annotation.UserId;
-import Skeep.backend.location.service.UserLocationService;
+import Skeep.backend.location.userLocation.service.UserLocationService;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

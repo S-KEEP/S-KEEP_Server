@@ -1,7 +1,7 @@
-package Skeep.backend.location.service;
+package Skeep.backend.location.location.service;
 
-import Skeep.backend.location.domain.Location;
-import Skeep.backend.location.domain.LocationRepository;
+import Skeep.backend.location.location.domain.Location;
+import Skeep.backend.location.location.domain.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package Skeep.backend.location.domain;
+package Skeep.backend.location.location.domain;
 
 import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.global.base.BaseTimeEntity;
