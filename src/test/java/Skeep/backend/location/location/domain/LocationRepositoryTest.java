@@ -1,4 +1,4 @@
-package Skeep.backend.location.domain;
+package Skeep.backend.location.location.domain;
 
 import org.junit.jupiter.api.DisplayName;
 
