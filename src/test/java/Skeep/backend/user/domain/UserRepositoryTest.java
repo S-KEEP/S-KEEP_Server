@@ -19,7 +19,7 @@ class UserRepositoryTest extends RepositoryTest {
     @Test
     void findUserSecurityFromByAppleSerialId() {
         // given
-        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang")).getId();
+        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"))).getId();
 
         // when
         Optional<UserSecurityForm> find_user_security_form = userRepository.findUserSecurityFromByAppleSerialId("1234567890");
@@ -31,7 +31,7 @@ class UserRepositoryTest extends RepositoryTest {
     @Test
     void findUserSecurityFromById() {
         // given
-        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang")).getId();
+        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"))).getId();
 
         // when
         Optional<UserSecurityForm> find_user_security_form = userRepository.findUserSecurityFromById(userId);
@@ -43,7 +43,7 @@ class UserRepositoryTest extends RepositoryTest {
     @Test
     void findByAppleSerialId() {
         // given
-        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang")).getId();
+        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"))).getId();
 
         // when
         Optional<User> find_user = userRepository.findByAppleSerialId("1234567890");
@@ -53,6 +53,7 @@ class UserRepositoryTest extends RepositoryTest {
                 () -> assertThat(find_user.get().getId()).isEqualTo(userId),
                 () -> assertThat(find_user.get().getAppleSerialId()).isEqualTo("1234567890"),
                 () -> assertThat(find_user.get().getName()).isEqualTo("Chaerin Yang"),
+                () -> assertThat(find_user.get().getEmail().getEmail()).isEqualTo("abcdegf@gmail.com"),
                 () -> assertThat(find_user.get().getProvider()).isEqualTo(EProvider.APPLE),
                 () -> assertThat(find_user.get().getStatus()).isEqualTo(EStatus.ACTIVATED)
         );

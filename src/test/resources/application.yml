@@ -26,6 +26,7 @@ spring:
           max-idle: 8
           max-active: 8
       port: 6379
+      password: 1234
       host: localhost
 
 jwt:
@@ -34,3 +35,14 @@ jwt:
     expiration: 86400000
   refresh-token:
     expiration: 604800000
+
+apple:
+  auth:
+    token-url: https://appleid.apple.com/auth/token
+    public-key-url: https://appleid.apple.com/auth/keys
+  iss: https://appleid.apple.com
+  aud: com.test
+  team-id: testtest
+  key:
+    id: testtest
+    path: classpath:/apple/AuthKey_testtest.p8
