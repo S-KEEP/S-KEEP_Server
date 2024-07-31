@@ -18,4 +18,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // query method
     Optional<User> findByAppleSerialId(String appleSerialId);
     Optional<User> findById(Long id);
+    Optional<User> findByIdAndStatus(Long id, EStatus status);
 }

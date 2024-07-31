@@ -19,13 +19,16 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "apple_serial_id", nullable = false, unique = true)
+    @Column(name = "apple_serial_id", nullable = false, unique = true, updatable = false)
     private String appleSerialId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, updatable = false)
     private String name;
 
-    @Column(name = "provider", nullable = false)
+    @Embedded
+    private Email email;
+
+    @Column(name = "provider", nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private EProvider provider;
 
@@ -34,18 +37,24 @@ public class User extends BaseTimeEntity {
     private EStatus status;
 
     @Builder
-    private User(final String appleSerialId, final String name, final EProvider provider) {
+    private User(final String appleSerialId, final String name, final Email email, final EProvider provider) {
         this.appleSerialId = appleSerialId;
         this.name = name;
+        this.email = email;
         this.provider = provider;
         this.status = EStatus.ACTIVATED;
     }
 
-    public static User createAppleUser(String appleSerialId, String name) {
+    public static User createAppleUser(final String appleSerialId, final String name, final Email email) {
         return User.builder()
                 .appleSerialId(appleSerialId)
                 .name(name)
+                .email(email)
                 .provider(EProvider.APPLE)
                 .build();
+    }
+
+    public void updateStatus(final EStatus status) {
+        this.status = status;
     }
 }

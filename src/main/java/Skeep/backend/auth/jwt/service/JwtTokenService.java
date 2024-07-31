@@ -53,4 +53,9 @@ public class JwtTokenService {
                         () -> refreshTokenRepository.save(RefreshToken.issueRefreshToken(userId, refreshToken))
                 );
     }
+
+    @Transactional
+    public void deleteRefreshToken(Long userId) {
+        refreshTokenRepository.deleteById(userId);
+    }
 }

@@ -1,6 +1,7 @@
 package Skeep.backend.user.service;
 
 import Skeep.backend.global.exception.BaseException;
+import Skeep.backend.user.domain.EStatus;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.exception.UserErrorCode;
@@ -21,5 +22,15 @@ public class UserFindService {
     public User findUserByAppleSerialId(String appleSerialId) {
         return userRepository.findByAppleSerialId(appleSerialId)
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
+    }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
+    }
+
+    public User findUserByIdAndStatus(final Long userId) {
+        return userRepository.findByIdAndStatus(userId, EStatus.ACTIVATED)
+                .orElseThrow(() -> new BaseException(UserErrorCode.DEACTIVATED_USER));
     }
 }

@@ -48,7 +48,11 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-  
+
+	// AWS S3
+	implementation platform('software.amazon.awssdk:bom:2.20.56')
+	implementation 'software.amazon.awssdk:s3'
+
 	// Lombok
 	compileOnly("org.projectlombok:lombok")
 	testImplementation ('org.projectlombok:lombok')
@@ -78,6 +82,10 @@ dependencies {
 
 	// API Docs
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	// Apple Private Key
+	implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.30.1'
+	implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
 }
 
 task copyGitSubmodule(type: Copy) {
