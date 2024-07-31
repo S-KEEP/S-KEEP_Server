@@ -82,6 +82,10 @@ dependencies {
 
 	// API Docs
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+	// Apple Private Key
+	implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.30.1'
+	implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
 }
 
 task copyGitSubmodule(type: Copy) {

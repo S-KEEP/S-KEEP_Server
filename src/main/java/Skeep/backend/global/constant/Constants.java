@@ -5,7 +5,7 @@ import java.util.List;
 public class Constants {
     public static String CLAIM_USER_ID = "uuid";
     public static String PREFIX_BEARER = "Bearer ";
-    public static String PREFIX_AUTH = "authorization";
+    public static String PREFIX_AUTH = "Authorization";
 
     public static List<String> NO_NEED_AUTH = List.of(
             "/api/auth/apple/login",

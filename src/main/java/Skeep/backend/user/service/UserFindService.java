@@ -24,6 +24,11 @@ public class UserFindService {
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
     }
 
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
+    }
+
     public User findUserByIdAndStatus(final Long userId) {
         return userRepository.findByIdAndStatus(userId, EStatus.ACTIVATED)
                 .orElseThrow(() -> new BaseException(UserErrorCode.DEACTIVATED_USER));

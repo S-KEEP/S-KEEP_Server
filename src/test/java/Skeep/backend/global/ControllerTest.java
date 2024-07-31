@@ -1,10 +1,12 @@
 package Skeep.backend.global;
 
 import Skeep.backend.auth.apple.controller.AppleController;
-import Skeep.backend.auth.apple.service.AppleAuthClient;
-import Skeep.backend.auth.apple.service.ApplePublicKeyGenerator;
+import Skeep.backend.auth.apple.service.AppleOAuthManager;
+import Skeep.backend.auth.apple.service.ApplePublicKeyClient;
 import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.auth.apple.service.AppleTokenUtil;
+import Skeep.backend.auth.jwt.controller.TokenReissueApiController;
+import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.security.config.SecurityConfig;
 import Skeep.backend.global.security.filter.JwtAuthenticationFilter;
@@ -28,7 +30,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(value = {
-        AppleController.class
+        AppleController.class,
+        TokenReissueApiController.class
 })
 @Import({SecurityConfig.class})
 public abstract class ControllerTest {
@@ -72,9 +75,6 @@ public abstract class ControllerTest {
     protected AppleTokenUtil appleTokenUtil;
 
     @MockBean
-    protected UserRepository userRepository;
-
-    @MockBean
     protected UserService userService;
 
     @MockBean
@@ -84,11 +84,17 @@ public abstract class ControllerTest {
     protected AppleService appleService;
 
     @MockBean
-    protected AppleAuthClient appleAuthClient;
+    protected ApplePublicKeyClient applePublicKeyClient;
 
     @MockBean
-    protected ApplePublicKeyGenerator applePublicKeyGenerator;
+    protected AppleOAuthManager appleOAuthManager;
 
     @MockBean
     protected JwtTokenService jwtTokenService;
+
+    @MockBean
+    protected UserRepository userRepository;
+
+    @MockBean
+    protected RefreshTokenRepository refreshTokenRepository;
 }
