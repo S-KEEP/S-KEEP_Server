@@ -24,6 +24,6 @@ public enum ECategory {
         return Arrays.stream(ECategory.values())
                 .filter(eCategory -> eCategory.getName().equals(name))
                 .findFirst()
-                .orElseThrow(() -> new BaseException(CategoryErrorCode.INVALID_ENUM_CATEGORY));
+                .orElseThrow(() -> BaseException.type(CategoryErrorCode.INVALID_ENUM_CATEGORY));
     }
 }

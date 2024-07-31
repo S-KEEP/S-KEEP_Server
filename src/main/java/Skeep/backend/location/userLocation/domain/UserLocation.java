@@ -1,7 +1,8 @@
-package Skeep.backend.location.domain;
+package Skeep.backend.location.userLocation.domain;
 
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.global.base.BaseTimeEntity;
+import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -21,12 +22,15 @@ public class UserLocation extends BaseTimeEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "file_name")
+    private String fileName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", nullable = false)
+    @JoinColumn(name = "location_id")
     private Location location;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,9 +38,15 @@ public class UserLocation extends BaseTimeEntity {
     private UserCategory userCategory;
 
     @Builder
-    public UserLocation(final User user, final Location location, final UserCategory userCategory) {
+    public UserLocation(final User user) {
         this.user = user;
+    }
+
+    public void updateUserLocation(
+            final String fileName,
+            final Location location
+    ) {
+        this.fileName = fileName;
         this.location = location;
-        this.userCategory = userCategory;
     }
 }
