@@ -23,7 +23,8 @@ public class AppleController {
     }
 
     @PostMapping("/revoke")
-    public void revoke(@RequestBody @Valid AppleLoginRequest request) {
+    public ResponseEntity<Void> revoke(@RequestBody @Valid AppleLoginRequest request) {
         appleService.revokeAppleUser(request);
+        return ResponseEntity.ok().build();
     }
 }
