@@ -26,6 +26,7 @@ import Skeep.backend.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -38,6 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
         TokenReissueApiController.class,
         UserController.class
 })
+@AutoConfigureMockMvc
 @Import({SecurityConfig.class})
 public abstract class ControllerTest {
     @Autowired
@@ -102,12 +104,4 @@ public abstract class ControllerTest {
 
     @MockBean
     protected RefreshTokenRepository refreshTokenRepository;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @BeforeEach
-    public void mockMvcSetUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
 }
