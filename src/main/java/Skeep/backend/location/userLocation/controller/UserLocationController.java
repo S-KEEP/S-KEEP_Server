@@ -1,7 +1,8 @@
 package Skeep.backend.location.userLocation.controller;
 
 import Skeep.backend.global.annotation.UserId;
-import Skeep.backend.location.userLocation.dto.request.FixedCategoryDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationGetDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
 import Skeep.backend.location.userLocation.service.UserLocationService;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,10 @@ public class UserLocationController {
     @GetMapping("/user-location")
     public ResponseEntity<?> getUserLocationList(
             @UserId Long userId,
-            @RequestBody FixedCategoryDto FixedCategoryDto
+            @RequestBody UserLocationGetDto UserLocationGetDto
     ) {
         return ResponseEntity.ok(
-                userLocationService.getUserLocationListByFixedCategory(userId, FixedCategoryDto)
+                userLocationService.getUserLocationListByUserCategory(userId, UserLocationGetDto)
         );
     }
 
@@ -34,5 +35,29 @@ public class UserLocationController {
                    userLocationService.createUserLocation(userId, screenshotUploadDto)
                )
                .build();
+    }
+
+    @PatchMapping("/user-location/{userLocationId}")
+    public ResponseEntity<?> updateUserLocation(
+            @UserId Long userId,
+            @PathVariable Long userLocationId,
+            @RequestBody UserLocationPatchDto userLocationPatchDto
+    ) {
+        return ResponseEntity.ok(
+                userLocationService.updateUserLocationWithUserCategory(
+                        userId,
+                        userLocationId,
+                        userLocationPatchDto
+                )
+        );
+    }
+
+    @DeleteMapping("/user-location/{userLocationId}")
+    public ResponseEntity<?> deleteUserLocation(
+            @UserId Long userId,
+            @PathVariable Long userLocationId
+    ) {
+        userLocationService.deleteUserLocation(userId, userLocationId);
+        return ResponseEntity.noContent().build();
     }
 }
