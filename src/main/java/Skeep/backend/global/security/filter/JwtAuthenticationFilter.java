@@ -46,11 +46,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("claim: getUserId() = {}", claims.get(Constants.CLAIM_USER_ID, Long.class));
 
         // 클레임에서 사용자 정보 추출
-        JwtUserInfo jwtUserInfo = new JwtUserInfo(claims.get(Constants.CLAIM_USER_ID, Long.class));
+        JwtUserInfo jwtUserInfo = new JwtUserInfo(
+                claims.get(Constants.CLAIM_USER_ID, Long.class),
+                ERole.valueOf(claims.get(Constants.CLAIM_USER_ROLE, String.class))
+        );
 
         // 인증 받지 않은 인증용 객체 생성
         UsernamePasswordAuthenticationToken unAuthenticatedToken =
-                new UsernamePasswordAuthenticationToken(jwtUserInfo, null);
+                new UsernamePasswordAuthenticationToken(jwtUserInfo, null, null);
 
         // 인증 받은 후의 인증 객체 생성
         UsernamePasswordAuthenticationToken authenticatedToken =

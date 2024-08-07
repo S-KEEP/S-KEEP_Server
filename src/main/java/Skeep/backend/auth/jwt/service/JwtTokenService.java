@@ -6,6 +6,7 @@ import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.util.JwtUtil;
+import Skeep.backend.user.domain.ERole;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,8 @@ public class JwtTokenService {
     public String reissueAccessToken(String refreshToken) {
         if (validateRefreshToken(refreshToken)) {
             Long userId = getUserIdFromRefreshToken(refreshToken);
-            return jwtUtil.generateAccessToken(userId);
+            ERole userRole = getUserRoleFromRefreshToken(refreshToken);
+            return jwtUtil.generateAccessToken(userId, userRole);
         } else {
             throw new BaseException(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
@@ -32,6 +34,11 @@ public class JwtTokenService {
     private Long getUserIdFromRefreshToken(String refreshToken) {
         Claims claims = jwtUtil.validateToken(refreshToken);
         return claims.get(Constants.CLAIM_USER_ID, Long.class);
+    }
+
+    private ERole getUserRoleFromRefreshToken(String refreshToken) {
+        Claims claims = jwtUtil.validateToken(refreshToken);
+        return claims.get(Constants.CLAIM_USER_ROLE, ERole.class);
     }
 
     private boolean validateRefreshToken(String refreshToken) {

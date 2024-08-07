@@ -2,6 +2,7 @@ package Skeep.backend.global.util;
 
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.dto.JwtDto;
+import Skeep.backend.user.domain.ERole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -41,9 +42,11 @@ public class JwtUtil implements InitializingBean {
                 .getBody();
     }
 
-    public String generateAccessToken(Long id) {
+    public String generateAccessToken(Long id, ERole role) {
         Claims claims = Jwts.claims();
         claims.put(Constants.CLAIM_USER_ID, id);
+        if (role != null)
+            claims.put(Constants.CLAIM_USER_ROLE, role);
 
         return Jwts.builder()
                 .setHeaderParam(Header.JWT_TYPE, Header.JWT_TYPE)
@@ -54,9 +57,11 @@ public class JwtUtil implements InitializingBean {
                 .compact();
     }
 
-    public String generateRefreshToken(Long id) {
+    public String generateRefreshToken(Long id, ERole role) {
         Claims claims = Jwts.claims();
         claims.put(Constants.CLAIM_USER_ID, id);
+        if (role != null)
+            claims.put(Constants.CLAIM_USER_ROLE, role);
 
         return Jwts.builder()
                 .setHeaderParam(Header.JWT_TYPE, Header.JWT_TYPE)
@@ -67,7 +72,7 @@ public class JwtUtil implements InitializingBean {
                 .compact();
     }
 
-    public JwtDto generateTokens(Long id) {
-        return new JwtDto(generateAccessToken(id), generateRefreshToken(id));
+    public JwtDto generateTokens(Long id, ERole role) {
+        return new JwtDto(generateAccessToken(id, role), generateRefreshToken(id, role));
     }
 }
