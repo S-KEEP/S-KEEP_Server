@@ -18,10 +18,10 @@ public class UserLocationController {
     @GetMapping("/user-location")
     public ResponseEntity<?> getUserLocationList(
             @UserId Long userId,
-            @RequestBody FixedCategoryDto FixedCategoryDto
+            @RequestBody UserLocationGetDto UserLocationGetDto
     ) {
         return ResponseEntity.ok(
-                userLocationService.getUserLocationListByFixedCategory(userId, FixedCategoryDto)
+                userLocationService.getUserLocationListByUserCategory(userId, UserLocationGetDto)
         );
     }
 

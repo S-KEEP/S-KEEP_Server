@@ -31,19 +31,18 @@ public class UserLocationService {
     private final UserLocationRetriever userLocationRetriever;
     private final S3Service s3Service;
 
-    public UserLocationListDto getUserLocationListByFixedCategory(
+    public UserLocationListDto getUserLocationListByUserCategory(
             Long userId,
-            FixedCategoryDto fixedCategoryDto
+            UserLocationGetDto userLocationGetDto
     ) {
-
         // Request 검증 로직
         User currentUser = userFindService.findUserByIdAndStatus(userId);
-        log.info("fixedCategoryDto: {}", fixedCategoryDto);
-        log.info("fixedCategoryDto's : {}", fixedCategoryDto.fixedCategory());
-        ECategory fixedCategory = ECategory.findByName(fixedCategoryDto.fixedCategory());
 
         List<UserLocation> userLocationList
-                = userLocationRetriever.findAllByUserIdAndFixedCategory(currentUser.getId(), fixedCategory);
+                = userLocationRetriever.findAllByUserIdAndFixedCategory(
+                                                currentUser.getId(),
+                                                userLocationGetDto.categoryName()
+                                        );
 
         // TODO: query 계속 날리는 부분 추후에 성능 개선
         List<UserLocationDto> userLocationDtoList = userLocationList.stream()
