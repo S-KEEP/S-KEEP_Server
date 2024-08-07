@@ -7,6 +7,7 @@ import Skeep.backend.global.security.info.JwtUserInfo;
 import Skeep.backend.global.security.provider.JwtAuthenticationManager;
 import Skeep.backend.global.util.HeaderUtil;
 import Skeep.backend.global.util.JwtUtil;
+import Skeep.backend.user.domain.ERole;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,26 +19,27 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final JwtAuthenticationManager jwtAuthenticationManager;
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return Constants.NO_NEED_AUTH.stream().anyMatch(request.getRequestURI()::startsWith);
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException{
+        return Constants.NO_NEED_AUTH.contains(request.getRequestURI());
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("url =" + request.getRequestURI());
 
         String token = HeaderUtil.refineHeader(request, Constants.PREFIX_AUTH, Constants.PREFIX_BEARER)
                 .orElseThrow(() -> new BaseException(GlobalErrorCode.INVALID_HEADER_VALUE));
