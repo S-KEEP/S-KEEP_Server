@@ -1,7 +1,7 @@
 package Skeep.backend.global.interceptor.post;
 
 import Skeep.backend.global.base.BaseResponse;
-import Skeep.backend.global.exception.GlobalErrorCode;
+import Skeep.backend.global.exception.ErrorResponse;
 import lombok.NonNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -23,8 +23,8 @@ public class ResponseInterceptor implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        if(body instanceof GlobalErrorCode)
-            return BaseResponse.fail((GlobalErrorCode)body);
+        if(body instanceof ErrorResponse)
+            return BaseResponse.fail((ErrorResponse)body);
         return BaseResponse.success(body);
     }
 }
