@@ -2,6 +2,7 @@ package Skeep.backend.screenshot.service;
 
 import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.category.domain.UserCategory;
+import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.category.service.UserCategorySaver;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.gpt.service.GptService;
@@ -31,7 +32,6 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 public class ScreenshotService {
-
     /**
      * 순환 참조 주의 : ScreenshotService는 다른 서비스에서 의존되어지면 안 됩니다.
      */
@@ -43,6 +43,8 @@ public class ScreenshotService {
     private final GptService gptService;
     private final KakaoMapService kakaoMapService;
     private final S3Service s3Service;
+
+    private final UserCategoryRepository userCategoryRepository;
 
     @Transactional
     public List<UserLocation> analyzeImageAndSaveResult(
@@ -107,12 +109,17 @@ public class ScreenshotService {
             final User currentUser,
             final Location location
     ) {
-        return userCategorySaver.saveUserCategory(
-                UserCategory.builder()
-                        .user(currentUser)
-                        .name(location.getFixedCategory().getName())
-                        .build()
-        );
+        // TODO: UserCategoryRetriever 생기면 그때 이 로직 수정할 것
+        return userCategoryRepository
+                .findByUserAndName(currentUser, location.getFixedCategory().getName())
+                .orElseGet(() ->
+                        userCategorySaver.saveUserCategory(
+                            UserCategory.builder()
+                                        .user(currentUser)
+                                        .name(location.getFixedCategory().getName())
+                                        .build()
+                        )
+                );
     }
 
     private Location getLocation(
