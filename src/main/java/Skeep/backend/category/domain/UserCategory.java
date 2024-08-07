@@ -20,7 +20,7 @@ public class UserCategory extends BaseTimeEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "description")
@@ -33,11 +33,9 @@ public class UserCategory extends BaseTimeEntity {
     @Builder
     public UserCategory(
             final String name,
-            final String description,
             final User user
     ) {
         this.name = name;
-        this.description = description;
         this.user = user;
     }
 }

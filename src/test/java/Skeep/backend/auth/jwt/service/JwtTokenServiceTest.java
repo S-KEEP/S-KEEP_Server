@@ -7,6 +7,7 @@ import Skeep.backend.global.ServiceTest;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.util.JwtUtil;
+import Skeep.backend.user.domain.ERole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,6 +29,7 @@ class JwtTokenServiceTest extends ServiceTest {
     private JwtUtil jwtUtil;
 
     private final Long USER_ID = 1L;
+    private final ERole USER_ROLE = ERole.USER;
 
     @Nested
     @DisplayName("AccessToken 재발급")
@@ -39,7 +41,7 @@ class JwtTokenServiceTest extends ServiceTest {
 
         @Test
         void RefreshToken이_유효하지_않으면_재발급에_실패한다() {
-            String wrongRefreshToken = jwtUtil.generateRefreshToken(USER_ID);
+            String wrongRefreshToken = jwtUtil.generateRefreshToken(USER_ID, USER_ROLE);
 
             assertThatThrownBy(() -> jwtTokenService.reissueAccessToken(wrongRefreshToken))
                     .isInstanceOf(BaseException.class)
@@ -66,7 +68,7 @@ class JwtTokenServiceTest extends ServiceTest {
             refreshTokenRepository.save(RefreshToken.issueRefreshToken(USER_ID, TokenFixture.REFRESH_TOKEN));
 
             // when
-            String newRefreshToken = jwtUtil.generateRefreshToken(USER_ID);
+            String newRefreshToken = jwtUtil.generateRefreshToken(USER_ID, USER_ROLE);
             jwtTokenService.updateRefreshToken(USER_ID, newRefreshToken);
 
             // then

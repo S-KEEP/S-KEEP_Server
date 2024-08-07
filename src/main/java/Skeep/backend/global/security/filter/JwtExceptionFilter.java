@@ -20,7 +20,7 @@ import java.io.IOException;
 public class JwtExceptionFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return Constants.NO_NEED_AUTH.stream().anyMatch(request.getRequestURI()::startsWith);
+        return Constants.NO_NEED_AUTH.contains(request.getRequestURI());
     }
 
     @Override
@@ -62,8 +62,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             log.error("FilterException throw Exception Exception : {}", e.getMessage());
             request.setAttribute("exception", GlobalErrorCode.INTERNAL_SERVER_ERROR);
-            filterChain.doFilter(request, response);
-        } finally {
             filterChain.doFilter(request, response);
         }
     }
