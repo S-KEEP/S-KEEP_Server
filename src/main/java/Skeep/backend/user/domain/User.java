@@ -32,24 +32,41 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private EProvider provider;
 
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ERole role;
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private EStatus status;
 
     @Builder
-    private User(final String appleSerialId, final String name, final Email email, final EProvider provider) {
+    private User(
+            final String appleSerialId,
+            final String name,
+            final Email email,
+            final ERole role,
+            final EProvider provider
+    ) {
         this.appleSerialId = appleSerialId;
         this.name = name;
         this.email = email;
         this.provider = provider;
+        this.role = role;
         this.status = EStatus.ACTIVATED;
     }
 
-    public static User createAppleUser(final String appleSerialId, final String name, final Email email) {
+    public static User createAppleUser(
+            final String appleSerialId,
+            final String name,
+            final Email email,
+            final ERole role
+    ) {
         return User.builder()
                 .appleSerialId(appleSerialId)
                 .name(name)
                 .email(email)
+                .role(role)
                 .provider(EProvider.APPLE)
                 .build();
     }

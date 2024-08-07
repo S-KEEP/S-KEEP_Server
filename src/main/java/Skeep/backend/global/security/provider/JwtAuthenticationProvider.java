@@ -11,8 +11,10 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final CustomUserDetailService customUserDetailService;
@@ -31,7 +33,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private Authentication authOfAfterLogin(JwtUserInfo userInfo) {
         UserPrincipal userPrincipal = customUserDetailService.loadUserById(userInfo.userId());
-        return new UsernamePasswordAuthenticationToken(userPrincipal, null);
+        return new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
     }
 
     @Override

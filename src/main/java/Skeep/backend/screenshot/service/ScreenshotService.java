@@ -6,7 +6,8 @@ import Skeep.backend.gpt.service.GptService;
 import Skeep.backend.kakaoMap.dto.response.KakaoResponseResult;
 import Skeep.backend.kakaoMap.service.KakaoMapService;
 import Skeep.backend.location.location.domain.Location;
-import Skeep.backend.location.location.service.LocationService;
+import Skeep.backend.location.location.service.LocationRetriever;
+import Skeep.backend.location.location.service.LocationSaver;
 import Skeep.backend.location.userLocation.domain.UserLocation;
 import Skeep.backend.location.userLocation.service.UserLocationSaver;
 import Skeep.backend.naverOcr.service.NaverOcrService;
@@ -15,7 +16,6 @@ import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
 import Skeep.backend.screenshot.exception.ScreenshotErrorCode;
 import Skeep.backend.screenshot.util.LocationAndCategory;
 import Skeep.backend.user.domain.User;
-import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,9 +33,9 @@ public class ScreenshotService {
     /**
      * 순환 참조 주의 : ScreenshotService는 다른 서비스에서 의존되어지면 안 됩니다.
      */
-    private final UserFindService userFindService;
     private final UserLocationSaver userLocationSaver;
-    private final LocationService locationService;
+    private final LocationRetriever locationRetriever;
+    private final LocationSaver locationSaver;
     private final NaverOcrService naverOcrService;
     private final GptService gptService;
     private final KakaoMapService kakaoMapService;
@@ -73,14 +73,14 @@ public class ScreenshotService {
             throw BaseException.type(ScreenshotErrorCode.FILE_BAD_REQUEST);
 
         return IntStream.range(0, imageList.size())
-                                              .mapToObj(i -> readyAndUploadToS3(
-                                                      currentUser,
-                                                      imageList.get(i),
-                                                      kakaoResponseResultList.get(i),
-                                                      locationNameAndCategoryList.get(i).category()
-                                                  )
-                                              )
-                                              .toList();
+                        .mapToObj(i -> readyAndUploadToS3(
+                                currentUser,
+                                imageList.get(i),
+                                kakaoResponseResultList.get(i),
+                                locationNameAndCategoryList.get(i).category()
+                            )
+                        )
+                        .toList();
     }
 
     private UserLocation readyAndUploadToS3(
@@ -92,8 +92,8 @@ public class ScreenshotService {
         UserLocation userLocation = userLocationSaver.createUserLocation(currentUser);
         String fileName = s3Service.uploadToS3(userLocation.getId(), file);
         Location location;
-        if (locationService.existsByKakaoMapId(kakaoResponseResult.id()))
-            location = locationService.findByKakaoMapId(kakaoResponseResult.id());
+        if (locationRetriever.existsByKakaoMapId(kakaoResponseResult.id()))
+            location = locationRetriever.findByKakaoMapId(kakaoResponseResult.id());
         else
             location = getLocationId(
                     kakaoResponseResult.id(),
@@ -112,7 +112,7 @@ public class ScreenshotService {
             final String y,
             final ECategory category
     ) {
-        return locationService.saveLocation(
+        return locationSaver.saveLocation(
                 Location.builder()
                         .kakaoMapId(kakaoMapId)
                         .x(x)

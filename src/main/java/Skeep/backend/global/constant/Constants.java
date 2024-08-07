@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Constants {
     public static String CLAIM_USER_ID = "uuid";
+    public static String CLAIM_USER_ROLE = "role";
     public static String PREFIX_BEARER = "Bearer ";
     public static String PREFIX_AUTH = "Authorization";
 

@@ -1,4 +1,6 @@
 package Skeep.backend.global.security.info;
 
-public record JwtUserInfo(Long userId) {
+import Skeep.backend.user.domain.ERole;
+
+public record JwtUserInfo(Long userId, ERole role) {
 }
