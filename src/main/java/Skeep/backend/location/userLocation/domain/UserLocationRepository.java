@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface UserLocationRepository extends JpaRepository<UserLocation, Long> {
 
     Optional<UserLocation> findByUserAndId(User user, Long id);
+    boolean existsByUserAndId(User user, Long id);
+    void deleteByUserAndId(User user, Long id);
 
     @Query(
             value = "SELECT * " +

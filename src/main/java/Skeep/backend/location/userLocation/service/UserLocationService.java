@@ -12,6 +12,7 @@ import Skeep.backend.location.userLocation.dto.response.LocationDto;
 import Skeep.backend.location.userLocation.dto.response.UserCategoryDto;
 import Skeep.backend.location.userLocation.dto.response.UserLocationDto;
 import Skeep.backend.location.userLocation.dto.response.UserLocationListDto;
+import Skeep.backend.location.userLocation.exception.UserLocationErrorCode;
 import Skeep.backend.s3.service.S3Service;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
 import Skeep.backend.screenshot.service.ScreenshotService;
@@ -33,6 +34,7 @@ public class UserLocationService {
     private final UserFindService userFindService;
     private final UserLocationRetriever userLocationRetriever;
     private final UserLocationUpdater userLocationUpdater;
+    private final UserLocationRemover userLocationRemover;
     private final S3Service s3Service;
     private final UserCategoryRepository userCategoryRepository;
 
@@ -104,5 +106,15 @@ public class UserLocationService {
         userLocationUpdater.updateUserCategory(targetUserLocation, targetUserCategory);
 
         return Boolean.TRUE;
+    }
+
+    @Transactional
+    public void deleteUserLocation(Long userId, Long userLocationId) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+
+        if (userLocationRetriever.existsByUserAndId(currentUser, userLocationId))
+            userLocationRemover.deleteByUserIdAndId(currentUser, userLocationId);
+        else
+            throw BaseException.type(UserLocationErrorCode.MISMATCH_USER_AND_USER_LOCATION);
     }
 }

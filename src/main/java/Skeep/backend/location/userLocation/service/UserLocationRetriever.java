@@ -24,4 +24,8 @@ public class UserLocationRetriever {
         return userLocationRepository.findByUserAndId(user, id)
                 .orElseThrow(() -> BaseException.type(UserLocationErrorCode.MISMATCH_USER_AND_USER_LOCATION));
     }
+
+    public Boolean existsByUserAndId(User user, Long id) {
+        return userLocationRepository.existsByUserAndId(user, id);
+    }
 }

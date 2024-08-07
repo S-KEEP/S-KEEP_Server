@@ -51,4 +51,13 @@ public class UserLocationController {
                 )
         );
     }
+
+    @DeleteMapping("/user-location/{userLocationId}")
+    public ResponseEntity<?> deleteUserLocation(
+            @UserId Long userId,
+            @PathVariable Long userLocationId
+    ) {
+        userLocationService.deleteUserLocation(userId, userLocationId);
+        return ResponseEntity.noContent().build();
+    }
 }
