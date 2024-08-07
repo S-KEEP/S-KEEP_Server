@@ -1,10 +1,13 @@
 package Skeep.backend.location.userLocation.service;
 
-import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.category.domain.UserCategory;
+import Skeep.backend.category.domain.UserCategoryRepository;
+import Skeep.backend.global.exception.BaseException;
+import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.userLocation.domain.UserLocation;
-import Skeep.backend.location.userLocation.dto.request.FixedCategoryDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationGetDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
 import Skeep.backend.location.userLocation.dto.response.LocationDto;
 import Skeep.backend.location.userLocation.dto.response.UserCategoryDto;
 import Skeep.backend.location.userLocation.dto.response.UserLocationDto;
@@ -17,6 +20,7 @@ import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.List;
@@ -25,11 +29,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserLocationService {
-
     private final ScreenshotService screenshotService;
     private final UserFindService userFindService;
     private final UserLocationRetriever userLocationRetriever;
+    private final UserLocationUpdater userLocationUpdater;
     private final S3Service s3Service;
+    private final UserCategoryRepository userCategoryRepository;
 
     public UserLocationListDto getUserLocationListByUserCategory(
             Long userId,
@@ -81,5 +86,23 @@ public class UserLocationService {
         List<UserLocation> userLocationList
                 = screenshotService.analyzeImageAndSaveResult(currentUser, screenshotUploadDto);
         return URI.create("");
+    }
+
+    @Transactional
+    public Boolean updateUserLocationWithUserCategory(
+            Long userId,
+            Long userLocationId,
+            UserLocationPatchDto userLocationPatchDto
+    ) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+        UserLocation targetUserLocation = userLocationRetriever.findByUserAndId(currentUser, userLocationId);
+
+        // ToDo: UserCategoryRetriever 구현되면 그때 코드 수정할 것
+        UserCategory targetUserCategory = userCategoryRepository.findById(userLocationPatchDto.userCategoryId())
+                .orElseThrow(() -> BaseException.type(GlobalErrorCode.NOT_FOUND));
+
+        userLocationUpdater.updateUserCategory(targetUserLocation, targetUserCategory);
+
+        return Boolean.TRUE;
     }
 }

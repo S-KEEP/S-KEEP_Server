@@ -51,4 +51,8 @@ public class UserLocation extends BaseTimeEntity {
         this.location = location;
         this.userCategory = userCategory;
     }
+
+    public void updateUserCategory(final UserCategory userCategory) {
+        this.userCategory = userCategory;
+    }
 }
