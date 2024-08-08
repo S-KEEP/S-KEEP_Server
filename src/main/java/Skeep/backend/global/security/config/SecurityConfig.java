@@ -33,91 +33,45 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 )
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final CustomLogoutProcessHandler customLogoutProcessHandler;
+    private final CustomLogoutResultHandler customLogoutResultHandler;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPointHandler customAuthenticationEntryPointHandler;
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
-    private final JwtTokenService jwtTokenService;
-
-    @Bean
-    public CustomUserDetailService customUserDetailService() {
-        return new CustomUserDetailService(userRepository);
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtil, jwtAuthenticationManager());
-    }
-
-    @Bean
-    public JwtExceptionFilter jwtExceptionFilter() {
-        return new JwtExceptionFilter();
-    }
-
-    @Bean
-    public CustomAccessDeniedHandler customAccessDeniedHandler() {
-        return new CustomAccessDeniedHandler();
-    }
-
-    @Bean
-    public CustomAuthenticationEntryPointHandler customAuthenticationEntryPointHandler() {
-        return new CustomAuthenticationEntryPointHandler();
-    }
-
-    @Bean
-    public CustomLogoutProcessHandler customLogoutProcessHandler() {
-        return new CustomLogoutProcessHandler(jwtTokenService, jwtUtil);
-    }
-
-    @Bean
-    public CustomLogoutResultHandler customLogoutResultHandler() {
-        return new CustomLogoutResultHandler();
-    }
-
-    @Bean
-    public JwtAuthenticationManager jwtAuthenticationManager() {
-        return new JwtAuthenticationManager(jwtAuthenticationProvider());
-    }
-
-    @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider() {
-        return new JwtAuthenticationProvider(customUserDetailService());
-    }
+    private final JwtAuthenticationManager jwtAuthenticationManager;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
 
-        http.httpBasic(AbstractHttpConfigurer::disable);
-
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        http.authorizeHttpRequests(request ->
-                request
-                        .requestMatchers(Constants.NO_NEED_AUTH.toArray(String[]::new)).permitAll()
-                        .anyRequest().authenticated()
-        );
-
-        http.formLogin(AbstractHttpConfigurer::disable);
-
-        http.logout(logout ->
-                logout
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(request ->
+                        request
+                                .requestMatchers(Constants.NO_NEED_AUTH.toArray(String[]::new)).permitAll()
+                                .requestMatchers("/api/**").hasAnyRole("USER")
+                                .anyRequest().authenticated()
+                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
-                        .addLogoutHandler(customLogoutProcessHandler())
-                        .logoutSuccessHandler(customLogoutResultHandler())
-        );
-
-        http.exceptionHandling(exception ->
-                exception
-                        .accessDeniedHandler(customAccessDeniedHandler())
-                        .authenticationEntryPoint(customAuthenticationEntryPointHandler())
-        );
-
-        http.addFilterBefore(
-                new JwtAuthenticationFilter(jwtUtil, jwtAuthenticationManager()), LogoutFilter.class
-        );
-        http.addFilterBefore(
-                new JwtExceptionFilter(), JwtAuthenticationFilter.class
-        );
-
-        return http.build();
+                        .addLogoutHandler(customLogoutProcessHandler)
+                        .logoutSuccessHandler(customLogoutResultHandler)
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(customAuthenticationEntryPointHandler)
+                )
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtUtil, jwtAuthenticationManager), LogoutFilter.class
+                )
+                .addFilterBefore(
+                        new JwtExceptionFilter(), JwtAuthenticationFilter.class
+                )
+                .getOrBuild();
     }
 }

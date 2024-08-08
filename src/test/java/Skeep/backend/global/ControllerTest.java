@@ -19,20 +19,27 @@ import Skeep.backend.global.security.provider.JwtAuthenticationManager;
 import Skeep.backend.global.security.provider.JwtAuthenticationProvider;
 import Skeep.backend.global.security.service.CustomUserDetailService;
 import Skeep.backend.global.util.JwtUtil;
+import Skeep.backend.user.controller.UserController;
 import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest(value = {
         AppleController.class,
-        TokenReissueApiController.class
+        TokenReissueApiController.class,
+        UserController.class
 })
+@AutoConfigureMockMvc
 @Import({SecurityConfig.class})
 public abstract class ControllerTest {
     @Autowired

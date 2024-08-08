@@ -30,11 +30,11 @@ public class UserLocation extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_category_id")
+    @JoinColumn(name = "users_category_id", nullable = false)
     private UserCategory userCategory;
 
     @Builder
@@ -44,9 +44,15 @@ public class UserLocation extends BaseTimeEntity {
 
     public void updateUserLocation(
             final String fileName,
-            final Location location
+            final Location location,
+            final UserCategory userCategory
     ) {
         this.fileName = fileName;
         this.location = location;
+        this.userCategory = userCategory;
+    }
+
+    public void updateUserCategory(final UserCategory userCategory) {
+        this.userCategory = userCategory;
     }
 }

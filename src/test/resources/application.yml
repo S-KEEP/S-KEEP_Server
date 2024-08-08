@@ -46,3 +46,30 @@ apple:
   key:
     id: testtest
     path: classpath:/apple/AuthKey_testtest.p8
+
+gpt:
+  token: gpttokengpttokengpttokengpttokengpttokengpttokengpttoken
+
+ocr:
+  url: "https://abc.def.ghi.com/custom/v1"
+  token: ocrtokenocrtokenocrtokenocrtokenocrtokenocrtoken
+
+kakao:
+  url: https://dapi.kakao.com/v2/local/search/keyword.json
+  token: kakaotokenkakaotokenkakaotokenkakaotokenkakaotoken
+
+cloud:
+  aws:
+    s3:
+      bucket: s3-bucket-name
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    credentials:
+      access-key: accesstokenaccesstoken
+      secret-key: secretkeysecretkeysecretkeysecretkey
+
+server:
+  domain: s-keep.site

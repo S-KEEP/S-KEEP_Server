@@ -7,13 +7,12 @@ import Skeep.backend.global.dto.JwtDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,10 +30,7 @@ class AppleControllerTest extends ControllerTest {
         void 이미_있는_사용자의_로그인을_성공하다() throws Exception {
             // given
             JwtDto jwtDto = new JwtDto(TokenFixture.ACCESS_TOKEN, TokenFixture.REFRESH_TOKEN);
-            Mockito.doReturn(jwtDto)
-                    .when(appleService)
-                    .login(ArgumentMatchers.any());
-            BDDMockito.verify(appleService).login(ArgumentMatchers.any());
+            Mockito.doReturn(jwtDto).when(appleService).login(any());
 
             // when
             MockHttpServletRequestBuilder requestBuilder = post(BASE_URL)

@@ -8,6 +8,8 @@ import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.util.JwtUtil;
+import Skeep.backend.user.domain.ERole;
+import Skeep.backend.user.dto.UserSecurityForm;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +46,16 @@ public class AppleService {
         String appleSerialId = getAppleSerialId(request.id_token());
 
         Long userId;
+//        UserSecurityForm userSecurityForm;
         if (userFindService.existUserByAppleSerialId(appleSerialId)) {
             userId = userFindService.findUserByAppleSerialId(appleSerialId).getId();
+//            userSecurityForm = userFindService.findUserSecurityFromByAppleSerialId(appleSerialId);
         } else {
             userId = signUp(appleSerialId, request.user());
         }
 
-        JwtDto jwtDto = jwtUtil.generateTokens(userId);
+        JwtDto jwtDto = jwtUtil.generateTokens(userId, ERole.USER);
+//        JwtDto jwtDto = jwtUtil.generateTokens(userId, userSecurityForm.getRole());
         jwtTokenService.updateRefreshToken(userId, jwtDto.refreshToken());
         return jwtDto;
     }
