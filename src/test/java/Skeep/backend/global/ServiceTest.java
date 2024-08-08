@@ -1,6 +1,7 @@
 package Skeep.backend.global;
 
 import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
+import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class ServiceTest {
 
     @Autowired
     protected RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    protected UserCategoryRepository userCategoryRepository;
 
     @BeforeEach
     void setUp() {
