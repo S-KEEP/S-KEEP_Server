@@ -1,5 +1,7 @@
 package Skeep.backend.auth.jwt.controller;
 
+import Skeep.backend.auth.jwt.dto.NewAccessTokenResponse;
+import Skeep.backend.auth.jwt.dto.RefreshTokenRequest;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,8 @@ public class TokenReissueApiController {
     private final JwtTokenService jwtTokenService;
 
     @PostMapping
-    public ResponseEntity<String> reissueToken(@RequestBody String refreshToken) {
-        String newAccessToken = jwtTokenService.reissueAccessToken(refreshToken);
-        return ResponseEntity.ok(newAccessToken);
+    public ResponseEntity<NewAccessTokenResponse> reissueToken(@RequestBody RefreshTokenRequest request) {
+        String newAccessToken = jwtTokenService.reissueAccessToken(request.refreshToken());
+        return ResponseEntity.ok(new NewAccessTokenResponse(newAccessToken));
     }
 }

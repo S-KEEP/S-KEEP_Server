@@ -8,6 +8,8 @@ import Skeep.backend.auth.apple.service.AppleTokenUtil;
 import Skeep.backend.auth.jwt.controller.TokenReissueApiController;
 import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
+import Skeep.backend.category.controller.UserCategoryController;
+import Skeep.backend.category.service.UserCategoryService;
 import Skeep.backend.global.security.config.SecurityConfig;
 import Skeep.backend.global.security.filter.JwtAuthenticationFilter;
 import Skeep.backend.global.security.filter.JwtExceptionFilter;
@@ -25,11 +27,14 @@ import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -37,10 +42,12 @@ import org.springframework.web.context.WebApplicationContext;
 @WebMvcTest(value = {
         AppleController.class,
         TokenReissueApiController.class,
-        UserController.class
+        UserController.class,
+        UserCategoryController.class
 })
 @AutoConfigureMockMvc
 @Import({SecurityConfig.class})
+@ExtendWith(SpringExtension.class)
 public abstract class ControllerTest {
     @Autowired
     protected MockMvc mockMvc;
@@ -100,8 +107,19 @@ public abstract class ControllerTest {
     protected JwtTokenService jwtTokenService;
 
     @MockBean
+    protected UserCategoryService userCategoryService;
+
+    @MockBean
     protected UserRepository userRepository;
 
     @MockBean
     protected RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @BeforeEach
+    public void mockMvcSetUp() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
 }

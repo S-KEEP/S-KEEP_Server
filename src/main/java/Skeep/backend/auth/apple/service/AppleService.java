@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.PublicKey;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 @Transactional(readOnly = true)
@@ -44,7 +45,7 @@ public class AppleService {
     @Transactional
     public JwtDto login(AppleLoginRequest request) {
         String appleSerialId = getAppleSerialId(request.id_token());
-
+        System.out.println("************");
         Long userId;
 //        UserSecurityForm userSecurityForm;
         if (userFindService.existUserByAppleSerialId(appleSerialId)) {
