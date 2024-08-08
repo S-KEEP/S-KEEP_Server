@@ -117,6 +117,7 @@ public class ScreenshotService {
                             UserCategory.builder()
                                         .user(currentUser)
                                         .name(location.getFixedCategory().getName())
+                                        .description(null)
                                         .build()
                         )
                 );

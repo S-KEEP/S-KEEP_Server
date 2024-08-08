@@ -19,7 +19,7 @@ class UserRepositoryTest extends RepositoryTest {
     @Test
     void findUserSecurityFromByAppleSerialId() {
         // given
-        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"))).getId();
+        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"), ERole.USER)).getId();
 
         // when
         Optional<UserSecurityForm> find_user_security_form = userRepository.findUserSecurityFromByAppleSerialId("1234567890");
@@ -31,7 +31,7 @@ class UserRepositoryTest extends RepositoryTest {
     @Test
     void findUserSecurityFromById() {
         // given
-        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"))).getId();
+        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"), ERole.USER)).getId();
 
         // when
         Optional<UserSecurityForm> find_user_security_form = userRepository.findUserSecurityFromById(userId);
@@ -43,7 +43,7 @@ class UserRepositoryTest extends RepositoryTest {
     @Test
     void findByAppleSerialId() {
         // given
-        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"))).getId();
+        Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"), ERole.USER)).getId();
 
         // when
         Optional<User> find_user = userRepository.findByAppleSerialId("1234567890");

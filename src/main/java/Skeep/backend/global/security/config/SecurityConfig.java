@@ -33,7 +33,6 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 )
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final CustomLogoutProcessHandler customLogoutProcessHandler;
     private final CustomLogoutResultHandler customLogoutResultHandler;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -43,7 +42,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

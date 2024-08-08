@@ -27,7 +27,7 @@ public class JwtTokenService {
             ERole userRole = getUserRoleFromRefreshToken(refreshToken);
             return jwtUtil.generateAccessToken(userId, userRole);
         } else {
-            throw new BaseException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+            throw BaseException.type(AuthErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
 
