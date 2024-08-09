@@ -2,7 +2,6 @@ package Skeep.backend.user.controller;
 
 import Skeep.backend.global.ControllerTest;
 import Skeep.backend.global.exception.BaseException;
-import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.user.domain.EProvider;
 import Skeep.backend.user.exception.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
