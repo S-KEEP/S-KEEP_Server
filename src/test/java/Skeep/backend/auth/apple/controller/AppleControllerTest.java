@@ -49,8 +49,8 @@ class AppleControllerTest extends ControllerTest {
             // then
             mockMvc.perform(requestBuilder)
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.accessToken").value(jwtDto.accessToken()))
-                    .andExpect(jsonPath("$.refreshToken").value(jwtDto.refreshToken()))
+                    .andExpect(jsonPath("$.result.accessToken").value(jwtDto.accessToken()))
+                    .andExpect(jsonPath("$.result.refreshToken").value(jwtDto.refreshToken()))
                     .andDo(print());
         }
     }

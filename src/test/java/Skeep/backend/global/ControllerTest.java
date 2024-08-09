@@ -43,7 +43,7 @@ import org.springframework.web.context.WebApplicationContext;
         AppleController.class,
         TokenReissueApiController.class,
         UserController.class,
-        UserCategoryController.class
+        UserCategoryController.class,
 })
 @AutoConfigureMockMvc
 @Import({SecurityConfig.class})
