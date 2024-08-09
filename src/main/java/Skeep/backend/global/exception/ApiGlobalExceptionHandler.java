@@ -1,8 +1,10 @@
 package Skeep.backend.global.exception;
 
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
@@ -11,6 +13,8 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -102,6 +106,17 @@ public class ApiGlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleAnyException(RuntimeException e, HttpServletRequest request) {
         return convert(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * OpenFeign 오률 전용 ExceptionHandler
+     */
+    @ExceptionHandler(FeignException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public String feignExceptionHandler(FeignException ex) {
+        ex.printStackTrace();
+        return ex.getMessage();
     }
 
     private ResponseEntity<ErrorResponse> convert(ErrorCode code) {
