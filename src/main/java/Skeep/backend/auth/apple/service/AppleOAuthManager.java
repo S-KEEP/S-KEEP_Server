@@ -46,6 +46,9 @@ public class AppleOAuthManager {
     @Value("${apple.key.path}")
     private String keyPath;
 
+    @Value("apple.key.value")
+    private String keyValue;
+
     @Value("${apple.aud}")
     private String aud;
 
@@ -92,15 +95,8 @@ public class AppleOAuthManager {
                 .compact();
     }
 
-    private PrivateKey getPrivateKey() {
-        ClassPathResource resource = new ClassPathResource(keyPath);
-
-        String privateKey = null;
-        try {
-            privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public PrivateKey getPrivateKey() {
+        String privateKey = keyValue;
 
         Reader pemReader = new StringReader(privateKey);
         PEMParser pemParser = new PEMParser(pemReader);
