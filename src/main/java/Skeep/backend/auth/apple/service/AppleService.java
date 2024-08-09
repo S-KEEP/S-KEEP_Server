@@ -9,7 +9,6 @@ import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.domain.ERole;
-import Skeep.backend.user.dto.UserSecurityForm;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.PublicKey;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Service
 @Transactional(readOnly = true)

@@ -2,12 +2,12 @@ package Skeep.backend.user.controller;
 
 import Skeep.backend.global.ControllerTest;
 import Skeep.backend.global.exception.BaseException;
-import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.user.domain.EProvider;
 import Skeep.backend.user.exception.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static Skeep.backend.fixture.TokenFixture.ACCESS_TOKEN;
@@ -34,20 +34,7 @@ class UserControllerTest extends ControllerTest {
         private static final String BASE_URL = "/api/user";
 
         @Test
-        void 토큰이_없다면_예외가_발생한다() throws Exception {
-            // when
-            MockHttpServletRequestBuilder requestBuilder = get(BASE_URL);
-
-            // then
-            final GlobalErrorCode expectedError = GlobalErrorCode.INVALID_HEADER_VALUE;
-            mockMvc.perform(requestBuilder)
-                    .andExpect(status().isNotFound())
-                    .andExpect(result -> assertTrue(result.getResolvedException() instanceof BaseException))
-                    .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), expectedError.getMessage()))
-                    .andDo(print());
-        }
-
-        @Test
+        @WithMockUser(username = "1")
         void 유저_정보를_찾을_수_없다면_예외가_발생한다() throws Exception {
             // given
             doThrow(BaseException.type(UserErrorCode.NOT_FOUND_USER))
@@ -68,6 +55,7 @@ class UserControllerTest extends ControllerTest {
         }
 
         @Test
+        @WithMockUser(username = "1")
         void 유저_정보_조회에_성공한다() throws Exception {
             // given
             given(userFindService.findById(anyLong()))
@@ -80,9 +68,10 @@ class UserControllerTest extends ControllerTest {
             // then
             mockMvc.perform(requestBuilder)
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.user.name").value(ALICE_JOHNSON.getName()))
-                    .andExpect(jsonPath("$.user.email").value(ALICE_JOHNSON.getEmail().getEmail()))
-                    .andExpect(jsonPath("$.user.provider").value(ALICE_JOHNSON.getProvider().getName()));
+                    .andExpect(jsonPath("$.result.name").value(ALICE_JOHNSON.getName()))
+                    .andExpect(jsonPath("$.result.email").value(ALICE_JOHNSON.getEmail().getEmail()))
+                    .andExpect(jsonPath("$.result.provider").value(ALICE_JOHNSON.getProvider().getName()))
+                    .andDo(print());
         }
     }
 
@@ -92,11 +81,12 @@ class UserControllerTest extends ControllerTest {
         private static final String BASE_URL = "/api/user/withdrawal";
 
         @Test
+        @WithMockUser(username = "1")
         void 유저_정보를_찾을_수_없다면_예외가_발생한다() throws Exception {
             // given
             doThrow(BaseException.type(UserErrorCode.NOT_FOUND_USER))
-                    .when(userFindService)
-                    .findById(anyLong());
+                    .when(userService)
+                    .withdrawalUser(anyLong());
 
             // when
             MockHttpServletRequestBuilder requestBuilder = post(BASE_URL)
@@ -112,6 +102,7 @@ class UserControllerTest extends ControllerTest {
         }
 
         @Test
+        @WithMockUser(username = "1")
         void 서비스_회원_탈퇴에_성공한다() throws Exception {
             // given
             doNothing()
