@@ -12,12 +12,15 @@ import org.bouncycastle.openssl.PEMException;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -42,9 +45,6 @@ public class AppleOAuthManager {
 
     @Value("${apple.key.path}")
     private String keyPath;
-
-    @Value("apple.key.value")
-    private String keyValue;
 
     @Value("${apple.aud}")
     private String aud;
@@ -93,7 +93,13 @@ public class AppleOAuthManager {
     }
 
     public PrivateKey getPrivateKey() {
-        String privateKey = keyValue;
+        ClassPathResource resource = new ClassPathResource(keyPath);
+        String privateKey = null;
+        try {
+            privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Reader pemReader = new StringReader(privateKey);
         PEMParser pemParser = new PEMParser(pemReader);
