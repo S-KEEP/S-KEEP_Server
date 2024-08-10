@@ -51,7 +51,7 @@ class UserRepositoryTest extends RepositoryTest {
         // then
         assertAll(
                 () -> assertThat(find_user.get().getId()).isEqualTo(userId),
-                () -> assertThat(find_user.get().getAppleSerialId()).isEqualTo("1234567890"),
+                () -> assertThat(find_user.get().getSerialId()).isEqualTo("1234567890"),
                 () -> assertThat(find_user.get().getName()).isEqualTo("Chaerin Yang"),
                 () -> assertThat(find_user.get().getEmail().getEmail()).isEqualTo("abcdegf@gmail.com"),
                 () -> assertThat(find_user.get().getProvider()).isEqualTo(EProvider.APPLE),

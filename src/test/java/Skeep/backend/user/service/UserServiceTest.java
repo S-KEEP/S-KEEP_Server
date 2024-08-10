@@ -31,7 +31,7 @@ class UserServiceTest extends ServiceTest {
             Optional<User> find_user = userRepository.findById(user.getId());
             assertAll(
                     () -> assertThat(find_user.get().getId()).isEqualTo(user.getId()),
-                    () -> assertThat(find_user.get().getAppleSerialId()).isEqualTo("1234567890"),
+                    () -> assertThat(find_user.get().getSerialId()).isEqualTo("1234567890"),
                     () -> assertThat(find_user.get().getName()).isEqualTo("Chaerin Yang"),
                     () -> assertThat(find_user.get().getEmail().getEmail()).isEqualTo("abcdegf@gmail.com"),
                     () -> assertThat(find_user.get().getProvider()).isEqualTo(EProvider.APPLE),

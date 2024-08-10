@@ -13,7 +13,7 @@ public enum UserFixture {
     BOB_BROWN("P6Q7R8S9T0", "Bob Brown", Email.createEmail("bob.brown@example.com"), EProvider.APPLE, EStatus.ACTIVATED),
     ;
 
-    private final String appleSerialId;
+    private final String serialId;
     private final String name;
     private final Email email;
     private final EProvider provider;
@@ -22,7 +22,7 @@ public enum UserFixture {
     public User toUser(EProvider provider) {
         if (provider == EProvider.APPLE) {
             return User.createAppleUser(
-                    appleSerialId,
+                    serialId,
                     name,
                     email,
                     ERole.USER

@@ -9,8 +9,8 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     // @Query
-    @Query("select u.id as id, u.role as role from User u where u.appleSerialId = :appleSerialId")
-    Optional<UserSecurityForm> findUserSecurityFromByAppleSerialId(@Param("appleSerialId") String appleSerialId);
+    @Query("select u.id as id, u.role as role from User u where u.serialId = :serialId")
+    Optional<UserSecurityForm> findUserSecurityFromByAppleSerialId(@Param("serialId") String serialId);
 
     @Query("select u.id as id, u.role as role from User u where u.id = :id")
     Optional<UserSecurityForm> findUserSecurityFromById(@Param("id") Long id);
