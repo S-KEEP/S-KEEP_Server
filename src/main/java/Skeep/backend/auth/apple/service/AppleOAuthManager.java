@@ -92,9 +92,8 @@ public class AppleOAuthManager {
                 .compact();
     }
 
-    private PrivateKey getPrivateKey() {
+    public PrivateKey getPrivateKey() {
         ClassPathResource resource = new ClassPathResource(keyPath);
-
         String privateKey = null;
         try {
             privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));

@@ -22,7 +22,7 @@ class UserRepositoryTest extends RepositoryTest {
         Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"), ERole.USER)).getId();
 
         // when
-        Optional<UserSecurityForm> find_user_security_form = userRepository.findUserSecurityFromByAppleSerialId("1234567890");
+        Optional<UserSecurityForm> find_user_security_form = userRepository.findUserSecurityFromBySerialId("1234567890");
 
         // then
         assertThat(find_user_security_form.get().getId()).isEqualTo(userId);
@@ -46,12 +46,12 @@ class UserRepositoryTest extends RepositoryTest {
         Long userId = userRepository.save(User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"), ERole.USER)).getId();
 
         // when
-        Optional<User> find_user = userRepository.findByAppleSerialId("1234567890");
+        Optional<User> find_user = userRepository.findBySerialId("1234567890");
 
         // then
         assertAll(
                 () -> assertThat(find_user.get().getId()).isEqualTo(userId),
-                () -> assertThat(find_user.get().getAppleSerialId()).isEqualTo("1234567890"),
+                () -> assertThat(find_user.get().getSerialId()).isEqualTo("1234567890"),
                 () -> assertThat(find_user.get().getName()).isEqualTo("Chaerin Yang"),
                 () -> assertThat(find_user.get().getEmail().getEmail()).isEqualTo("abcdegf@gmail.com"),
                 () -> assertThat(find_user.get().getProvider()).isEqualTo(EProvider.APPLE),

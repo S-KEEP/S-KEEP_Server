@@ -11,6 +11,7 @@ public class Constants {
     public static List<String> NO_NEED_AUTH = List.of(
             "/api/auth/apple/login",
             "/api/auth/jwt/reissue",
+            "/api/auth/apple/revoke",
             "/swagger-ui/index.html",
             "/swagger-ui/swagger-ui-standalone-preset.js",
             "/swagger-ui/swagger-initializer.js",

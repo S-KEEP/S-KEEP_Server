@@ -19,7 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserSecurityForm userSecurityForm = userRepository.findUserSecurityFromByAppleSerialId(username)
+        UserSecurityForm userSecurityForm = userRepository.findUserSecurityFromBySerialId(username)
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
         log.info(("아이디 기반 조회 성공"));
 

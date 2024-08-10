@@ -33,9 +33,15 @@ public class UserCategory extends BaseTimeEntity {
     @Builder
     public UserCategory(
             final String name,
+            final String description,
             final User user
     ) {
         this.name = name;
+        this.description = description;
         this.user = user;
+    }
+
+    public static UserCategory createUserCategory(String name, String description, User user) {
+        return new UserCategory(name, description, user);
     }
 }

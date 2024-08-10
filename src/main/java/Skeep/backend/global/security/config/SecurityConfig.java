@@ -1,6 +1,5 @@
 package Skeep.backend.global.security.config;
 
-import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.global.constant.Constants;
 import Skeep.backend.global.security.filter.JwtAuthenticationFilter;
 import Skeep.backend.global.security.filter.JwtExceptionFilter;
@@ -9,10 +8,7 @@ import Skeep.backend.global.security.handler.exception.CustomAuthenticationEntry
 import Skeep.backend.global.security.handler.logout.CustomLogoutProcessHandler;
 import Skeep.backend.global.security.handler.logout.CustomLogoutResultHandler;
 import Skeep.backend.global.security.provider.JwtAuthenticationManager;
-import Skeep.backend.global.security.provider.JwtAuthenticationProvider;
-import Skeep.backend.global.security.service.CustomUserDetailService;
 import Skeep.backend.global.util.JwtUtil;
-import Skeep.backend.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

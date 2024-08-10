@@ -67,7 +67,7 @@ class TokenReissueApiControllerTest extends ControllerTest {
             // then
             mockMvc.perform(requestBuilder)
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.accessToken").value(NEW_ACCESS_TOKEN))
+                    .andExpect(jsonPath("$.result.accessToken").value(NEW_ACCESS_TOKEN))
                     .andDo(print());
         }
     }

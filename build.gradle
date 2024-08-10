@@ -91,7 +91,7 @@ dependencies {
 task copyGitSubmodule(type: Copy) {
 	copy {
 		from './skeep-properties'
-		include '*.yml'
+		include '*.yml', '*.p8'
 		into './src/main/resources'
 	}
 }

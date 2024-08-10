@@ -19,8 +19,8 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "apple_serial_id", nullable = false, unique = true, updatable = false)
-    private String appleSerialId;
+    @Column(name = "serial_id", nullable = false, unique = true, updatable = false)
+    private String serialId;
 
     @Column(name = "name", nullable = false, updatable = false)
     private String name;
@@ -42,13 +42,13 @@ public class User extends BaseTimeEntity {
 
     @Builder
     private User(
-            final String appleSerialId,
+            final String serialId,
             final String name,
             final Email email,
             final ERole role,
             final EProvider provider
     ) {
-        this.appleSerialId = appleSerialId;
+        this.serialId = serialId;
         this.name = name;
         this.email = email;
         this.provider = provider;
@@ -57,13 +57,13 @@ public class User extends BaseTimeEntity {
     }
 
     public static User createAppleUser(
-            final String appleSerialId,
+            final String serialId,
             final String name,
             final Email email,
             final ERole role
     ) {
         return User.builder()
-                .appleSerialId(appleSerialId)
+                .serialId(serialId)
                 .name(name)
                 .email(email)
                 .role(role)
