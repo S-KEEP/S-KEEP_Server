@@ -42,6 +42,6 @@ public class UserFindService {
 
     public User findUserByIdAndStatus(final Long userId) {
         return userRepository.findByIdAndStatus(userId, EStatus.ACTIVATED)
-                .orElseThrow(() -> new BaseException(UserErrorCode.DEACTIVATED_USER));
+                .orElseThrow(() -> BaseException.type(UserErrorCode.DEACTIVATED_USER));
     }
 }

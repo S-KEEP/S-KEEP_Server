@@ -25,12 +25,12 @@ class UserServiceTest extends ServiceTest {
         @Test
         void Apple_유저를_성공적으로_저장하다() {
             // when
-            Long userId = userService.saveAppleUser("1234567890", "Chaerin Yang", "abcdegf@gmail.com");
+            User user = userService.saveAppleUser("1234567890", "Chaerin Yang", "abcdegf@gmail.com");
 
             // then
-            Optional<User> find_user = userRepository.findById(userId);
+            Optional<User> find_user = userRepository.findById(user.getId());
             assertAll(
-                    () -> assertThat(find_user.get().getId()).isEqualTo(userId),
+                    () -> assertThat(find_user.get().getId()).isEqualTo(user.getId()),
                     () -> assertThat(find_user.get().getAppleSerialId()).isEqualTo("1234567890"),
                     () -> assertThat(find_user.get().getName()).isEqualTo("Chaerin Yang"),
                     () -> assertThat(find_user.get().getEmail().getEmail()).isEqualTo("abcdegf@gmail.com"),
