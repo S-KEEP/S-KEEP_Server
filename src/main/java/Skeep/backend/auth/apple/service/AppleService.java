@@ -50,12 +50,12 @@ public class AppleService {
         String appleSerialId = getAppleSerialId(request.id_token());
         UserSecurityForm userSecurityForm;
 
-        if (!userFindService.existUserByAppleSerialId(appleSerialId)) {
+        if (!userFindService.existUserBySerialId(appleSerialId)) {
             User user = signUp(appleSerialId, request.user());
             userCategorySaver.createUserCategoryList(user);
         }
 
-        userSecurityForm = userFindService.findUserSecurityFromByAppleSerialId(appleSerialId);
+        userSecurityForm = userFindService.findUserSecurityFromBySerialId(appleSerialId);
         return createJwtDto(userSecurityForm.getId(), userSecurityForm.getRole());
     }
 
