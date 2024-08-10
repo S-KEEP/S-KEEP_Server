@@ -16,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserFindService {
     private final UserRepository userRepository;
 
-    public Boolean existUserByAppleSerialId(String appleSerialId) {
-        return userRepository.findByAppleSerialId(appleSerialId).isPresent();
+    public Boolean existUserBySerialId(String serialId) {
+        return userRepository.findBySerialId(serialId).isPresent();
     }
 
-    public UserSecurityForm findUserSecurityFromByAppleSerialId(String appleSerialId) {
-        return userRepository.findUserSecurityFromByAppleSerialId(appleSerialId)
+    public UserSecurityForm findUserSecurityFromBySerialId(String serialId) {
+        return userRepository.findUserSecurityFromBySerialId(serialId)
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
     }
 
@@ -30,8 +30,8 @@ public class UserFindService {
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
     }
 
-    public User findUserByAppleSerialId(String appleSerialId) {
-        return userRepository.findByAppleSerialId(appleSerialId)
+    public User findUserBySerialId(String serialId) {
+        return userRepository.findBySerialId(serialId)
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
     }
 
@@ -42,6 +42,6 @@ public class UserFindService {
 
     public User findUserByIdAndStatus(final Long userId) {
         return userRepository.findByIdAndStatus(userId, EStatus.ACTIVATED)
-                .orElseThrow(() -> new BaseException(UserErrorCode.DEACTIVATED_USER));
+                .orElseThrow(() -> BaseException.type(UserErrorCode.DEACTIVATED_USER));
     }
 }

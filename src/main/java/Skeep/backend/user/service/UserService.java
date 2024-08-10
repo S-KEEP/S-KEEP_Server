@@ -15,10 +15,10 @@ public class UserService {
     private final JwtTokenService jwtTokenService;
 
     @Transactional
-    public Long saveAppleUser(String appleSerialId, String name, String email) {
+    public User saveAppleUser(String appleSerialId, String name, String email) {
         return userRepository.save(
                 User.createAppleUser(appleSerialId, name, Email.createEmail(email), ERole.USER)
-        ).getId();
+        );
     }
 
     @Transactional

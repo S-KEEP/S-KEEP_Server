@@ -5,10 +5,13 @@ import Skeep.backend.auth.apple.dto.AppleLoginRequest;
 import Skeep.backend.auth.apple.dto.ApplePublicKeys;
 import Skeep.backend.auth.exception.AuthErrorCode;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
+import Skeep.backend.category.service.UserCategorySaver;
 import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.domain.ERole;
+import Skeep.backend.user.domain.User;
+import Skeep.backend.user.dto.UserSecurityForm;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,30 +40,33 @@ public class AppleService {
     private final JwtUtil jwtUtil;
     private final AppleTokenUtil appleTokenUtil;
 
+    private final UserCategorySaver userCategorySaver;
+
     @Value("${apple.aud}")
     private String aud;
 
     @Transactional
     public JwtDto login(AppleLoginRequest request) {
         String appleSerialId = getAppleSerialId(request.id_token());
-        System.out.println("************");
-        Long userId;
-//        UserSecurityForm userSecurityForm;
-        if (userFindService.existUserByAppleSerialId(appleSerialId)) {
-            userId = userFindService.findUserByAppleSerialId(appleSerialId).getId();
-//            userSecurityForm = userFindService.findUserSecurityFromByAppleSerialId(appleSerialId);
-        } else {
-            userId = signUp(appleSerialId, request.user());
+        UserSecurityForm userSecurityForm;
+
+        if (!userFindService.existUserBySerialId(appleSerialId)) {
+            User user = signUp(appleSerialId, request.user());
+            userCategorySaver.createUserCategoryList(user);
         }
 
-        JwtDto jwtDto = jwtUtil.generateTokens(userId, ERole.USER);
-//        JwtDto jwtDto = jwtUtil.generateTokens(userId, userSecurityForm.getRole());
+        userSecurityForm = userFindService.findUserSecurityFromBySerialId(appleSerialId);
+        return createJwtDto(userSecurityForm.getId(), userSecurityForm.getRole());
+    }
+
+    public JwtDto createJwtDto(Long userId, ERole role) {
+        JwtDto jwtDto = jwtUtil.generateTokens(userId, role);
         jwtTokenService.updateRefreshToken(userId, jwtDto.refreshToken());
         return jwtDto;
     }
 
     @Transactional
-    public Long signUp(String appleSerialId, AppleLoginRequest.AppleUser user) {
+    public User signUp(String appleSerialId, AppleLoginRequest.AppleUser user) {
         return userService.saveAppleUser(appleSerialId, user.name().firstName() + user.name().lastName(), user.email());
     }
 

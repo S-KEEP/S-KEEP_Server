@@ -13,7 +13,7 @@ class UserTest {
         User user = User.createAppleUser("1234567890", "Chaerin Yang", Email.createEmail("abcdegf@gmail.com"), ERole.USER);
 
         assertAll(
-                () -> assertThat(user.getAppleSerialId()).isEqualTo("1234567890"),
+                () -> assertThat(user.getSerialId()).isEqualTo("1234567890"),
                 () -> assertThat(user.getName()).isEqualTo("Chaerin Yang"),
                 () -> assertThat(user.getEmail().getEmail()).isEqualTo("abcdegf@gmail.com"),
                 () -> assertThat(user.getProvider()).isEqualTo(EProvider.APPLE),
