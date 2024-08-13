@@ -48,7 +48,7 @@ public class UserLocationService {
 
         if (page < 1)
             throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
-        Pageable pageable = PageRequest.of(page - 1, 3);
+        Pageable pageable = PageRequest.of(page - 1, 10);
         Page<UserLocation> userLocationPage
                 = userLocationRetriever.findAllByUserIdAndUserCategory(
                                                 currentUser.getId(),
