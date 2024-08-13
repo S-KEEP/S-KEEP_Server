@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -97,7 +98,12 @@ public class UserLocationService {
         User currentUser = userFindService.findUserByIdAndStatus(userId);
         List<UserLocation> userLocationList
                 = screenshotService.analyzeImageAndSaveResult(currentUser, screenshotUploadDto);
-        return URI.create("");
+
+        String uriString = userLocationList.stream()
+                .map(userLocation -> "/user-location/" + userLocation.getId())
+                .collect(Collectors.joining(","));
+
+        return URI.create(uriString);
     }
 
     public UserLocationDto getUserLocationRetrieve(Long userId, Long userLocationId) {
