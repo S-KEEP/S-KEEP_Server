@@ -2,6 +2,7 @@ package Skeep.backend.location.userLocation.controller;
 
 import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
+import Skeep.backend.location.userLocation.dto.response.UserLocationCreate;
 import Skeep.backend.location.userLocation.service.UserLocationService;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +42,11 @@ public class UserLocationController {
             @UserId Long userId,
             @ModelAttribute ScreenshotUploadDto screenshotUploadDto
     ) {
-        return ResponseEntity.created(
-                   userLocationService.createUserLocation(userId, screenshotUploadDto)
-               )
-               .build();
+        UserLocationCreate userLocationCreate
+                = userLocationService.createUserLocation(userId, screenshotUploadDto);
+
+        return ResponseEntity.created(userLocationCreate.uri() )
+                             .body(userLocationCreate.userLocationCreateDto());
     }
 
     @PatchMapping("/user-location/{userLocationId}")

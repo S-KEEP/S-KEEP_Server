@@ -7,10 +7,7 @@ import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.userLocation.domain.UserLocation;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
-import Skeep.backend.location.userLocation.dto.response.LocationDto;
-import Skeep.backend.location.userLocation.dto.response.UserCategoryDto;
-import Skeep.backend.location.userLocation.dto.response.UserLocationDto;
-import Skeep.backend.location.userLocation.dto.response.UserLocationListDto;
+import Skeep.backend.location.userLocation.dto.response.*;
 import Skeep.backend.location.userLocation.exception.UserLocationErrorCode;
 import Skeep.backend.s3.service.S3Service;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
@@ -92,7 +89,7 @@ public class UserLocationService {
         );
     }
 
-    public URI createUserLocation(
+    public UserLocationCreate createUserLocation(
             Long userId,
             ScreenshotUploadDto screenshotUploadDto
     ) {
@@ -104,7 +101,36 @@ public class UserLocationService {
                 .map(userLocation -> "/user-location/" + userLocation.getId())
                 .collect(Collectors.joining(","));
 
-        return URI.create(uriString);
+        List<UserLocationDto> userLocationDtoList =
+                userLocationList.stream().map(
+                        userLocation -> {
+                            Location tempLocation = userLocation.getLocation();
+                            UserCategory tempUserCategory = userLocation.getUserCategory();
+                            return UserLocationDto.of(
+                                    userLocation.getId(),
+                                    s3Service.getPresignUrl(userLocation.getFileName()),
+                                    LocationDto.of(
+                                            tempLocation.getId(),
+                                            tempLocation.getKakaoMapId(),
+                                            tempLocation.getX(),
+                                            tempLocation.getY(),
+                                            tempLocation.getFixedCategory()
+                                    ),
+                                    tempUserCategory != null ?
+                                            UserCategoryDto.of(
+                                                    tempUserCategory.getId(),
+                                                    tempUserCategory.getName(),
+                                                    tempUserCategory.getDescription()
+                                            ) : null
+                            );
+                        }
+                ).toList();
+        UserLocationCreateDto userLocationCreateDto = UserLocationCreateDto.of(userLocationDtoList);
+
+        return UserLocationCreate.of(
+                userLocationCreateDto,
+                URI.create(uriString)
+        );
     }
 
     public UserLocationDto getUserLocationRetrieve(Long userId, Long userLocationId) {
