@@ -66,19 +66,10 @@ public class UserLocationService {
                     return UserLocationDto.of(
                             userLocation.getId(),
                             s3Service.getPresignUrl(userLocation.getFileName()),
-                            LocationDto.of(
-                                    tempLocation.getId(),
-                                    tempLocation.getKakaoMapId(),
-                                    tempLocation.getX(),
-                                    tempLocation.getY(),
-                                    tempLocation.getFixedCategory()
-                            ),
+                            LocationDto.of(tempLocation),
                             tempUserCategory != null ?
-                                UserCategoryDto.of(
-                                    tempUserCategory.getId(),
-                                    tempUserCategory.getName(),
-                                    tempUserCategory.getDescription()
-                                ) : null
+                                UserCategoryDto.of(tempUserCategory)
+                                    : null
                         );
                     }
                 ).toList();
@@ -109,19 +100,10 @@ public class UserLocationService {
                             return UserLocationDto.of(
                                     userLocation.getId(),
                                     s3Service.getPresignUrl(userLocation.getFileName()),
-                                    LocationDto.of(
-                                            tempLocation.getId(),
-                                            tempLocation.getKakaoMapId(),
-                                            tempLocation.getX(),
-                                            tempLocation.getY(),
-                                            tempLocation.getFixedCategory()
-                                    ),
+                                    LocationDto.of(tempLocation),
                                     tempUserCategory != null ?
-                                            UserCategoryDto.of(
-                                                    tempUserCategory.getId(),
-                                                    tempUserCategory.getName(),
-                                                    tempUserCategory.getDescription()
-                                            ) : null
+                                            UserCategoryDto.of(tempUserCategory)
+                                            : null
                             );
                         }
                 ).toList();
@@ -145,18 +127,8 @@ public class UserLocationService {
         return UserLocationDto.of(
                 userLocationId,
                 s3Service.getPresignUrl(targetLocation.getFileName()),
-                LocationDto.of(
-                        location.getId(),
-                        location.getKakaoMapId(),
-                        location.getX(),
-                        location.getY(),
-                        location.getFixedCategory()
-                ),
-                UserCategoryDto.of(
-                        userCategory.getId(),
-                        userCategory.getName(),
-                        userCategory.getDescription()
-                )
+                LocationDto.of(location),
+                UserCategoryDto.of(userCategory)
         );
     }
 

@@ -1,5 +1,6 @@
 package Skeep.backend.location.userLocation.dto.response;
 
+import Skeep.backend.category.domain.UserCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
@@ -15,14 +16,12 @@ public record UserCategoryDto(
         String description
 ) implements Serializable {
     public static UserCategoryDto of(
-            final Long id,
-            final String name,
-            final String description
+            final UserCategory userCategory
     ) {
         return UserCategoryDto.builder()
-                              .id(id)
-                              .name(name)
-                              .description(description)
+                              .id(userCategory.getId())
+                              .name(userCategory.getName())
+                              .description(userCategory.getDescription())
                               .build();
     }
 }
