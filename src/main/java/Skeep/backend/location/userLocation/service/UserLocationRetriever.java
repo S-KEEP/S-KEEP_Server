@@ -6,9 +6,9 @@ import Skeep.backend.location.userLocation.domain.UserLocationRepository;
 import Skeep.backend.location.userLocation.exception.UserLocationErrorCode;
 import Skeep.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -16,8 +16,8 @@ public class UserLocationRetriever {
 
     private final UserLocationRepository userLocationRepository;
 
-    public List<UserLocation> findAllByUserIdAndFixedCategory(Long userId, String category) {
-        return userLocationRepository.findAllByUserIdAndFixedCategory(userId, category);
+    public Page<UserLocation> findAllByUserIdAndUserCategory(Long userId, String category, Pageable pageable) {
+        return userLocationRepository.findAllByUserIdAndUserCategory(userId, category, pageable);
     }
 
     public UserLocation findByUserAndId(User user, Long id) {

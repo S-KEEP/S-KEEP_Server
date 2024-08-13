@@ -6,7 +6,6 @@ import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.userLocation.domain.UserLocation;
-import Skeep.backend.location.userLocation.dto.request.UserLocationGetDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
 import Skeep.backend.location.userLocation.dto.response.LocationDto;
 import Skeep.backend.location.userLocation.dto.response.UserCategoryDto;
@@ -20,11 +19,15 @@ import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,16 +43,23 @@ public class UserLocationService {
 
     public UserLocationListDto getUserLocationListByUserCategory(
             Long userId,
-            UserLocationGetDto userLocationGetDto
+            String userCategory,
+            int page
     ) {
         // Request 검증 로직
         User currentUser = userFindService.findUserByIdAndStatus(userId);
 
-        List<UserLocation> userLocationList
-                = userLocationRetriever.findAllByUserIdAndFixedCategory(
+        if (page < 1)
+            throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
+        Pageable pageable = PageRequest.of(page - 1, 3);
+        Page<UserLocation> userLocationPage
+                = userLocationRetriever.findAllByUserIdAndUserCategory(
                                                 currentUser.getId(),
-                                                userLocationGetDto.categoryName()
+                                                userCategory,
+                                                pageable
                                         );
+
+        List<UserLocation> userLocationList = userLocationPage.getContent();
 
         // TODO: query 계속 날리는 부분 추후에 성능 개선
         List<UserLocationDto> userLocationDtoList = userLocationList.stream()
@@ -76,7 +86,8 @@ public class UserLocationService {
                 ).toList();
 
         return UserLocationListDto.of(
-            userLocationDtoList
+                userLocationDtoList,
+                userLocationPage.getTotalPages()
         );
     }
 
@@ -87,7 +98,38 @@ public class UserLocationService {
         User currentUser = userFindService.findUserByIdAndStatus(userId);
         List<UserLocation> userLocationList
                 = screenshotService.analyzeImageAndSaveResult(currentUser, screenshotUploadDto);
-        return URI.create("");
+
+        String uriString = userLocationList.stream()
+                .map(userLocation -> "/user-location/" + userLocation.getId())
+                .collect(Collectors.joining(","));
+
+        return URI.create(uriString);
+    }
+
+    public UserLocationDto getUserLocationRetrieve(Long userId, Long userLocationId) {
+
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+
+        UserLocation targetLocation
+                = userLocationRetriever.findByUserAndId(currentUser, userLocationId);
+        Location location = targetLocation.getLocation();
+        UserCategory userCategory = targetLocation.getUserCategory();
+
+        return UserLocationDto.of(
+                s3Service.getPresignUrl(targetLocation.getFileName()),
+                LocationDto.of(
+                        location.getId(),
+                        location.getKakaoMapId(),
+                        location.getX(),
+                        location.getY(),
+                        location.getFixedCategory()
+                ),
+                UserCategoryDto.of(
+                        userCategory.getId(),
+                        userCategory.getName(),
+                        userCategory.getDescription()
+                )
+        );
     }
 
     @Transactional
