@@ -67,6 +67,7 @@ public class UserLocationService {
                     Location tempLocation = userLocation.getLocation();
                     UserCategory tempUserCategory = userLocation.getUserCategory();
                     return UserLocationDto.of(
+                            userLocation.getId(),
                             s3Service.getPresignUrl(userLocation.getFileName()),
                             LocationDto.of(
                                     tempLocation.getId(),
@@ -116,6 +117,7 @@ public class UserLocationService {
         UserCategory userCategory = targetLocation.getUserCategory();
 
         return UserLocationDto.of(
+                userLocationId,
                 s3Service.getPresignUrl(targetLocation.getFileName()),
                 LocationDto.of(
                         location.getId(),
