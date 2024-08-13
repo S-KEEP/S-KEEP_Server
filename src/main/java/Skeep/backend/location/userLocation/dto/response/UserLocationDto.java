@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 @Builder
 public record UserLocationDto(
+        @JsonProperty("id")
+        Long id,
         @JsonProperty("photoUrl")
         String photoUrl,
         @JsonProperty("location")
@@ -17,11 +19,13 @@ public record UserLocationDto(
         UserCategoryDto userCategoryDto
 ) implements Serializable {
         public static UserLocationDto of(
+                final Long id,
                 final String photoUrl,
                 final LocationDto locationDto,
                 final UserCategoryDto userCategoryDto
         ) {
                 return UserLocationDto.builder()
+                                      .id(id)
                                       .photoUrl(photoUrl)
                                       .locationDto(locationDto)
                                       .userCategoryDto(userCategoryDto)
