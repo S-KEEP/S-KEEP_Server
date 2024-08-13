@@ -1,7 +1,6 @@
 package Skeep.backend.location.userLocation.controller;
 
 import Skeep.backend.global.annotation.UserId;
-import Skeep.backend.location.userLocation.dto.request.UserLocationGetDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
 import Skeep.backend.location.userLocation.service.UserLocationService;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
@@ -19,10 +18,11 @@ public class UserLocationController {
     @GetMapping("/user-location")
     public ResponseEntity<?> getUserLocationList(
             @UserId Long userId,
-            @RequestBody UserLocationGetDto UserLocationGetDto
+            @RequestParam String userCategory,
+            @RequestParam int page
     ) {
         return ResponseEntity.ok(
-                userLocationService.getUserLocationListByUserCategory(userId, UserLocationGetDto)
+                userLocationService.getUserLocationListByUserCategory(userId, userCategory, page)
         );
     }
 

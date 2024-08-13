@@ -20,6 +20,9 @@ import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,16 +43,23 @@ public class UserLocationService {
 
     public UserLocationListDto getUserLocationListByUserCategory(
             Long userId,
-            UserLocationGetDto userLocationGetDto
+            String userCategory,
+            int page
     ) {
         // Request 검증 로직
         User currentUser = userFindService.findUserByIdAndStatus(userId);
 
-        List<UserLocation> userLocationList
-                = userLocationRetriever.findAllByUserIdAndFixedCategory(
+        if (page < 1)
+            throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
+        Pageable pageable = PageRequest.of(page - 1, 3);
+        Page<UserLocation> userLocationPage
+                = userLocationRetriever.findAllByUserIdAndUserCategory(
                                                 currentUser.getId(),
-                                                userLocationGetDto.categoryName()
+                                                userCategory,
+                                                pageable
                                         );
+
+        List<UserLocation> userLocationList = userLocationPage.getContent();
 
         // TODO: query 계속 날리는 부분 추후에 성능 개선
         List<UserLocationDto> userLocationDtoList = userLocationList.stream()
@@ -76,7 +86,8 @@ public class UserLocationService {
                 ).toList();
 
         return UserLocationListDto.of(
-            userLocationDtoList
+                userLocationDtoList,
+                userLocationPage.getTotalPages()
         );
     }
 
