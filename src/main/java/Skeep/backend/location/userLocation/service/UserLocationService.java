@@ -6,7 +6,6 @@ import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.userLocation.domain.UserLocation;
-import Skeep.backend.location.userLocation.dto.request.UserLocationGetDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
 import Skeep.backend.location.userLocation.dto.response.LocationDto;
 import Skeep.backend.location.userLocation.dto.response.UserCategoryDto;
@@ -99,6 +98,32 @@ public class UserLocationService {
         List<UserLocation> userLocationList
                 = screenshotService.analyzeImageAndSaveResult(currentUser, screenshotUploadDto);
         return URI.create("");
+    }
+
+    public UserLocationDto getUserLocationRetrieve(Long userId, Long userLocationId) {
+
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+
+        UserLocation targetLocation
+                = userLocationRetriever.findByUserAndId(currentUser, userLocationId);
+        Location location = targetLocation.getLocation();
+        UserCategory userCategory = targetLocation.getUserCategory();
+
+        return UserLocationDto.of(
+                s3Service.getPresignUrl(targetLocation.getFileName()),
+                LocationDto.of(
+                        location.getId(),
+                        location.getKakaoMapId(),
+                        location.getX(),
+                        location.getY(),
+                        location.getFixedCategory()
+                ),
+                UserCategoryDto.of(
+                        userCategory.getId(),
+                        userCategory.getName(),
+                        userCategory.getDescription()
+                )
+        );
     }
 
     @Transactional

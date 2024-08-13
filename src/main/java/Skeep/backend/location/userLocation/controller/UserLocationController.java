@@ -26,6 +26,16 @@ public class UserLocationController {
         );
     }
 
+    @GetMapping("/user-location/{userLocationId}")
+    public ResponseEntity<?> getUserLocationRetrieve(
+            @UserId Long userId,
+            @PathVariable Long userLocationId
+    ) {
+        return ResponseEntity.ok(
+                userLocationService.getUserLocationRetrieve(userId, userLocationId)
+        );
+    }
+
     @PostMapping("/user-location")
     public ResponseEntity<?> createUserLocation(
             @UserId Long userId,
