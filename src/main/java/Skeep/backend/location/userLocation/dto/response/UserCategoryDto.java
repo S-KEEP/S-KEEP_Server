@@ -10,7 +10,7 @@ import java.io.Serializable;
 public record UserCategoryDto(
         @JsonProperty("id")
         Long id,
-        @JsonProperty("title")
+        @JsonProperty("name")
         String name,
         @JsonProperty("description")
         String description
