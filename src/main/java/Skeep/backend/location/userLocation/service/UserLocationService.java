@@ -59,19 +59,15 @@ public class UserLocationService {
         List<UserLocation> userLocationList = userLocationPage.getContent();
 
         // TODO: query 계속 날리는 부분 추후에 성능 개선
-        List<UserLocationDto> userLocationDtoList = userLocationList.stream()
-                .map(userLocation -> {
-                    Location tempLocation = userLocation.getLocation();
-                    UserCategory tempUserCategory = userLocation.getUserCategory();
-                    return UserLocationDto.of(
-                            userLocation.getId(),
-                            s3Service.getPresignUrl(userLocation.getFileName()),
-                            LocationDto.of(tempLocation),
-                            tempUserCategory != null ?
-                                UserCategoryDto.of(tempUserCategory)
-                                    : null
-                        );
-                    }
+        List<UserLocationDto> userLocationDtoList =
+                userLocationList.stream().map(
+                        userLocation ->
+                            UserLocationDto.of(
+                                userLocation.getId(),
+                                s3Service.getPresignUrl(userLocation.getFileName()),
+                                LocationDto.of(userLocation.getLocation()),
+                                UserCategoryDto.of(userLocation.getUserCategory())
+                            )
                 ).toList();
 
         return UserLocationListDto.of(
@@ -94,23 +90,17 @@ public class UserLocationService {
 
         List<UserLocationDto> userLocationDtoList =
                 userLocationList.stream().map(
-                        userLocation -> {
-                            Location tempLocation = userLocation.getLocation();
-                            UserCategory tempUserCategory = userLocation.getUserCategory();
-                            return UserLocationDto.of(
-                                    userLocation.getId(),
-                                    s3Service.getPresignUrl(userLocation.getFileName()),
-                                    LocationDto.of(tempLocation),
-                                    tempUserCategory != null ?
-                                            UserCategoryDto.of(tempUserCategory)
-                                            : null
-                            );
-                        }
+                        userLocation ->
+                            UserLocationDto.of(
+                                userLocation.getId(),
+                                s3Service.getPresignUrl(userLocation.getFileName()),
+                                LocationDto.of(userLocation.getLocation()),
+                                UserCategoryDto.of(userLocation.getUserCategory())
+                            )
                 ).toList();
-        UserLocationCreateDto userLocationCreateDto = UserLocationCreateDto.of(userLocationDtoList);
 
         return UserLocationCreate.of(
-                userLocationCreateDto,
+                UserLocationCreateDto.of(userLocationDtoList),
                 URI.create(uriString)
         );
     }
