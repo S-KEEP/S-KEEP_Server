@@ -12,9 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("[Repository Test] -> UserCategoryRepository 테스트")
 public class UserCategoryRepositoryTest extends RepositoryTest {
@@ -68,5 +69,25 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
                                 UserCategoryFixture.SHOPPING_DOWNTOWN.getDescription()
                         )
         );
+    }
+
+    @Test
+    void findByUserAndName() {
+        // given
+        userCategoryRepository.save(UserCategoryFixture.EXCITING.toUserCategory(user));
+        userCategoryRepository.save(UserCategoryFixture.PARK_NATURE.toUserCategory(user));
+        userCategoryRepository.save(UserCategoryFixture.REST.toUserCategory(user));
+        userCategoryRepository.save(UserCategoryFixture.HISTORY.toUserCategory(user));
+        userCategoryRepository.save(UserCategoryFixture.CULTURE_FESTIVAL.toUserCategory(user));
+        userCategoryRepository.save(UserCategoryFixture.SHOPPING_DOWNTOWN.toUserCategory(user));
+
+        // when
+        Optional<User> findUser = userRepository.findById(user.getId());
+        Optional<UserCategory> findUserCategory = userCategoryRepository.findByUserAndName(findUser.get(), ECategory.HISTORY.getName());
+
+        // then
+        assertTrue(findUserCategory.isPresent());
+        assertEquals(ECategory.HISTORY.getName(), findUserCategory.get().getName());
+        assertEquals(user.getId(), findUserCategory.get().getUser().getId());
     }
 }

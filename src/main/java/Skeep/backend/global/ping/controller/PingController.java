@@ -1,9 +1,7 @@
 package Skeep.backend.global.ping.controller;
 
-import Skeep.backend.auth.apple.dto.AppleLoginRequest;
 import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.global.dto.JwtDto;
-import Skeep.backend.global.util.JwtUtil;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import jakarta.validation.Valid;
