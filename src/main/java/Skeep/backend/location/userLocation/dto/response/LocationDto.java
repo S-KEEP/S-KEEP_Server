@@ -1,6 +1,6 @@
 package Skeep.backend.location.userLocation.dto.response;
 
-import Skeep.backend.category.domain.ECategory;
+import Skeep.backend.location.location.domain.Location;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
@@ -20,18 +20,14 @@ public record LocationDto(
         String fixedCategory
 ) implements Serializable {
     public static LocationDto of(
-            final Long id,
-            final String kakaoMapId,
-            final String x,
-            final String y,
-            final ECategory fixedCategory
+            final Location location
     ) {
         return LocationDto.builder()
-                          .id(id)
-                          .kakaoMapId(kakaoMapId)
-                          .x(x)
-                          .y(y)
-                          .fixedCategory(fixedCategory.getName())
+                          .id(location.getId())
+                          .kakaoMapId(location.getKakaoMapId())
+                          .x(location.getX())
+                          .y(location.getY())
+                          .fixedCategory(location.getFixedCategory().name())
                           .build();
     }
 }

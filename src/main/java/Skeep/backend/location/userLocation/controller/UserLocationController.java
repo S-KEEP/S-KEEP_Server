@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/user-location")
 public class UserLocationController {
 
     private final UserLocationService userLocationService;
 
-    @GetMapping("/user-location")
+    @GetMapping
     public ResponseEntity<?> getUserLocationList(
             @UserId Long userId,
             @RequestParam String userCategory,
@@ -27,7 +27,7 @@ public class UserLocationController {
         );
     }
 
-    @GetMapping("/user-location/{userLocationId}")
+    @GetMapping("/{userLocationId}")
     public ResponseEntity<?> getUserLocationRetrieve(
             @UserId Long userId,
             @PathVariable Long userLocationId
@@ -37,7 +37,7 @@ public class UserLocationController {
         );
     }
 
-    @PostMapping("/user-location")
+    @PostMapping
     public ResponseEntity<?> createUserLocation(
             @UserId Long userId,
             @ModelAttribute ScreenshotUploadDto screenshotUploadDto
@@ -45,11 +45,11 @@ public class UserLocationController {
         UserLocationCreate userLocationCreate
                 = userLocationService.createUserLocation(userId, screenshotUploadDto);
 
-        return ResponseEntity.created(userLocationCreate.uri() )
+        return ResponseEntity.created(userLocationCreate.uri())
                              .body(userLocationCreate.userLocationCreateDto());
     }
 
-    @PatchMapping("/user-location/{userLocationId}")
+    @PatchMapping("/{userLocationId}")
     public ResponseEntity<?> updateUserLocation(
             @UserId Long userId,
             @PathVariable Long userLocationId,
@@ -64,7 +64,7 @@ public class UserLocationController {
         );
     }
 
-    @DeleteMapping("/user-location/{userLocationId}")
+    @DeleteMapping("/{userLocationId}")
     public ResponseEntity<?> deleteUserLocation(
             @UserId Long userId,
             @PathVariable Long userLocationId
