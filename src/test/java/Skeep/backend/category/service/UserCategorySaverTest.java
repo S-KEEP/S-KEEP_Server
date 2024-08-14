@@ -23,7 +23,7 @@ class UserCategorySaverTest extends ServiceTest {
     private UserCategorySaver userCategorySaver;
 
     @Test
-    void 유저_카테고리를_디폴트로_7개_생성하다() {
+    void 유저_카테고리를_디폴트로_생성하다() {
         // given
         User user = userRepository.save(UserFixture.BOB_BROWN.toUser(EProvider.APPLE));
 

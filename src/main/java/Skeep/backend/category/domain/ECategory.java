@@ -17,6 +17,7 @@ public enum ECategory {
     EXCITING("익사이팅", "뛰어 놀고 싶을 때"),
     RESTAURANT("맛집", "여기는 꼭 먹어봐야 해"),
     HISTORY("역사 및 유적지", "언젠간 가볼 곳"),
+    ETC("기타", "")
     ;
 
     private final String name;
