@@ -30,8 +30,8 @@ public class GptService {
     public List<LocationAndCategory> getGptAnalyze(List<String> targetTextList) {
 
         Flux<LocationAndCategory> imageTextList = Flux.fromIterable(targetTextList)
-                .flatMapSequential(this::requestGpt)
-                .flatMap(this::parseResponse);
+                                                      .flatMapSequential(this::requestGpt)
+                                                      .flatMap(this::parseResponse);
 
         return imageTextList.collectList().block();
     }
