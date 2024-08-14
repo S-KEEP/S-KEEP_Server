@@ -48,7 +48,7 @@ public class UserLocationService {
 
         if (page < 1)
             throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
-        Pageable pageable = PageRequest.of(page - 1, 3);
+        Pageable pageable = PageRequest.of(page - 1, 10);
         Page<UserLocation> userLocationPage
                 = userLocationRetriever.findAllByUserIdAndUserCategory(
                                                 currentUser.getId(),
@@ -59,28 +59,15 @@ public class UserLocationService {
         List<UserLocation> userLocationList = userLocationPage.getContent();
 
         // TODO: query 계속 날리는 부분 추후에 성능 개선
-        List<UserLocationDto> userLocationDtoList = userLocationList.stream()
-                .map(userLocation -> {
-                    Location tempLocation = userLocation.getLocation();
-                    UserCategory tempUserCategory = userLocation.getUserCategory();
-                    return UserLocationDto.of(
-                            userLocation.getId(),
-                            s3Service.getPresignUrl(userLocation.getFileName()),
-                            LocationDto.of(
-                                    tempLocation.getId(),
-                                    tempLocation.getKakaoMapId(),
-                                    tempLocation.getX(),
-                                    tempLocation.getY(),
-                                    tempLocation.getFixedCategory()
-                            ),
-                            tempUserCategory != null ?
-                                UserCategoryDto.of(
-                                    tempUserCategory.getId(),
-                                    tempUserCategory.getName(),
-                                    tempUserCategory.getDescription()
-                                ) : null
-                        );
-                    }
+        List<UserLocationDto> userLocationDtoList =
+                userLocationList.stream().map(
+                        userLocation ->
+                            UserLocationDto.of(
+                                userLocation.getId(),
+                                s3Service.getPresignUrl(userLocation.getFileName()),
+                                LocationDto.of(userLocation.getLocation()),
+                                UserCategoryDto.of(userLocation.getUserCategory())
+                            )
                 ).toList();
 
         return UserLocationListDto.of(
@@ -103,32 +90,17 @@ public class UserLocationService {
 
         List<UserLocationDto> userLocationDtoList =
                 userLocationList.stream().map(
-                        userLocation -> {
-                            Location tempLocation = userLocation.getLocation();
-                            UserCategory tempUserCategory = userLocation.getUserCategory();
-                            return UserLocationDto.of(
-                                    userLocation.getId(),
-                                    s3Service.getPresignUrl(userLocation.getFileName()),
-                                    LocationDto.of(
-                                            tempLocation.getId(),
-                                            tempLocation.getKakaoMapId(),
-                                            tempLocation.getX(),
-                                            tempLocation.getY(),
-                                            tempLocation.getFixedCategory()
-                                    ),
-                                    tempUserCategory != null ?
-                                            UserCategoryDto.of(
-                                                    tempUserCategory.getId(),
-                                                    tempUserCategory.getName(),
-                                                    tempUserCategory.getDescription()
-                                            ) : null
-                            );
-                        }
+                        userLocation ->
+                            UserLocationDto.of(
+                                userLocation.getId(),
+                                s3Service.getPresignUrl(userLocation.getFileName()),
+                                LocationDto.of(userLocation.getLocation()),
+                                UserCategoryDto.of(userLocation.getUserCategory())
+                            )
                 ).toList();
-        UserLocationCreateDto userLocationCreateDto = UserLocationCreateDto.of(userLocationDtoList);
 
         return UserLocationCreate.of(
-                userLocationCreateDto,
+                UserLocationCreateDto.of(userLocationDtoList),
                 URI.create(uriString)
         );
     }
@@ -145,18 +117,8 @@ public class UserLocationService {
         return UserLocationDto.of(
                 userLocationId,
                 s3Service.getPresignUrl(targetLocation.getFileName()),
-                LocationDto.of(
-                        location.getId(),
-                        location.getKakaoMapId(),
-                        location.getX(),
-                        location.getY(),
-                        location.getFixedCategory()
-                ),
-                UserCategoryDto.of(
-                        userCategory.getId(),
-                        userCategory.getName(),
-                        userCategory.getDescription()
-                )
+                LocationDto.of(location),
+                UserCategoryDto.of(userCategory)
         );
     }
 
