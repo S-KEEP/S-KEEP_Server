@@ -97,7 +97,7 @@ public class ScreenshotService {
         List<KakaoResponseResult> kakaoResponseResultList
                 = locationNameList.stream() .map(s -> {
                     if (s.isEmpty() || kakaoMapServiceResultList.isEmpty())
-                        return KakaoResponseResult.of("", "", "");
+                        return KakaoResponseResult.of("", "", "", "");
                     return kakaoMapServiceResultList.remove(0);
                 })
                 .toList();
@@ -169,7 +169,7 @@ public class ScreenshotService {
         List<KakaoResponseResult> kakaoResponseResultList
                 = locationNameList.stream() .map(s -> {
                     if (s.isEmpty() || kakaoMapServiceResultList.isEmpty())
-                        return KakaoResponseResult.of("", "", "");
+                        return KakaoResponseResult.of("", "", "", "");
                     return kakaoMapServiceResultList.remove(0);
                 })
                 .toList();
@@ -249,6 +249,7 @@ public class ScreenshotService {
         return locationSaver.saveLocation(
                 Location.builder()
                         .kakaoMapId(kakaoResponseResult.id())
+                        .roadAddress(kakaoResponseResult.roadAddress())
                         .x(kakaoResponseResult.x())
                         .y(kakaoResponseResult.y())
                         .fixedCategory(category)
