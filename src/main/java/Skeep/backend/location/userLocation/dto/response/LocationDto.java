@@ -12,6 +12,8 @@ public record LocationDto(
         Long id,
         @JsonProperty("kakaoMapId")
         String kakaoMapId,
+        @JsonProperty("roadAddress")
+        String roadAddress,
         @JsonProperty("x")
         String x,
         @JsonProperty("y")
@@ -23,6 +25,7 @@ public record LocationDto(
         return LocationDto.builder()
                           .id(location.getId())
                           .kakaoMapId(location.getKakaoMapId())
+                          .roadAddress(location.getRoadAddress())
                           .x(location.getX())
                           .y(location.getY())
                           .build();
