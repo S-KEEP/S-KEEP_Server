@@ -1,5 +1,6 @@
 package Skeep.backend.global.base;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -13,9 +14,17 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeEntity {
+    @Column(name = "created_date", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdDate;
 
+    @Column(name = "modified_date")
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
+//    For TEST
+//    @PreUpdate
+//    public void setModifiedDate() {
+//        this.modifiedDate = LocalDateTime.now().minusDays(10);
+//    }
 }
