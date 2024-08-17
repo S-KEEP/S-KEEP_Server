@@ -12,7 +12,9 @@ import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.location.service.LocationRetriever;
 import Skeep.backend.location.location.service.LocationSaver;
 import Skeep.backend.location.userLocation.domain.UserLocation;
+import Skeep.backend.location.userLocation.dto.request.UserLocationImagePatchDto;
 import Skeep.backend.location.userLocation.service.UserLocationSaver;
+import Skeep.backend.location.userLocation.service.UserLocationUpdater;
 import Skeep.backend.naverOcr.service.NaverOcrService;
 import Skeep.backend.s3.service.S3Service;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
@@ -36,6 +38,7 @@ public class ScreenshotService {
      * 순환 참조 주의 : ScreenshotService는 다른 서비스에서 의존되어지면 안 됩니다.
      */
     private final UserLocationSaver userLocationSaver;
+    private final UserLocationUpdater userLocationUpdater;
     private final LocationRetriever locationRetriever;
     private final LocationSaver locationSaver;
     private final UserCategorySaver userCategorySaver;
@@ -57,7 +60,7 @@ public class ScreenshotService {
             throw BaseException.type(ScreenshotErrorCode.FILE_BAD_REQUEST);
 
         // OCR API
-        List<String> imageTextList = naverOcrService.getImageTextList(imageList);
+        List<String> imageTextList = naverOcrService.getImageTextListWithFile(imageList);
         log.info("imageTextList: {}", imageTextList);
 
         List<String> presentTextList = imageTextList.stream()
@@ -115,6 +118,94 @@ public class ScreenshotService {
                 .toList();
     }
 
+    @Transactional
+    public List<UserLocation> reanalyzeImageAndSaveResult(
+            User currentUser,
+            List<UserLocation> userLocationList,
+            List<UserLocationImagePatchDto> userLocationImagePatchDtoList
+    ) {
+        if (userLocationImagePatchDtoList.isEmpty() || userLocationImagePatchDtoList.size() > 5)
+            throw BaseException.type(ScreenshotErrorCode.PATCH_BAD_REQUEST);
+
+        List<String> imageUrlList = userLocationImagePatchDtoList.stream()
+                                                                 .map(UserLocationImagePatchDto::imageUrl)
+                                                                 .toList();
+
+        // OCR API
+        List<String> imageTextList = naverOcrService.getImageTextListWithUrl(imageUrlList);
+        log.info("imageTextList: {}", imageTextList);
+
+        List<String> presentTextList = imageTextList.stream()
+                .filter(imageText -> !imageText.isEmpty())
+                .toList();
+
+        // GPT API
+        List<LocationAndCategory> gptServiceResultList = gptService.getGptAnalyze(presentTextList);
+        log.info("gptServiceResultList: {}", gptServiceResultList);
+
+        List<LocationAndCategory> locationNameAndCategoryList
+                = imageTextList.stream().map(s -> {
+                    if (s.isEmpty() || gptServiceResultList.isEmpty())
+                        return LocationAndCategory.of("", "");
+                    else
+                        return gptServiceResultList.remove(0);
+                })
+                .toList();
+        log.info("locationAndCategoryList: {}", locationNameAndCategoryList);
+
+        List<String> locationNameList = locationNameAndCategoryList.stream()
+                .map(LocationAndCategory::locationName)
+                .toList();
+        List<String> presentLocationNameList =
+                locationNameAndCategoryList.stream()
+                        .map(LocationAndCategory::locationName)
+                        .filter(locationName -> !locationName.isEmpty())
+                        .toList();
+
+        List<KakaoResponseResult> kakaoMapServiceResultList
+                = kakaoMapService.getKakaoLocationIdList(presentLocationNameList);
+        log.info("kakaoMapServiceResultList: {}", kakaoMapServiceResultList);
+
+        List<KakaoResponseResult> kakaoResponseResultList
+                = locationNameList.stream() .map(s -> {
+                    if (s.isEmpty() || kakaoMapServiceResultList.isEmpty())
+                        return KakaoResponseResult.of("", "", "");
+                    return kakaoMapServiceResultList.remove(0);
+                })
+                .toList();
+
+        if (imageUrlList.size() != imageTextList.size() ||imageUrlList.size() != kakaoResponseResultList.size())
+            throw BaseException.type(ScreenshotErrorCode.FILE_BAD_REQUEST);
+
+        log.info("LocationAndCategoryList: {}", locationNameAndCategoryList);
+        return IntStream.range(0, kakaoResponseResultList.size())
+                .filter(i -> !kakaoResponseResultList.get(i).id().isEmpty())
+                .mapToObj(i -> updateUserLocation(
+                                currentUser,
+                                userLocationList.get(i),
+                                kakaoResponseResultList.get(i),
+                                locationNameAndCategoryList.get(i).category()
+                        )
+                )
+                .toList();
+    }
+
+    private UserLocation updateUserLocation(
+            User currentUser,
+            UserLocation userLocation,
+            KakaoResponseResult kakaoResponseResult,
+            ECategory category
+    ) {
+        Location location;
+        if (locationRetriever.existsByKakaoMapId(kakaoResponseResult.id()))
+            location = locationRetriever.findByKakaoMapId(kakaoResponseResult.id());
+        else
+            location = getLocation(kakaoResponseResult, category);
+        UserCategory userCategory = getCategory(currentUser, location);
+
+        return userLocationUpdater.updateUserLocation(userLocation, location, userCategory);
+    }
+
     private UserLocation readyAndUploadToS3(
             User currentUser,
             MultipartFile file,
@@ -129,9 +220,8 @@ public class ScreenshotService {
         else
             location = getLocation(kakaoResponseResult, category);
         UserCategory userCategory = getCategory(currentUser, location);
-        userLocation.updateUserLocation(fileName, location, userCategory);
 
-        return userLocation;
+        return userLocationUpdater.updateUserLocation(userLocation, fileName, location, userCategory);
     }
 
     private UserCategory getCategory(
