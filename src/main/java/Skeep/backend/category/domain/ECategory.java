@@ -1,11 +1,7 @@
 package Skeep.backend.category.domain;
 
-import Skeep.backend.category.exception.CategoryErrorCode;
-import Skeep.backend.global.exception.BaseException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
@@ -17,16 +13,16 @@ public enum ECategory {
     EXCITING("익사이팅", "뛰어 놀고 싶을 때"),
     RESTAURANT("맛집", "여기는 꼭 먹어봐야 해"),
     HISTORY("역사 및 유적지", "언젠간 가볼 곳"),
-    ETC("기타", "")
+    EXTRA("기타", "")
     ;
 
     private final String name;
     private final String description;
 
     public static ECategory findByName(String name) {
-        return Arrays.stream(ECategory.values())
-                .filter(eCategory -> eCategory.getName().equals(name))
-                .findFirst()
-                .orElseThrow(() -> BaseException.type(CategoryErrorCode.INVALID_ENUM_CATEGORY));
+        for(ECategory eCategory : ECategory.values())
+            if(eCategory.getName().equals(name))
+                return eCategory;
+        return ECategory.EXTRA;
     }
 }
