@@ -32,11 +32,7 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
     @BeforeEach
     public void setUp() {
         user = userRepository.save(UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE));
-    }
 
-    @Test
-    void findAllById() {
-        // given
         List<UserCategoryFixture> fixtures = Arrays.asList(
                 UserCategoryFixture.REST,
                 UserCategoryFixture.PARK_NATURE,
@@ -47,9 +43,11 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
                 UserCategoryFixture.HISTORY,
                 UserCategoryFixture.EXTRA
         );
-
         fixtures.forEach(fixture -> userCategoryRepository.save(fixture.toUserCategory(user)));
+    }
 
+    @Test
+    void findAllById() {
         // when
         List<UserCategory> userCategoryList = userCategoryRepository.findAllByUserId(user.getId());
 
@@ -73,14 +71,6 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
 
     @Test
     void findByUserAndName() {
-        // given
-        userCategoryRepository.save(UserCategoryFixture.EXCITING.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.PARK_NATURE.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.REST.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.HISTORY.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.CULTURE_FESTIVAL.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.SHOPPING_DOWNTOWN.toUserCategory(user));
-
         // when
         Optional<User> findUser = userRepository.findById(user.getId());
         Optional<UserCategory> findUserCategory = userCategoryRepository.findByUserAndName(findUser.get(), ECategory.HISTORY.getName());
@@ -89,5 +79,15 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
         assertTrue(findUserCategory.isPresent());
         assertEquals(ECategory.HISTORY.getName(), findUserCategory.get().getName());
         assertEquals(user.getId(), findUserCategory.get().getUser().getId());
+    }
+
+    @Test
+    void deleteAllByUser() {
+        // when
+        userCategoryRepository.deleteAllByUser(user);
+
+        // then
+        List<UserCategory> userCategories = userCategoryRepository.findAllByUserId(user.getId());
+        assertTrue(userCategories.isEmpty());
     }
 }

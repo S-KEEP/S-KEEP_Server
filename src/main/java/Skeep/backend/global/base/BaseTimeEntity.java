@@ -2,6 +2,7 @@ package Skeep.backend.global.base;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,4 +19,10 @@ public class BaseTimeEntity {
 
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
+    // For TEST
+    @PreUpdate
+    public void setModifiedDate() {
+        this.modifiedDate = LocalDateTime.now().minusDays(10);
+    }
 }
