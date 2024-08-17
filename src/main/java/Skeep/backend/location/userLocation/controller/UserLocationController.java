@@ -49,17 +49,17 @@ public class UserLocationController {
                              .body(userLocationCreate.userLocationCreateDto());
     }
 
-    @PatchMapping("/{userLocationId}")
-    public ResponseEntity<?> updateUserLocation(
+    @PatchMapping("/{userLocationId}/category")
+    public ResponseEntity<?> updateUserLocationWithCategory(
             @UserId Long userId,
             @PathVariable Long userLocationId,
-            @RequestBody UserLocationPatchDto userLocationPatchDto
+            @RequestBody UserLocationPatchWithCategoryDto userLocationPatchWithCategoryDto
     ) {
         return ResponseEntity.ok(
                 userLocationService.updateUserLocationWithUserCategory(
                         userId,
                         userLocationId,
-                        userLocationPatchDto
+                        userLocationPatchWithCategoryDto
                 )
         );
     }
