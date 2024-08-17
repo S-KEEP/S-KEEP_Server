@@ -1,7 +1,8 @@
 package Skeep.backend.location.userLocation.controller;
 
 import Skeep.backend.global.annotation.UserId;
-import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchListDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchWithCategoryDto;
 import Skeep.backend.location.userLocation.dto.response.UserLocationCreate;
 import Skeep.backend.location.userLocation.service.UserLocationService;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
@@ -11,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/user-location")
 public class UserLocationController {
 
     private final UserLocationService userLocationService;
 
-    @GetMapping("/user-location")
+    @GetMapping
     public ResponseEntity<?> getUserLocationList(
             @UserId Long userId,
             @RequestParam String userCategory,
@@ -27,7 +28,7 @@ public class UserLocationController {
         );
     }
 
-    @GetMapping("/user-location/{userLocationId}")
+    @GetMapping("/{userLocationId}")
     public ResponseEntity<?> getUserLocationRetrieve(
             @UserId Long userId,
             @PathVariable Long userLocationId
@@ -37,7 +38,7 @@ public class UserLocationController {
         );
     }
 
-    @PostMapping("/user-location")
+    @PostMapping
     public ResponseEntity<?> createUserLocation(
             @UserId Long userId,
             @ModelAttribute ScreenshotUploadDto screenshotUploadDto
@@ -45,26 +46,39 @@ public class UserLocationController {
         UserLocationCreate userLocationCreate
                 = userLocationService.createUserLocation(userId, screenshotUploadDto);
 
-        return ResponseEntity.created(userLocationCreate.uri() )
+        return ResponseEntity.created(userLocationCreate.uri())
                              .body(userLocationCreate.userLocationCreateDto());
     }
 
-    @PatchMapping("/user-location/{userLocationId}")
-    public ResponseEntity<?> updateUserLocation(
+    @PatchMapping("/{userLocationId}/category")
+    public ResponseEntity<?> updateUserLocationWithCategory(
             @UserId Long userId,
             @PathVariable Long userLocationId,
-            @RequestBody UserLocationPatchDto userLocationPatchDto
+            @RequestBody UserLocationPatchWithCategoryDto userLocationPatchWithCategoryDto
     ) {
         return ResponseEntity.ok(
                 userLocationService.updateUserLocationWithUserCategory(
                         userId,
                         userLocationId,
-                        userLocationPatchDto
+                        userLocationPatchWithCategoryDto
                 )
         );
     }
 
-    @DeleteMapping("/user-location/{userLocationId}")
+    @PatchMapping("/reanalysis")
+    public ResponseEntity<?> updateUserLocation(
+            @UserId Long userId,
+            @RequestBody UserLocationPatchListDto userLocationPatchListDto
+    ) {
+        return ResponseEntity.ok(
+                userLocationService.updateUserLocation(
+                        userId,
+                        userLocationPatchListDto
+                )
+        );
+    }
+
+    @DeleteMapping("/{userLocationId}")
     public ResponseEntity<?> deleteUserLocation(
             @UserId Long userId,
             @PathVariable Long userLocationId

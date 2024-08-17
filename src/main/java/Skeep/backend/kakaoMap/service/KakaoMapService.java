@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -36,27 +37,28 @@ public class KakaoMapService {
         return imageTextList.collectList().block();
     }
 
-    private Mono<KakaoResponse> requestKakaoMap(String target) {
+    private Mono<Optional<KakaoResponse>> requestKakaoMap(String target) {
         return webClient.get()
                 .uri(kakaoApiUrl + "?query=" + target)
                 .header("Authorization", "KakaoAK " + kakaoApiSecret)
                 .retrieve()
                 .bodyToMono(KakaoResponse.class)
                 .doOnSuccess(response -> log.info("Kakao API response: {}", response))
-                .doOnError(throwable -> {
-                            log.info("KaKao API 요청 실패: {}", throwable.getMessage());
-                            throw BaseException.type(
-                                    KakaoMapErrorCode.FAILED_KAKAO_API_REQUEST
-                            );
-                        }
-                );
+                .doOnError(throwable ->
+                            log.info("KaKao API 요청 실패: {}", throwable.getMessage())
+                )
+                .map(Optional::ofNullable)
+                .onErrorResume(throwable -> Mono.just(Optional.empty()));
     }
 
-    private Mono<KakaoResponseResult> parseResponse(KakaoResponse response) {
+    private Mono<KakaoResponseResult> parseResponse(Optional<KakaoResponse> response) {
+        if (response.isEmpty())
+            return Mono.just(KakaoResponseResult.of("", "", ""));
 
-        List<Document> documentList = response.getDocumentList();
+        KakaoResponse kakaoResponse = response.get();
+        List<Document> documentList = kakaoResponse.getDocumentList();
         if (documentList.isEmpty())
-            throw BaseException.type(KakaoMapErrorCode.FAILED_FIND_LOCATION_API);
+            return Mono.just(KakaoResponseResult.of("", "", ""));
 
         Document document = documentList.get(0);
         return Mono.just(

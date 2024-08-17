@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Builder
-public record UserLocationCreateDto(
+public record UserLocationPatchDto(
         @JsonProperty("userLocationList")
         List<UserLocationDto> userLocationDtoList,
         @JsonProperty("successCount")
@@ -15,12 +15,12 @@ public record UserLocationCreateDto(
         @JsonProperty("failedCount")
         Integer failedCount
 ) implements Serializable {
-    public static UserLocationCreateDto of(
+    public static UserLocationPatchDto of(
             final List<UserLocationDto> userLocationDtoList,
             final Integer successCount,
             final Integer failedCount
     ) {
-        return UserLocationCreateDto.builder()
+        return UserLocationPatchDto.builder()
                 .userLocationDtoList(userLocationDtoList)
                 .successCount(successCount)
                 .failedCount(failedCount)
