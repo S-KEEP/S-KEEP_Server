@@ -1,7 +1,8 @@
 package Skeep.backend.location.userLocation.controller;
 
 import Skeep.backend.global.annotation.UserId;
-import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchListDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchWithCategoryDto;
 import Skeep.backend.location.userLocation.dto.response.UserLocationCreate;
 import Skeep.backend.location.userLocation.service.UserLocationService;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
@@ -49,17 +50,30 @@ public class UserLocationController {
                              .body(userLocationCreate.userLocationCreateDto());
     }
 
-    @PatchMapping("/{userLocationId}")
-    public ResponseEntity<?> updateUserLocation(
+    @PatchMapping("/{userLocationId}/category")
+    public ResponseEntity<?> updateUserLocationWithCategory(
             @UserId Long userId,
             @PathVariable Long userLocationId,
-            @RequestBody UserLocationPatchDto userLocationPatchDto
+            @RequestBody UserLocationPatchWithCategoryDto userLocationPatchWithCategoryDto
     ) {
         return ResponseEntity.ok(
                 userLocationService.updateUserLocationWithUserCategory(
                         userId,
                         userLocationId,
-                        userLocationPatchDto
+                        userLocationPatchWithCategoryDto
+                )
+        );
+    }
+
+    @PatchMapping("/reanalysis")
+    public ResponseEntity<?> updateUserLocation(
+            @UserId Long userId,
+            @RequestBody UserLocationPatchListDto userLocationPatchListDto
+    ) {
+        return ResponseEntity.ok(
+                userLocationService.updateUserLocation(
+                        userId,
+                        userLocationPatchListDto
                 )
         );
     }

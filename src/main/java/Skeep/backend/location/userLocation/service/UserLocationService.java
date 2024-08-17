@@ -6,7 +6,9 @@ import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.userLocation.domain.UserLocation;
-import Skeep.backend.location.userLocation.dto.request.UserLocationPatchDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationImagePatchDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchListDto;
+import Skeep.backend.location.userLocation.dto.request.UserLocationPatchWithCategoryDto;
 import Skeep.backend.location.userLocation.dto.response.*;
 import Skeep.backend.location.userLocation.exception.UserLocationErrorCode;
 import Skeep.backend.s3.service.S3Service;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,13 +103,72 @@ public class UserLocationService {
                 ).toList();
 
         return UserLocationCreate.of(
-                UserLocationCreateDto.of(userLocationDtoList),
+                UserLocationCreateDto.of(
+                        userLocationDtoList,
+                        userLocationList.size(),
+                        screenshotUploadDto.getFile().size() - userLocationList.size()
+                ),
                 URI.create(uriString)
         );
     }
 
-    public UserLocationDto getUserLocationRetrieve(Long userId, Long userLocationId) {
+    public UserLocationPatchDto updateUserLocation(
+            Long userId,
+            UserLocationPatchListDto userLocationPatchListDto
+    ) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
 
+        List<UserLocationImagePatchDto> userLocationImagePatchDtoList
+                = userLocationPatchListDto.userLocationImagePatchDtoList();
+
+        List<UserLocation> userLocationList =
+                userLocationImagePatchDtoList.stream().map(obj -> {
+                        UserLocation targetUserLocation =
+                                userLocationRetriever.findByUserAndId(currentUser, obj.id());
+
+                        URI targetUri;
+                        try {
+                            targetUri = new URI(obj.imageUrl());
+                        } catch (URISyntaxException e) {
+                            throw BaseException.type(UserLocationErrorCode.BAD_REQUEST_IMAGE_URL);
+                        }
+
+                        String targetFileName = targetUri.getPath().substring(1);
+
+                        if (!targetUserLocation.getFileName().equals(targetFileName))
+                            throw BaseException.type(
+                                    UserLocationErrorCode.MISMATCH_USER_LOCATION_AND_REQUEST_IMAGE_URL
+                            );
+                        return targetUserLocation;
+                })
+                .toList();
+
+        List<UserLocation> retUserLocationList =
+                screenshotService.reanalyzeImageAndSaveResult(
+                        currentUser,
+                        userLocationList,
+                        userLocationPatchListDto.userLocationImagePatchDtoList()
+                );
+
+        List<UserLocationDto> userLocationDtoList =
+                retUserLocationList.stream().map(
+                        userLocation ->
+                                UserLocationDto.of(
+                                        userLocation.getId(),
+                                        s3Service.getPresignUrl(userLocation.getFileName()),
+                                        LocationDto.of(userLocation.getLocation()),
+                                        UserCategoryDto.of(userLocation.getUserCategory())
+                                )
+                ).toList();
+
+        return UserLocationPatchDto.of(
+                userLocationDtoList,
+                retUserLocationList.size(),
+                userLocationList.size() - retUserLocationList.size()
+        );
+    }
+
+    public UserLocationDto getUserLocationRetrieve(Long userId, Long userLocationId) {
         User currentUser = userFindService.findUserByIdAndStatus(userId);
 
         UserLocation targetLocation
@@ -126,13 +188,13 @@ public class UserLocationService {
     public Boolean updateUserLocationWithUserCategory(
             Long userId,
             Long userLocationId,
-            UserLocationPatchDto userLocationPatchDto
+            UserLocationPatchWithCategoryDto userLocationPatchWithCategoryDto
     ) {
         User currentUser = userFindService.findUserByIdAndStatus(userId);
         UserLocation targetUserLocation = userLocationRetriever.findByUserAndId(currentUser, userLocationId);
 
         // ToDo: UserCategoryRetriever 구현되면 그때 코드 수정할 것
-        UserCategory targetUserCategory = userCategoryRepository.findById(userLocationPatchDto.userCategoryId())
+        UserCategory targetUserCategory = userCategoryRepository.findById(userLocationPatchWithCategoryDto.userCategoryId())
                 .orElseThrow(() -> BaseException.type(GlobalErrorCode.NOT_FOUND));
 
         userLocationUpdater.updateUserCategory(targetUserLocation, targetUserCategory);
