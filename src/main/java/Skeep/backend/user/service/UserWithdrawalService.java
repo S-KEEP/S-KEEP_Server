@@ -1,14 +1,11 @@
 package Skeep.backend.user.service;
 
-import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryRepository;
-import Skeep.backend.location.userLocation.domain.UserLocation;
 import Skeep.backend.location.userLocation.domain.UserLocationRepository;
 import Skeep.backend.user.domain.EStatus;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
