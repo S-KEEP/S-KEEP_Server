@@ -100,7 +100,11 @@ public class UserLocationService {
                 ).toList();
 
         return UserLocationCreate.of(
-                UserLocationCreateDto.of(userLocationDtoList),
+                UserLocationCreateDto.of(
+                        userLocationDtoList,
+                        userLocationList.size(),
+                        screenshotUploadDto.getFile().size() - userLocationList.size()
+                ),
                 URI.create(uriString)
         );
     }

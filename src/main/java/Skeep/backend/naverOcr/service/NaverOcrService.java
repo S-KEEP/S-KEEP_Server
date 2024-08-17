@@ -39,12 +39,13 @@ public class NaverOcrService {
 
         Flux<String> imageTextList = Flux.fromIterable(imageList)
                                          .flatMapSequential(this::requestOcr)
+                                         .map(optionalText -> optionalText.orElse(""))
                                          .flatMap(this::parseResponse);
 
         return imageTextList.collectList().block();
     }
     
-    private Mono<String> requestOcr(MultipartFile file) {
+    private Mono<Optional<String>> requestOcr(MultipartFile file) {
 
         MultipartBodyBuilder builder = makeRequestBody(file);
         log.info("Request body builder 생성 완료: {}", builder.build());
@@ -57,13 +58,11 @@ public class NaverOcrService {
                         .retrieve()
                         .bodyToMono(String.class)
                         .doOnSuccess(response -> log.info("NAVER OCR response: {}", response))
-                        .doOnError(throwable -> {
-                                log.info("NAVER OCR API 요청 실패: {}", throwable.getMessage());
-                                throw BaseException.type(
-                                        NaverOcrErrorCode.FAILED_OCR_API_REQUEST
-                                );
-                            }
-                        );
+                        .doOnError(throwable ->
+                                log.info("NAVER OCR API 요청 실패: {}", throwable.getMessage())
+                        )
+                        .map(Optional::ofNullable)
+                        .onErrorResume(throwable -> Mono.just(Optional.empty()));
     }
 
     private MultipartBodyBuilder makeRequestBody(MultipartFile file) {
@@ -95,6 +94,8 @@ public class NaverOcrService {
     }
 
     private Mono<String> parseResponse(String response) {
+        if (response.isEmpty())
+            return Mono.just("");
         try {
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> map = mapper.readValue(response, new TypeReference<>(){});
@@ -104,7 +105,7 @@ public class NaverOcrService {
 
             String inferResult = (String) image.get("inferResult");
             if (!inferResult.equals("SUCCESS"))
-                throw BaseException.type(NaverOcrErrorCode.FAILED_OCR_IN_API);
+                return Mono.just("");
 
             List<Map<String, Object>> fields = (List<Map<String, Object>>) image.get("fields");
             String extractedText = fields.stream()
@@ -112,12 +113,12 @@ public class NaverOcrService {
                     .collect(Collectors.joining(" "));
             return Mono.justOrEmpty(extractedText);
         } catch (IOException e) {
-            throw BaseException.type(NaverOcrErrorCode.FAILED_PARSING_OCR_API_RESPONSE);
+            return Mono.just("");
         }
     }
 
     public NaverOcrService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl(this.naverOcrBaseUrl)
                                          .build();
-        }
     }
+}

@@ -60,30 +60,59 @@ public class ScreenshotService {
         List<String> imageTextList = naverOcrService.getImageTextList(imageList);
         log.info("imageTextList: {}", imageTextList);
 
-        // GPT API
-        List<LocationAndCategory> locationNameAndCategoryList = gptService.getGptAnalyze(imageTextList);
-        log.info("imageLocationAndCategoryList: {}", locationNameAndCategoryList);
-
-        List<String> locationNameList = locationNameAndCategoryList
-                                                    .stream()
-                                                    .map(LocationAndCategory::locationName)
+        List<String> presentTextList = imageTextList.stream()
+                                                    .filter(imageText -> !imageText.isEmpty())
                                                     .toList();
-        // Kakao API
-        List<KakaoResponseResult> kakaoResponseResultList = kakaoMapService.getKakaoLocationIdList(locationNameList);
-        log.info("kakaoResponseResultList: {}", kakaoResponseResultList);
+
+        // GPT API
+        List<LocationAndCategory> gptServiceResultList = gptService.getGptAnalyze(presentTextList);
+        log.info("gptServiceResultList: {}", gptServiceResultList);
+
+        List<LocationAndCategory> locationNameAndCategoryList
+                = imageTextList.stream().map(s -> {
+                    if (s.isEmpty() || gptServiceResultList.isEmpty())
+                        return LocationAndCategory.of("", "");
+                    else
+                        return gptServiceResultList.remove(0);
+                })
+                .toList();
+        log.info("locationAndCategoryList: {}", locationNameAndCategoryList);
+
+        List<String> locationNameList = locationNameAndCategoryList.stream()
+                                                                   .map(LocationAndCategory::locationName)
+                                                                   .toList();
+        List<String> presentLocationNameList =
+                locationNameAndCategoryList.stream()
+                                           .map(LocationAndCategory::locationName)
+                                           .filter(locationName -> !locationName.isEmpty())
+                                           .toList();
+
+        List<KakaoResponseResult> kakaoMapServiceResultList
+                = kakaoMapService.getKakaoLocationIdList(presentLocationNameList);
+        log.info("kakaoMapServiceResultList: {}", kakaoMapServiceResultList);
+
+        List<KakaoResponseResult> kakaoResponseResultList
+                = locationNameList.stream() .map(s -> {
+                    if (s.isEmpty() || kakaoMapServiceResultList.isEmpty())
+                        return KakaoResponseResult.of("", "", "");
+                    return kakaoMapServiceResultList.remove(0);
+                })
+                .toList();
 
         if (imageList.size() != imageTextList.size() || imageList.size() != kakaoResponseResultList.size())
             throw BaseException.type(ScreenshotErrorCode.FILE_BAD_REQUEST);
 
-        return IntStream.range(0, imageList.size())
-                        .mapToObj(i -> readyAndUploadToS3(
-                                currentUser,
-                                imageList.get(i),
-                                kakaoResponseResultList.get(i),
-                                locationNameAndCategoryList.get(i).category()
-                            )
-                        )
-                        .toList();
+        log.info("LocationAndCategoryList: {}", locationNameAndCategoryList);
+        return IntStream.range(0, kakaoResponseResultList.size())
+                .filter(i -> !kakaoResponseResultList.get(i).id().isEmpty())
+                .mapToObj(i -> readyAndUploadToS3(
+                        currentUser,
+                        imageList.get(i),
+                        kakaoResponseResultList.get(i),
+                        locationNameAndCategoryList.get(i).category()
+                    )
+                )
+                .toList();
     }
 
     private UserLocation readyAndUploadToS3(

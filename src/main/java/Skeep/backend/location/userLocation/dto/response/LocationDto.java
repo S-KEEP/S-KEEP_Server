@@ -15,9 +15,7 @@ public record LocationDto(
         @JsonProperty("x")
         String x,
         @JsonProperty("y")
-        String y,
-        @JsonProperty("fixedCategory")
-        String fixedCategory
+        String y
 ) implements Serializable {
     public static LocationDto of(
             final Location location
@@ -27,7 +25,6 @@ public record LocationDto(
                           .kakaoMapId(location.getKakaoMapId())
                           .x(location.getX())
                           .y(location.getY())
-                          .fixedCategory(location.getFixedCategory().name())
                           .build();
     }
 }

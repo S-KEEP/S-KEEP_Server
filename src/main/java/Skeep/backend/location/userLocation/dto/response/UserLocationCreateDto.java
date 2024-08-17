@@ -9,13 +9,21 @@ import java.util.List;
 @Builder
 public record UserLocationCreateDto(
         @JsonProperty("userLocationList")
-        List<UserLocationDto> userLocationDtoList
+        List<UserLocationDto> userLocationDtoList,
+        @JsonProperty("successCount")
+        Integer successCount,
+        @JsonProperty("failedCount")
+        Integer failedCount
 ) implements Serializable {
     public static UserLocationCreateDto of(
-            final List<UserLocationDto> userLocationDtoList
+            final List<UserLocationDto> userLocationDtoList,
+            final Integer successCount,
+            final Integer failedCount
     ) {
         return UserLocationCreateDto.builder()
                 .userLocationDtoList(userLocationDtoList)
+                .successCount(successCount)
+                .failedCount(failedCount)
                 .build();
     }
 }
