@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.util.List;
 
 import static Skeep.backend.fixture.TokenFixture.ACCESS_TOKEN;
-import static Skeep.backend.fixture.UserCategoryFixture.*;
 import static Skeep.backend.global.constant.Constants.PREFIX_AUTH;
 import static Skeep.backend.global.constant.Constants.PREFIX_BEARER;
 import static org.mockito.ArgumentMatchers.any;
