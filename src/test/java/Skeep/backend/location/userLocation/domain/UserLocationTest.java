@@ -17,7 +17,11 @@ public class UserLocationTest {
     @Test
     void UserLocation_객체_생성에_성공하다() {
         User user = UserFixture.BOB_BROWN.toUser(EProvider.APPLE);
-        Location location = Location.createLocation("kakaoMapIdTestId", ECategory.EXCITING);
+        Location location = Location.createLocation(
+                "kakaoMapIdTestId",
+                "서울 성동구 성수이로7길 41-1",
+                ECategory.EXCITING
+        );
         UserCategory userCategory = UserCategory.createUserCategory("맛집", "진짜 맛있는 집만 모아놓은 카테고리", user);
         UserLocation userLocation = UserLocation.createUserLocation("abc.jpg", location, user, userCategory);
         assertAll(

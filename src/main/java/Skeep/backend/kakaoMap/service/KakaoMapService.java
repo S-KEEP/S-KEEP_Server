@@ -1,10 +1,8 @@
 package Skeep.backend.kakaoMap.service;
 
-import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.kakaoMap.dto.response.Document;
 import Skeep.backend.kakaoMap.dto.response.KakaoResponse;
 import Skeep.backend.kakaoMap.dto.response.KakaoResponseResult;
-import Skeep.backend.kakaoMap.exception.KakaoMapErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -53,17 +51,18 @@ public class KakaoMapService {
 
     private Mono<KakaoResponseResult> parseResponse(Optional<KakaoResponse> response) {
         if (response.isEmpty())
-            return Mono.just(KakaoResponseResult.of("", "", ""));
+            return Mono.just(KakaoResponseResult.of("", "", "", ""));
 
         KakaoResponse kakaoResponse = response.get();
         List<Document> documentList = kakaoResponse.getDocumentList();
         if (documentList.isEmpty())
-            return Mono.just(KakaoResponseResult.of("", "", ""));
+            return Mono.just(KakaoResponseResult.of("", "", "", ""));
 
         Document document = documentList.get(0);
         return Mono.just(
                 KakaoResponseResult.of(
                         document.getId(),
+                        document.getRoadAddressName(),
                         document.getX(),
                         document.getY()
                 )
