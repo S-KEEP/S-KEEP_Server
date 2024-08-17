@@ -23,6 +23,9 @@ public class Location extends BaseTimeEntity {
     @Column(name = "kakao_map_id", nullable = false)
     private String kakaoMapId;
 
+    @Column(name = "road_address", nullable = false)
+    private String roadAddress;
+
     @Column(name = "x", nullable = false)
     private String x;
 
@@ -36,19 +39,26 @@ public class Location extends BaseTimeEntity {
     @Builder
     private Location(
             final String kakaoMapId,
+            final String roadAddress,
             final ECategory fixedCategory,
             final String x,
             final String y
     ) {
         this.kakaoMapId = kakaoMapId;
+        this.roadAddress = roadAddress;
         this.x = x;
         this.y = y;
         this.fixedCategory = fixedCategory;
     }
 
-    public static Location createLocation(String kakaoMapId, ECategory fixedCategory) {
+    public static Location createLocation(
+            String kakaoMapId,
+            String roadAddress,
+            ECategory fixedCategory
+    ) {
         return Location.builder()
                 .kakaoMapId(kakaoMapId)
+                .roadAddress(roadAddress)
                 .fixedCategory(fixedCategory)
                 .build();
     }
