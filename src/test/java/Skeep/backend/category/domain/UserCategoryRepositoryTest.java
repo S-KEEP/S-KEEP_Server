@@ -11,10 +11,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("[Repository Test] -> UserCategoryRepository 테스트")
@@ -35,38 +37,36 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
     @Test
     void findAllById() {
         // given
-        userCategoryRepository.save(UserCategoryFixture.EXCITING.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.PARK_NATURE.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.REST.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.HISTORY.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.CULTURE_FESTIVAL.toUserCategory(user));
-        userCategoryRepository.save(UserCategoryFixture.SHOPPING_DOWNTOWN.toUserCategory(user));
+        List<UserCategoryFixture> fixtures = Arrays.asList(
+                UserCategoryFixture.REST,
+                UserCategoryFixture.PARK_NATURE,
+                UserCategoryFixture.CULTURE_FESTIVAL,
+                UserCategoryFixture.SHOPPING_DOWNTOWN,
+                UserCategoryFixture.EXCITING,
+                UserCategoryFixture.RESTAURANT,
+                UserCategoryFixture.HISTORY,
+                UserCategoryFixture.EXTRA
+        );
+
+        fixtures.forEach(fixture -> userCategoryRepository.save(fixture.toUserCategory(user)));
 
         // when
         List<UserCategory> userCategoryList = userCategoryRepository.findAllByUserId(user.getId());
 
         // then
         assertAll(
-                () -> assertThat(userCategoryList).hasSize(6),
+                () -> assertThat(userCategoryList).hasSize(8),
                 () -> assertThat(userCategoryList)
-                        .extracting("name")
+                        .extracting("name", "description")
                         .containsExactlyInAnyOrder(
-                                UserCategoryFixture.EXCITING.getName(),
-                                UserCategoryFixture.PARK_NATURE.getName(),
-                                UserCategoryFixture.REST.getName(),
-                                UserCategoryFixture.HISTORY.getName(),
-                                UserCategoryFixture.CULTURE_FESTIVAL.getName(),
-                                UserCategoryFixture.SHOPPING_DOWNTOWN.getName()
-                        ),
-                () -> assertThat(userCategoryList)
-                        .extracting("description")
-                        .containsExactlyInAnyOrder(
-                                UserCategoryFixture.EXCITING.getDescription(),
-                                UserCategoryFixture.PARK_NATURE.getDescription(),
-                                UserCategoryFixture.REST.getDescription(),
-                                UserCategoryFixture.HISTORY.getDescription(),
-                                UserCategoryFixture.CULTURE_FESTIVAL.getDescription(),
-                                UserCategoryFixture.SHOPPING_DOWNTOWN.getDescription()
+                                tuple(UserCategoryFixture.REST.getName(), UserCategoryFixture.REST.getDescription()),
+                                tuple(UserCategoryFixture.PARK_NATURE.getName(), UserCategoryFixture.PARK_NATURE.getDescription()),
+                                tuple(UserCategoryFixture.CULTURE_FESTIVAL.getName(), UserCategoryFixture.CULTURE_FESTIVAL.getDescription()),
+                                tuple(UserCategoryFixture.SHOPPING_DOWNTOWN.getName(), UserCategoryFixture.SHOPPING_DOWNTOWN.getDescription()),
+                                tuple(UserCategoryFixture.EXCITING.getName(), UserCategoryFixture.EXCITING.getDescription()),
+                                tuple(UserCategoryFixture.RESTAURANT.getName(), UserCategoryFixture.RESTAURANT.getDescription()),
+                                tuple(UserCategoryFixture.HISTORY.getName(), UserCategoryFixture.HISTORY.getDescription()),
+                                tuple(UserCategoryFixture.EXTRA.getName(), UserCategoryFixture.EXTRA.getDescription())
                         )
         );
     }

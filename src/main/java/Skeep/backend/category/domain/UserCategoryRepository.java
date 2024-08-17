@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UserCategoryRepository extends JpaRepository<UserCategory, Long> {
     List<UserCategory> findAllByUserId(Long userId);
     Optional<UserCategory> findByUserAndName(User user, String name);
+    void deleteAllByUser(User user);
 }
