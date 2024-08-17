@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -17,6 +18,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u.id as id, u.role as role from User u where u.id = :id")
     Optional<UserSecurityForm> findUserSecurityFromById(@Param("id") Long id);
+
+    @Query("select u from User u where u.modifiedDate < :date and u.status = :status")
+    List<User> findUsersNotModifiedSince(@Param("date") LocalDateTime date, @Param("status") EStatus status);
 
     @Modifying
     @Transactional

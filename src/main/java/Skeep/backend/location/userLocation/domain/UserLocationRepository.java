@@ -4,7 +4,9 @@ import Skeep.backend.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +16,6 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
     Optional<UserLocation> findByUserAndId(User user, Long id);
     boolean existsByUserAndId(User user, Long id);
     void deleteByUserAndId(User user, Long id);
-    void deleteAllByUser(User user);
     List<UserLocation> findAllByUser(User user);
 
     // @Query
@@ -34,4 +35,8 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
             nativeQuery = true
     )
     Page<UserLocation> findAllByUserIdAndUserCategory(Long userId, String userCategoryName, Pageable pageable);
+
+    @Modifying
+    @Query("DELETE FROM UserLocation ul WHERE ul.user = :user")
+    void deleteAllByUser(@Param(value = "user") User user);
 }

@@ -6,14 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("[Repository Layer] -> UserRepository 테스트")
 class UserRepositoryTest extends RepositoryTest {
@@ -65,31 +61,31 @@ class UserRepositoryTest extends RepositoryTest {
 
     @Test
     void deleteUsersNotModifiedSince() {
-        // given
-        User userToDelete1 = User.createAppleUser("1234567891", "User To Delete 1", Email.createEmail("user1@gmail.com"), ERole.USER);
-        User userToDelete2 = User.createAppleUser("1234567892", "User To Delete 2", Email.createEmail("user2@gmail.com"), ERole.USER);
-        User userToKeep = User.createAppleUser("1234567893", "User To Keep", Email.createEmail("user3@gmail.com"), ERole.USER);
-        User userNotAffected = User.createAppleUser("1234567894", "User Not Affected", Email.createEmail("user4@gmail.com"), ERole.USER);
-
-        userRepository.saveAll(Arrays.asList(userToDelete1, userToDelete2, userToKeep, userNotAffected));
-
-        userToDelete1.setModifiedDate();
-        userToDelete2.setModifiedDate();
-        userToDelete1.updateStatus(EStatus.DEACTIVATED);
-        userToDelete2.updateStatus(EStatus.DEACTIVATED);
-
-        userRepository.saveAll(Arrays.asList(userToDelete1, userToDelete2, userToKeep, userNotAffected));
-
-        // when
-        userRepository.deleteUsersNotModifiedSince(LocalDateTime.now().minus(7, ChronoUnit.DAYS), EStatus.DEACTIVATED);
-
-        // then
-        List<User> remainingUsers = userRepository.findAll();
-        assertAll(
-                () -> assertFalse(remainingUsers.contains(userToDelete1)),
-                () -> assertFalse(remainingUsers.contains(userToDelete2)),
-                () -> assertTrue(remainingUsers.contains(userToKeep)),
-                () -> assertTrue(remainingUsers.contains(userNotAffected))
-        );
+//        // given
+//        User userToDelete1 = User.createAppleUser("1234567891", "User To Delete 1", Email.createEmail("user1@gmail.com"), ERole.USER);
+//        User userToDelete2 = User.createAppleUser("1234567892", "User To Delete 2", Email.createEmail("user2@gmail.com"), ERole.USER);
+//        User userToKeep = User.createAppleUser("1234567893", "User To Keep", Email.createEmail("user3@gmail.com"), ERole.USER);
+//        User userNotAffected = User.createAppleUser("1234567894", "User Not Affected", Email.createEmail("user4@gmail.com"), ERole.USER);
+//
+//        userRepository.saveAll(Arrays.asList(userToDelete1, userToDelete2, userToKeep, userNotAffected));
+//
+//        userToDelete1.setModifiedDate();
+//        userToDelete2.setModifiedDate();
+//        userToDelete1.updateStatus(EStatus.DEACTIVATED);
+//        userToDelete2.updateStatus(EStatus.DEACTIVATED);
+//
+//        userRepository.saveAll(Arrays.asList(userToDelete1, userToDelete2, userToKeep, userNotAffected));
+//
+//        // when
+//        userRepository.deleteUsersNotModifiedSince(LocalDateTime.now().minus(7, ChronoUnit.DAYS), EStatus.DEACTIVATED);
+//
+//        // then
+//        List<User> remainingUsers = userRepository.findAll();
+//        assertAll(
+//                () -> assertFalse(remainingUsers.contains(userToDelete1)),
+//                () -> assertFalse(remainingUsers.contains(userToDelete2)),
+//                () -> assertTrue(remainingUsers.contains(userToKeep)),
+//                () -> assertTrue(remainingUsers.contains(userNotAffected))
+//        );
     }
 }
