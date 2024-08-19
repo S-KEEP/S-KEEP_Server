@@ -2,6 +2,7 @@ package Skeep.backend.category.controller;
 
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.dto.UserCategoryList;
+import Skeep.backend.fixture.UserCategoryFixture;
 import Skeep.backend.fixture.UserFixture;
 import Skeep.backend.global.ControllerTest;
 import Skeep.backend.user.domain.EProvider;
@@ -16,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.util.List;
 
 import static Skeep.backend.fixture.TokenFixture.ACCESS_TOKEN;
-import static Skeep.backend.fixture.UserCategoryFixture.*;
 import static Skeep.backend.global.constant.Constants.PREFIX_AUTH;
 import static Skeep.backend.global.constant.Constants.PREFIX_BEARER;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,19 +51,23 @@ class UserCategoryControllerTest extends ControllerTest {
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.result.userCategoryDtoList").exists())
-                    .andExpect(jsonPath("$.result.userCategoryDtoList.length()").value(6))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[0].name").value("익사이팅"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[0].description").value("Exciting activities"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList.length()").value(8))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[0].name").value("휴식"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[0].description").value("방해받지 않고 싶을 때 가려고 모아둔 곳"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[1].name").value("공원/자연"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[1].description").value("Parks and nature-related activities"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[2].name").value("휴식"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[2].description").value("Relaxation and rest"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[3].name").value("역사 및 유적지"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[3].description").value("Historical sites and landmarks"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[4].name").value("문화/축제"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[4].description").value("Cultural events and festivals"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[5].name").value("쇼핑/도심"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[5].description").value("Shopping and downtown areas"));
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[1].description").value("힐링하고 싶을 때"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[2].name").value("문화/축제"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[2].description").value("즐기고 싶은 곳"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[3].name").value("쇼핑/도심"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[3].description").value("가까운 곳을 가고 싶을 때"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[4].name").value("익사이팅"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[4].description").value("뛰어 놀고 싶을 때"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[5].name").value("맛집"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[5].description").value("여기는 꼭 먹어봐야 해"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[6].name").value("역사 및 유적지"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[6].description").value("언젠간 가볼 곳"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[7].name").value("기타"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[7].description").value(""));
         }
     }
 
@@ -71,12 +75,14 @@ class UserCategoryControllerTest extends ControllerTest {
         User user = UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE);
 
         List<UserCategory> userCategoryList = List.of(
-                EXCITING.toUserCategory(user),
-                PARK_NATURE.toUserCategory(user),
-                REST.toUserCategory(user),
-                HISTORY.toUserCategory(user),
-                CULTURE_FESTIVAL.toUserCategory(user),
-                SHOPPING_DOWNTOWN.toUserCategory(user)
+                UserCategoryFixture.REST.toUserCategory(user),
+                UserCategoryFixture.PARK_NATURE.toUserCategory(user),
+                UserCategoryFixture.CULTURE_FESTIVAL.toUserCategory(user),
+                UserCategoryFixture.SHOPPING_DOWNTOWN.toUserCategory(user),
+                UserCategoryFixture.EXCITING.toUserCategory(user),
+                UserCategoryFixture.RESTAURANT.toUserCategory(user),
+                UserCategoryFixture.HISTORY.toUserCategory(user),
+                UserCategoryFixture.EXTRA.toUserCategory(user)
         );
         return UserCategoryList.createDto(userCategoryList);
     }
