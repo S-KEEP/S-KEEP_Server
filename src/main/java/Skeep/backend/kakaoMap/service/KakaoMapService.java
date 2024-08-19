@@ -51,17 +51,18 @@ public class KakaoMapService {
 
     private Mono<KakaoResponseResult> parseResponse(Optional<KakaoResponse> response) {
         if (response.isEmpty())
-            return Mono.just(KakaoResponseResult.of("", "", "", ""));
+            return Mono.just(KakaoResponseResult.of("", "", "", "", ""));
 
         KakaoResponse kakaoResponse = response.get();
         List<Document> documentList = kakaoResponse.getDocumentList();
         if (documentList.isEmpty())
-            return Mono.just(KakaoResponseResult.of("", "", "", ""));
+            return Mono.just(KakaoResponseResult.of("", "", "", "", ""));
 
         Document document = documentList.get(0);
         return Mono.just(
                 KakaoResponseResult.of(
                         document.getId(),
+                        document.getPlaceName(),
                         document.getRoadAddressName(),
                         document.getX(),
                         document.getY()
