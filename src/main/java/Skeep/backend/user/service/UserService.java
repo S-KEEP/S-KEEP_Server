@@ -11,21 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserFindService userFindService;
-    private final JwtTokenService jwtTokenService;
 
     @Transactional
     public User saveAppleUser(String appleSerialId, String name, String email) {
         return userRepository.save(
                 User.createAppleUser(appleSerialId, name, Email.createEmail(email), ERole.USER)
         );
-    }
-
-    @Transactional
-    public void withdrawalUser(Long userId) {
-        User user = userFindService.findById(userId);
-        user.updateStatus(EStatus.DEACTIVATED);
-
-        jwtTokenService.deleteRefreshToken(userId);
     }
 }
