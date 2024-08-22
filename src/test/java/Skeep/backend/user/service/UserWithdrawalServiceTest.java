@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("[Service Test] -> UserWithdrawalService 테스트")
 public class UserWithdrawalServiceTest extends ServiceTest {

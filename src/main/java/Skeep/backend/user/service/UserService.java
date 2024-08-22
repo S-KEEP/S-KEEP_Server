@@ -1,7 +1,9 @@
 package Skeep.backend.user.service;
 
-import Skeep.backend.auth.jwt.service.JwtTokenService;
-import Skeep.backend.user.domain.*;
+import Skeep.backend.user.domain.ERole;
+import Skeep.backend.user.domain.Email;
+import Skeep.backend.user.domain.User;
+import Skeep.backend.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
