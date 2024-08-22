@@ -85,8 +85,8 @@ class UserControllerTest extends ControllerTest {
         void 유저_정보를_찾을_수_없다면_예외가_발생한다() throws Exception {
             // given
             doThrow(BaseException.type(UserErrorCode.NOT_FOUND_USER))
-                    .when(userService)
-                    .withdrawalUser(anyLong());
+                    .when(userWithdrawalService)
+                    .withdrawal(anyLong());
 
             // when
             MockHttpServletRequestBuilder requestBuilder = post(BASE_URL)
@@ -106,8 +106,8 @@ class UserControllerTest extends ControllerTest {
         void 서비스_회원_탈퇴에_성공한다() throws Exception {
             // given
             doNothing()
-                    .when(userService)
-                    .withdrawalUser(anyLong());
+                    .when(userWithdrawalService)
+                    .withdrawal(anyLong());
 
             // when
             MockHttpServletRequestBuilder requestBuilder = post(BASE_URL)

@@ -5,6 +5,7 @@ import Skeep.backend.user.domain.User;
 import Skeep.backend.user.dto.UserInformation;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
+import Skeep.backend.user.service.UserWithdrawalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
-    private final UserService userService;
     private final UserFindService userFindService;
+    private final UserWithdrawalService userWithdrawalService;
 
     @PostMapping("/withdrawal")
     public ResponseEntity<Void> withdrawalUser(@UserId Long userId) {
-        userService.withdrawalUser(userId);
+        userWithdrawalService.withdrawal(userId);
         return ResponseEntity.ok().build();
     }
 
