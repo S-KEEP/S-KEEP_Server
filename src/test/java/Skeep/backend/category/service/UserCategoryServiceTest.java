@@ -29,7 +29,7 @@ class UserCategoryServiceTest extends ServiceTest {
         void setUp() {
             user = userRepository.save(ALICE_JOHNSON.toUser(EProvider.APPLE));
 
-            userCategoryRepository.save(EXCITING.toUserCategory(user));
+            userCategoryRepository.save(ACTIVITY.toUserCategory(user));
             userCategoryRepository.save(PARK_NATURE.toUserCategory(user));
             userCategoryRepository.save(REST.toUserCategory(user));
             userCategoryRepository.save(HISTORY.toUserCategory(user));
@@ -46,7 +46,7 @@ class UserCategoryServiceTest extends ServiceTest {
                     () -> assertThat(userCategoryList.userCategoryDtoList()).hasSize(6),
                     () -> assertThat(userCategoryList.userCategoryDtoList()).extracting("name")
                             .containsExactlyInAnyOrder(
-                                    EXCITING.getName(),
+                                    ACTIVITY.getName(),
                                     PARK_NATURE.getName(),
                                     REST.getName(),
                                     HISTORY.getName(),

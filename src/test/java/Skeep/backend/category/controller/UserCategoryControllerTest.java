@@ -79,7 +79,7 @@ class UserCategoryControllerTest extends ControllerTest {
                 UserCategoryFixture.PARK_NATURE.toUserCategory(user),
                 UserCategoryFixture.CULTURE_FESTIVAL.toUserCategory(user),
                 UserCategoryFixture.SHOPPING_DOWNTOWN.toUserCategory(user),
-                UserCategoryFixture.EXCITING.toUserCategory(user),
+                UserCategoryFixture.ACTIVITY.toUserCategory(user),
                 UserCategoryFixture.RESTAURANT.toUserCategory(user),
                 UserCategoryFixture.HISTORY.toUserCategory(user),
                 UserCategoryFixture.EXTRA.toUserCategory(user)

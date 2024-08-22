@@ -49,7 +49,7 @@ class UserLocationRepositoryTest extends RepositoryTest {
                 UserCategoryFixture.PARK_NATURE,
                 UserCategoryFixture.CULTURE_FESTIVAL,
                 UserCategoryFixture.SHOPPING_DOWNTOWN,
-                UserCategoryFixture.EXCITING,
+                UserCategoryFixture.ACTIVITY,
                 UserCategoryFixture.RESTAURANT,
                 UserCategoryFixture.HISTORY,
                 UserCategoryFixture.EXTRA
