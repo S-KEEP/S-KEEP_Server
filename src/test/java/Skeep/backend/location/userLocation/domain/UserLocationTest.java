@@ -21,7 +21,7 @@ public class UserLocationTest {
                 "kakaoMapIdTestId",
                 "옹근달 성수점",
                 "서울 성동구 성수이로7길 41-1",
-                ECategory.EXCITING
+                ECategory.ACTIVITY
         );
         UserCategory userCategory = UserCategory.createUserCategory("맛집", "진짜 맛있는 집만 모아놓은 카테고리", user);
         UserLocation userLocation = UserLocation.createUserLocation("abc.jpg", location, user, userCategory);

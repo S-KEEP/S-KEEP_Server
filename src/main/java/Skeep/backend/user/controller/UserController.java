@@ -4,7 +4,6 @@ import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.dto.UserInformation;
 import Skeep.backend.user.service.UserFindService;
-import Skeep.backend.user.service.UserService;
 import Skeep.backend.user.service.UserWithdrawalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

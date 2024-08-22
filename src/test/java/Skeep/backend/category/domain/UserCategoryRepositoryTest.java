@@ -38,7 +38,7 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
                 UserCategoryFixture.PARK_NATURE,
                 UserCategoryFixture.CULTURE_FESTIVAL,
                 UserCategoryFixture.SHOPPING_DOWNTOWN,
-                UserCategoryFixture.EXCITING,
+                UserCategoryFixture.ACTIVITY,
                 UserCategoryFixture.RESTAURANT,
                 UserCategoryFixture.HISTORY,
                 UserCategoryFixture.EXTRA
@@ -61,7 +61,7 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
                                 tuple(UserCategoryFixture.PARK_NATURE.getName(), UserCategoryFixture.PARK_NATURE.getDescription()),
                                 tuple(UserCategoryFixture.CULTURE_FESTIVAL.getName(), UserCategoryFixture.CULTURE_FESTIVAL.getDescription()),
                                 tuple(UserCategoryFixture.SHOPPING_DOWNTOWN.getName(), UserCategoryFixture.SHOPPING_DOWNTOWN.getDescription()),
-                                tuple(UserCategoryFixture.EXCITING.getName(), UserCategoryFixture.EXCITING.getDescription()),
+                                tuple(UserCategoryFixture.ACTIVITY.getName(), UserCategoryFixture.ACTIVITY.getDescription()),
                                 tuple(UserCategoryFixture.RESTAURANT.getName(), UserCategoryFixture.RESTAURANT.getDescription()),
                                 tuple(UserCategoryFixture.HISTORY.getName(), UserCategoryFixture.HISTORY.getDescription()),
                                 tuple(UserCategoryFixture.EXTRA.getName(), UserCategoryFixture.EXTRA.getDescription())

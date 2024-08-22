@@ -13,12 +13,12 @@ public class LocationTest {
     void LOCATION_객체_생성에_성공한다() {
         Location location = Location.builder()
                 .kakaoMapId("kakaoMapIdTestId")
-                .fixedCategory(ECategory.EXCITING)
+                .fixedCategory(ECategory.ACTIVITY)
                 .build();
 
         assertAll(
                 () -> assertThat(location.getKakaoMapId()).isEqualTo("kakaoMapIdTestId"),
-                () -> assertThat(location.getFixedCategory()).isEqualTo(ECategory.EXCITING)
+                () -> assertThat(location.getFixedCategory()).isEqualTo(ECategory.ACTIVITY)
         );
     }
 }
