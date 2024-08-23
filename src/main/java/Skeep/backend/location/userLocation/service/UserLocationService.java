@@ -58,7 +58,7 @@ public class UserLocationService {
                                                 userCategory,
                                                 pageable
                                         );
-        if (page > userLocationPage.getTotalPages())
+        if (page != 1 && page > userLocationPage.getTotalPages())
             throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
 
         List<UserLocation> userLocationList = userLocationPage.getContent();
