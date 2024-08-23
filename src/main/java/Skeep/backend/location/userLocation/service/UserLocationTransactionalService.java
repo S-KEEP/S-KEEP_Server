@@ -4,11 +4,13 @@ import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.category.service.UserCategorySaver;
+import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.kakaoMap.dto.response.KakaoResponseResult;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.location.service.LocationRetriever;
 import Skeep.backend.location.location.service.LocationSaver;
 import Skeep.backend.location.userLocation.domain.UserLocation;
+import Skeep.backend.location.userLocation.exception.UserLocationErrorCode;
 import Skeep.backend.s3.service.S3Service;
 import Skeep.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -71,15 +73,7 @@ public class UserLocationTransactionalService {
         // TODO: UserCategoryRetriever 생기면 그때 이 로직 수정할 것
         return userCategoryRepository
                 .findByUserAndName(currentUser, location.getFixedCategory().getName())
-                .orElseGet(() ->
-                        userCategorySaver.saveUserCategory(
-                                UserCategory.builder()
-                                        .user(currentUser)
-                                        .name(location.getFixedCategory().getName())
-                                        .description(null)
-                                        .build()
-                        )
-                );
+                .orElseThrow(() -> BaseException.type(UserLocationErrorCode.INVALID_CATEGORY));
     }
 
     private Location getLocation(
