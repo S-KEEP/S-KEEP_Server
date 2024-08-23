@@ -1,22 +1,13 @@
 package Skeep.backend.screenshot.service;
 
-import Skeep.backend.category.domain.ECategory;
-import Skeep.backend.category.domain.UserCategory;
-import Skeep.backend.category.domain.UserCategoryRepository;
-import Skeep.backend.category.service.UserCategorySaver;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.gpt.service.GptService;
 import Skeep.backend.kakaoMap.dto.response.KakaoResponseResult;
 import Skeep.backend.kakaoMap.service.KakaoMapService;
-import Skeep.backend.location.location.domain.Location;
-import Skeep.backend.location.location.service.LocationRetriever;
-import Skeep.backend.location.location.service.LocationSaver;
 import Skeep.backend.location.userLocation.domain.UserLocation;
 import Skeep.backend.location.userLocation.dto.request.UserLocationImagePatchDto;
-import Skeep.backend.location.userLocation.service.UserLocationSaver;
-import Skeep.backend.location.userLocation.service.UserLocationUpdater;
+import Skeep.backend.location.userLocation.service.UserLocationTransactionalService;
 import Skeep.backend.naverOcr.service.NaverOcrService;
-import Skeep.backend.s3.service.S3Service;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
 import Skeep.backend.screenshot.exception.ScreenshotErrorCode;
 import Skeep.backend.screenshot.util.LocationAndCategory;
@@ -37,19 +28,11 @@ public class ScreenshotService {
     /**
      * 순환 참조 주의 : ScreenshotService는 다른 서비스에서 의존되어지면 안 됩니다.
      */
-    private final UserLocationSaver userLocationSaver;
-    private final UserLocationUpdater userLocationUpdater;
-    private final LocationRetriever locationRetriever;
-    private final LocationSaver locationSaver;
-    private final UserCategorySaver userCategorySaver;
     private final NaverOcrService naverOcrService;
     private final GptService gptService;
     private final KakaoMapService kakaoMapService;
-    private final S3Service s3Service;
+    private final UserLocationTransactionalService userLocationTransactionalService;
 
-    private final UserCategoryRepository userCategoryRepository;
-
-    @Transactional
     public List<UserLocation> analyzeImageAndSaveResult(
             User currentUser,
             ScreenshotUploadDto screenshotUploadDto
@@ -108,7 +91,7 @@ public class ScreenshotService {
         log.info("LocationAndCategoryList: {}", locationNameAndCategoryList);
         return IntStream.range(0, kakaoResponseResultList.size())
                 .filter(i -> !kakaoResponseResultList.get(i).id().isEmpty())
-                .mapToObj(i -> readyAndUploadToS3(
+                .mapToObj(i -> userLocationTransactionalService.readyAndUploadToS3(
                         currentUser,
                         imageList.get(i),
                         kakaoResponseResultList.get(i),
@@ -180,7 +163,7 @@ public class ScreenshotService {
         log.info("LocationAndCategoryList: {}", locationNameAndCategoryList);
         return IntStream.range(0, kakaoResponseResultList.size())
                 .filter(i -> !kakaoResponseResultList.get(i).id().isEmpty())
-                .mapToObj(i -> updateUserLocation(
+                .mapToObj(i -> userLocationTransactionalService.updateUserLocation(
                                 currentUser,
                                 userLocationList.get(i),
                                 kakaoResponseResultList.get(i),
@@ -188,73 +171,5 @@ public class ScreenshotService {
                         )
                 )
                 .toList();
-    }
-
-    private UserLocation updateUserLocation(
-            User currentUser,
-            UserLocation userLocation,
-            KakaoResponseResult kakaoResponseResult,
-            ECategory category
-    ) {
-        Location location;
-        if (locationRetriever.existsByKakaoMapId(kakaoResponseResult.id()))
-            location = locationRetriever.findByKakaoMapId(kakaoResponseResult.id());
-        else
-            location = getLocation(kakaoResponseResult, category);
-        UserCategory userCategory = getCategory(currentUser, location);
-
-        return userLocationUpdater.updateUserLocation(userLocation, location, userCategory);
-    }
-
-    private UserLocation readyAndUploadToS3(
-            User currentUser,
-            MultipartFile file,
-            KakaoResponseResult kakaoResponseResult,
-            ECategory category
-    ) {
-        UserLocation userLocation = userLocationSaver.createUserLocation(currentUser);
-        String fileName = s3Service.uploadToS3(userLocation.getId(), file);
-        Location location;
-        if (locationRetriever.existsByKakaoMapId(kakaoResponseResult.id()))
-            location = locationRetriever.findByKakaoMapId(kakaoResponseResult.id());
-        else
-            location = getLocation(kakaoResponseResult, category);
-        UserCategory userCategory = getCategory(currentUser, location);
-
-        return userLocationUpdater.updateUserLocation(userLocation, fileName, location, userCategory);
-    }
-
-    private UserCategory getCategory(
-            final User currentUser,
-            final Location location
-    ) {
-        // TODO: UserCategoryRetriever 생기면 그때 이 로직 수정할 것
-        return userCategoryRepository
-                .findByUserAndName(currentUser, location.getFixedCategory().getName())
-                .orElseGet(() ->
-                        userCategorySaver.saveUserCategory(
-                            UserCategory.builder()
-                                        .user(currentUser)
-                                        .name(location.getFixedCategory().getName())
-                                        .description(null)
-                                        .build()
-                        )
-                );
-    }
-
-    private Location getLocation(
-            final KakaoResponseResult kakaoResponseResult,
-            final ECategory category
-    ) {
-        return locationSaver.saveLocation(
-                Location.builder()
-                        .kakaoMapId(kakaoResponseResult.id())
-                        .placeName(kakaoResponseResult.placeName())
-                        .roadAddress(kakaoResponseResult.roadAddress())
-                        .x(kakaoResponseResult.x())
-                        .y(kakaoResponseResult.y())
-                        .fixedCategory(category)
-                        .build()
-        );
     }
 }
