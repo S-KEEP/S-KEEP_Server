@@ -90,7 +90,8 @@ public class ScreenshotService {
 
         log.info("LocationAndCategoryList: {}", locationNameAndCategoryList);
         return IntStream.range(0, kakaoResponseResultList.size())
-                .filter(i -> !kakaoResponseResultList.get(i).id().isEmpty())
+                .filter(i -> !(kakaoResponseResultList.get(i).id().isEmpty() ||
+                        kakaoResponseResultList.get(i).roadAddress().isEmpty()))
                 .mapToObj(i -> userLocationTransactionalService.readyAndUploadToS3(
                         currentUser,
                         imageList.get(i),
@@ -162,7 +163,8 @@ public class ScreenshotService {
 
         log.info("LocationAndCategoryList: {}", locationNameAndCategoryList);
         return IntStream.range(0, kakaoResponseResultList.size())
-                .filter(i -> !kakaoResponseResultList.get(i).id().isEmpty())
+                .filter(i -> !(kakaoResponseResultList.get(i).id().isEmpty() ||
+                        kakaoResponseResultList.get(i).roadAddress().isEmpty()))
                 .mapToObj(i -> userLocationTransactionalService.updateUserLocation(
                                 currentUser,
                                 userLocationList.get(i),
