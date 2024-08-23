@@ -60,7 +60,7 @@ class UserCategoryControllerTest extends ControllerTest {
                     .andExpect(jsonPath("$.result.userCategoryDtoList[2].description").value("즐기고 싶은 곳"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[3].name").value("쇼핑/도심"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[3].description").value("가까운 곳을 가고 싶을 때"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[4].name").value("익사이팅"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[4].name").value("액티비티"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[4].description").value("뛰어 놀고 싶을 때"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[5].name").value("맛집"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[5].description").value("여기는 꼭 먹어봐야 해"))
@@ -79,7 +79,7 @@ class UserCategoryControllerTest extends ControllerTest {
                 UserCategoryFixture.PARK_NATURE.toUserCategory(user),
                 UserCategoryFixture.CULTURE_FESTIVAL.toUserCategory(user),
                 UserCategoryFixture.SHOPPING_DOWNTOWN.toUserCategory(user),
-                UserCategoryFixture.EXCITING.toUserCategory(user),
+                UserCategoryFixture.ACTIVITY.toUserCategory(user),
                 UserCategoryFixture.RESTAURANT.toUserCategory(user),
                 UserCategoryFixture.HISTORY.toUserCategory(user),
                 UserCategoryFixture.EXTRA.toUserCategory(user)

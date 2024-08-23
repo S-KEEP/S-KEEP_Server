@@ -38,7 +38,7 @@ public class JwtTokenService {
 
     private ERole getUserRoleFromRefreshToken(String refreshToken) {
         Claims claims = jwtUtil.validateToken(refreshToken);
-        return claims.get(Constants.CLAIM_USER_ROLE, ERole.class);
+        return ERole.valueOf(claims.get(Constants.CLAIM_USER_ROLE, String.class));
     }
 
     private boolean validateRefreshToken(String refreshToken) {

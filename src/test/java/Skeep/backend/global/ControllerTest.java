@@ -25,6 +25,7 @@ import Skeep.backend.user.controller.UserController;
 import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.user.service.UserService;
+import Skeep.backend.user.service.UserWithdrawalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,6 +93,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected UserFindService userFindService;
+
+    @MockBean
+    protected UserWithdrawalService userWithdrawalService;
 
     @MockBean
     protected AppleService appleService;
