@@ -59,11 +59,15 @@ public class KakaoMapService {
             return Mono.just(KakaoResponseResult.of("", "", "", "", ""));
 
         Document document = documentList.get(0);
+        log.info("document.getRoadAddressName() : {}", document.getRoadAddressName());
+        log.info("document.getRoadAddressName() : {}", document.getAddressName());
+        String address = document.getRoadAddressName().isEmpty()
+                ? document.getAddressName() : document.getRoadAddressName();
         return Mono.just(
                 KakaoResponseResult.of(
                         document.getId(),
                         document.getPlaceName(),
-                        document.getRoadAddressName(),
+                        address,
                         document.getX(),
                         document.getY()
                 )
