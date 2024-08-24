@@ -39,17 +39,7 @@ public class UserCategoryController {
             @UserId Long userId,
             @PathVariable Long userCategoryId
     ) {
-//        userCategoryRemover.deleteUserCategory(userId, userCategoryId);
-//        return ResponseEntity.ok().build();
-        try {
-            userCategoryRemover.deleteUserCategory(userId, userCategoryId);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            // 예외 발생 시 BAD_REQUEST 응답을 반환
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            // 그 외의 예외 발생 시 INTERNAL_SERVER_ERROR 응답을 반환
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        userCategoryRemover.deleteUserCategory(userId, userCategoryId);
+        return ResponseEntity.ok().build();
     }
 }
