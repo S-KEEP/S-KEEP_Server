@@ -11,6 +11,7 @@ import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.category.controller.UserCategoryController;
 import Skeep.backend.category.service.UserCategoryRemover;
 import Skeep.backend.category.service.UserCategoryRetriever;
+import Skeep.backend.category.service.UserCategorySaver;
 import Skeep.backend.category.service.UserCategoryUpdater;
 import Skeep.backend.global.security.config.SecurityConfig;
 import Skeep.backend.global.security.filter.JwtAuthenticationFilter;
@@ -23,6 +24,7 @@ import Skeep.backend.global.security.provider.JwtAuthenticationManager;
 import Skeep.backend.global.security.provider.JwtAuthenticationProvider;
 import Skeep.backend.global.security.service.CustomUserDetailService;
 import Skeep.backend.global.util.JwtUtil;
+import Skeep.backend.location.userLocation.service.UserLocationRemover;
 import Skeep.backend.user.controller.UserController;
 import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.service.UserFindService;
@@ -119,6 +121,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected UserCategoryRemover userCategoryRemover;
+
+    @MockBean
+    protected UserCategorySaver userCategorySaver;
+
+    @MockBean
+    protected UserLocationRemover userLocationRemover;
 
     @MockBean
     protected UserRepository userRepository;

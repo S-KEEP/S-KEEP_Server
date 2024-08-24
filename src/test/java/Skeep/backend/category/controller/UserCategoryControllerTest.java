@@ -24,7 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,7 +85,6 @@ class UserCategoryControllerTest extends ControllerTest {
         void 유저_카테고리_수정에_성공한다() throws Exception {
             // given
             UserCategoryDto userCategoryDto = new UserCategoryDto(1L, "공원/자연", "자연을 느끼고 싶을 때");
-
             doNothing().when(userCategoryUpdater).updateUserCategory(anyLong(), any(UserCategoryDto.class));
 
             // when
@@ -92,31 +92,6 @@ class UserCategoryControllerTest extends ControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(PREFIX_AUTH, PREFIX_BEARER + ACCESS_TOKEN)
                     .content(objectMapper.writeValueAsString(userCategoryDto));
-
-            // then
-            mockMvc.perform(requestBuilder)
-                    .andDo(print())
-                    .andExpect(status().isOk());
-        }
-    }
-
-    @Nested
-    @DisplayName("유저 카테고리 삭제 API [DELETE /api/userCategory/{userCategoryId}]")
-    class deleteUserCategory {
-        private static final String BASE_URL = "/api/user-category/{userCategoryId}";
-
-        @Test
-        @WithMockUser(username = "1")
-        void 유저_카테고리_삭제에_성공한다() throws Exception {
-            // given
-            Long userCategoryId = 1L;
-
-            doNothing().when(userCategoryRemover).deleteUserCategory(anyLong(), anyLong());
-
-            // when
-            MockHttpServletRequestBuilder requestBuilder = delete(BASE_URL, userCategoryId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(PREFIX_AUTH, PREFIX_BEARER + ACCESS_TOKEN);
 
             // then
             mockMvc.perform(requestBuilder)

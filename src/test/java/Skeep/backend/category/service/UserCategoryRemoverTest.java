@@ -3,28 +3,21 @@ package Skeep.backend.category.service;
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.category.exception.UserCategoryErrorCode;
-import Skeep.backend.fixture.UserCategoryFixture;
-import Skeep.backend.fixture.UserFixture;
 import Skeep.backend.global.ServiceTest;
 import Skeep.backend.global.exception.BaseException;
-import Skeep.backend.location.userLocation.service.UserLocationRemover;
 import Skeep.backend.user.domain.EProvider;
 import Skeep.backend.user.domain.User;
-import Skeep.backend.user.service.UserFindService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static Skeep.backend.fixture.UserCategoryFixture.*;
-import static Skeep.backend.fixture.UserCategoryFixture.SHOPPING_DOWNTOWN;
-import static Skeep.backend.fixture.UserFixture.*;
+import static Skeep.backend.fixture.UserCategoryFixture.ACTIVITY;
 import static Skeep.backend.fixture.UserFixture.ALICE_JOHNSON;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
+import static Skeep.backend.fixture.UserFixture.JOHN_DOE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("[Service Layer] -> UserCategoryRemover")
 class UserCategoryRemoverTest extends ServiceTest {

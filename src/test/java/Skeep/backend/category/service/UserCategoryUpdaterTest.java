@@ -19,7 +19,6 @@ import static Skeep.backend.fixture.UserFixture.ALICE_JOHNSON;
 import static Skeep.backend.fixture.UserFixture.JOHN_DOE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("[Service Layer] -> UserCategoryUpdater")
 class UserCategoryUpdaterTest extends ServiceTest {

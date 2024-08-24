@@ -31,7 +31,6 @@ public class UserCategoryRemover {
         }
 
         userLocationRemover.deleteAllByUserAndUserCategory(user, userCategory);
-
         userCategoryRepository.deleteById(userCategoryId);
     }
 

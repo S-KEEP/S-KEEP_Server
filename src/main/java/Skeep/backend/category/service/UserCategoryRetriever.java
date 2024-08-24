@@ -2,7 +2,6 @@ package Skeep.backend.category.service;
 
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryRepository;
-import Skeep.backend.category.dto.UserCategoryDto;
 import Skeep.backend.category.dto.response.UserCategoryList;
 import Skeep.backend.category.exception.UserCategoryErrorCode;
 import Skeep.backend.global.exception.BaseException;
