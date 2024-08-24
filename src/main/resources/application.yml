@@ -14,3 +14,8 @@ spring:
   config:
     import:
       - classpath:/application-oauth.yml
+      - classpath:/application-tour.yml
+
+---
+server:
+  port: 8081

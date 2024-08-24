@@ -64,7 +64,7 @@ class UserCategoryControllerTest extends ControllerTest {
                     .andExpect(jsonPath("$.result.userCategoryDtoList[4].description").value("뛰어 놀고 싶을 때"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[5].name").value("맛집"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[5].description").value("여기는 꼭 먹어봐야 해"))
-                    .andExpect(jsonPath("$.result.userCategoryDtoList[6].name").value("역사 및 유적지"))
+                    .andExpect(jsonPath("$.result.userCategoryDtoList[6].name").value("역사/유적지"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[6].description").value("언젠간 가볼 곳"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[7].name").value("기타"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[7].description").value(""));
