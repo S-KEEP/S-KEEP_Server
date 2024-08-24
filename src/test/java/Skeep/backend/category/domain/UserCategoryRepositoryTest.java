@@ -28,12 +28,13 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
     private UserCategoryRepository userCategoryRepository;
 
     private static User user;
+    private static List<UserCategoryFixture> fixtures;
 
     @BeforeEach
     public void setUp() {
         user = userRepository.save(UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE));
 
-        List<UserCategoryFixture> fixtures = Arrays.asList(
+        fixtures = Arrays.asList(
                 UserCategoryFixture.REST,
                 UserCategoryFixture.PARK_NATURE,
                 UserCategoryFixture.CULTURE_FESTIVAL,
@@ -89,5 +90,15 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
         // then
         List<UserCategory> userCategories = userCategoryRepository.findAllByUserId(user.getId());
         assertTrue(userCategories.isEmpty());
+    }
+
+    @Test
+    void deleteById() {
+        // when
+        userCategoryRepository.deleteById(1L);
+
+        // then
+        List<UserCategory> userCategories = userCategoryRepository.findAllByUserId(user.getId());
+        assertThat(userCategories.size()).isEqualTo(fixtures.size() - 1);
     }
 }
