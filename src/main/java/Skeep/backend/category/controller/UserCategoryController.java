@@ -36,7 +36,7 @@ public class UserCategoryController {
     @DeleteMapping("/{userCategoryId}")
     public ResponseEntity<Void> deleteUserCategory(
             @UserId Long userId,
-            @PathVariable Long userCategoryId
+            @PathVariable("userCategoryId") Long userCategoryId
     ) {
         userCategoryRemover.deleteUserCategory(userId, userCategoryId);
         return ResponseEntity.ok().build();
