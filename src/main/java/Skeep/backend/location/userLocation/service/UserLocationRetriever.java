@@ -13,19 +13,25 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserLocationRetriever {
-
     private final UserLocationRepository userLocationRepository;
 
-    public Page<UserLocation> findAllByUserIdAndUserCategory(Long userId, String category, Pageable pageable) {
+    public Page<UserLocation> findAllByUserIdAndUserCategory(
+            Long userId,
+            String category,
+            Pageable pageable) {
         return userLocationRepository.findAllByUserIdAndUserCategory(userId, category, pageable);
     }
 
-    public UserLocation findByUserAndId(User user, Long id) {
+    public UserLocation findByUserAndId(
+            User user,
+            Long id) {
         return userLocationRepository.findByUserAndId(user, id)
                 .orElseThrow(() -> BaseException.type(UserLocationErrorCode.MISMATCH_USER_AND_USER_LOCATION));
     }
 
-    public Boolean existsByUserAndId(User user, Long id) {
+    public Boolean existsByUserAndId(
+            User user,
+            Long id) {
         return userLocationRepository.existsByUserAndId(user, id);
     }
 }

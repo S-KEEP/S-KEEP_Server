@@ -9,7 +9,7 @@ import Skeep.backend.auth.jwt.controller.TokenReissueApiController;
 import Skeep.backend.auth.jwt.domain.RefreshTokenRepository;
 import Skeep.backend.auth.jwt.service.JwtTokenService;
 import Skeep.backend.category.controller.UserCategoryController;
-import Skeep.backend.category.service.UserCategoryService;
+import Skeep.backend.category.service.UserCategoryRetriever;
 import Skeep.backend.global.security.config.SecurityConfig;
 import Skeep.backend.global.security.filter.JwtAuthenticationFilter;
 import Skeep.backend.global.security.filter.JwtExceptionFilter;
@@ -110,7 +110,7 @@ public abstract class ControllerTest {
     protected JwtTokenService jwtTokenService;
 
     @MockBean
-    protected UserCategoryService userCategoryService;
+    protected UserCategoryRetriever userCategoryRetriever;
 
     @MockBean
     protected UserRepository userRepository;

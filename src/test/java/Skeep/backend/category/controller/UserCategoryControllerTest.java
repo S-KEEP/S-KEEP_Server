@@ -1,7 +1,7 @@
 package Skeep.backend.category.controller;
 
 import Skeep.backend.category.domain.UserCategory;
-import Skeep.backend.category.dto.UserCategoryList;
+import Skeep.backend.category.dto.response.UserCategoryList;
 import Skeep.backend.fixture.UserCategoryFixture;
 import Skeep.backend.fixture.UserFixture;
 import Skeep.backend.global.ControllerTest;
@@ -38,7 +38,7 @@ class UserCategoryControllerTest extends ControllerTest {
         void 유저_카테고리_리스트_조회에_성공한다() throws Exception {
             // given
             doReturn(createUserCategoryList())
-                    .when(userCategoryService)
+                    .when(userCategoryRetriever)
                     .getUserCategoryList(any());
 
             // when

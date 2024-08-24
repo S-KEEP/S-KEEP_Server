@@ -47,4 +47,12 @@ public class UserCategory extends BaseTimeEntity {
             User user) {
         return new UserCategory(name, description, user);
     }
+
+    public void updateUserCategory(
+            String name,
+            String description
+    ) {
+        this.name = name;
+        this.description = description;
+    }
 }
