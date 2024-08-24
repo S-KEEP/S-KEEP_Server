@@ -4,6 +4,7 @@ import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.user.domain.User;
+import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class UserCategorySaver {
     private final UserCategoryRepository userCategoryRepository;
+    private final UserFindService userFindService;
 
     @Transactional
     public void createUserCategoryList(User user) {
@@ -26,7 +28,8 @@ public class UserCategorySaver {
     }
 
     @Transactional
-    public UserCategory saveUserCategory(UserCategory userCategory) {
-        return userCategoryRepository.save(userCategory);
+    public UserCategory saveUserCategory(Long userId, String name, String description) {
+        User user = userFindService.findById(userId);
+        return userCategoryRepository.save(UserCategory.createUserCategory(name, description, user));
     }
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,25 +28,30 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
     @Autowired
     private UserCategoryRepository userCategoryRepository;
 
-    private static User user;
-    private static List<UserCategoryFixture> fixtures;
+    private User user;
+    private List<UserCategoryFixture> fixtures;
+    private List<UserCategory> userCategories = new ArrayList<>();
 
     @BeforeEach
-    public void setUp() {
-        user = userRepository.save(UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE));
+        public void setUp() {
+            user = userRepository.save(UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE));
 
-        fixtures = Arrays.asList(
-                UserCategoryFixture.REST,
-                UserCategoryFixture.PARK_NATURE,
-                UserCategoryFixture.CULTURE_FESTIVAL,
-                UserCategoryFixture.SHOPPING_DOWNTOWN,
-                UserCategoryFixture.ACTIVITY,
-                UserCategoryFixture.RESTAURANT,
-                UserCategoryFixture.HISTORY,
-                UserCategoryFixture.EXTRA
-        );
-        fixtures.forEach(fixture -> userCategoryRepository.save(fixture.toUserCategory(user)));
-    }
+            fixtures = Arrays.asList(
+                    UserCategoryFixture.REST,
+                    UserCategoryFixture.PARK_NATURE,
+                    UserCategoryFixture.CULTURE_FESTIVAL,
+                    UserCategoryFixture.SHOPPING_DOWNTOWN,
+                    UserCategoryFixture.ACTIVITY,
+                    UserCategoryFixture.RESTAURANT,
+                    UserCategoryFixture.HISTORY,
+                    UserCategoryFixture.EXTRA
+            );
+
+            fixtures.forEach(fixture -> {
+                UserCategory userCategory = userCategoryRepository.save(fixture.toUserCategory(user));
+                userCategories.add(userCategory);
+            });
+        }
 
     @Test
     void findAllById() {
@@ -95,10 +101,10 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
     @Test
     void deleteById() {
         // when
-        userCategoryRepository.deleteById(1L);
+        userCategoryRepository.deleteById(userCategories.get(0).getId());
 
         // then
-        List<UserCategory> userCategories = userCategoryRepository.findAllByUserId(user.getId());
-        assertThat(userCategories.size()).isEqualTo(fixtures.size() - 1);
+        List<UserCategory> findUserCategories = userCategoryRepository.findAll();
+        assertThat(findUserCategories.size()).isEqualTo(fixtures.size() - 1);
     }
 }

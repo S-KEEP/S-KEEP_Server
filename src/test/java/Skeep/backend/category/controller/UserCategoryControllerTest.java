@@ -2,6 +2,7 @@ package Skeep.backend.category.controller;
 
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.dto.UserCategoryDto;
+import Skeep.backend.category.dto.request.UserCategoryCreateRequest;
 import Skeep.backend.category.dto.response.UserCategoryList;
 import Skeep.backend.fixture.UserCategoryFixture;
 import Skeep.backend.fixture.UserFixture;
@@ -11,10 +12,13 @@ import Skeep.backend.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static Skeep.backend.fixture.TokenFixture.ACCESS_TOKEN;
@@ -22,13 +26,12 @@ import static Skeep.backend.global.constant.Constants.PREFIX_AUTH;
 import static Skeep.backend.global.constant.Constants.PREFIX_BEARER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("[Controller Layer] -> UserCategoryController")
 class UserCategoryControllerTest extends ControllerTest {
@@ -100,7 +103,58 @@ class UserCategoryControllerTest extends ControllerTest {
         }
     }
 
-    private UserCategoryList createUserCategoryList() {
+    @Nested
+    @DisplayName("유저 카테고리 삭제 API [DELETE /api/user-category/{userCategoryId}]")
+    class deleteUserCategory {
+        private static final String BASE_URL = "/api/user-category/{userCategoryId}";
+
+        @Test
+        @WithMockUser(username = "1")
+        void 유저_카테고리_삭제에_성공한다() throws Exception {
+            // given
+            doNothing()
+                    .when(userCategoryRemover)
+                    .deleteUserCategory(anyLong(), anyLong());
+
+            // when
+            MockHttpServletRequestBuilder requestBuilder = delete(BASE_URL, 1L)
+                    .header(PREFIX_AUTH, PREFIX_BEARER + ACCESS_TOKEN);
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    @DisplayName("유저 카테고리 저장 API [POST /api/user-category]")
+    class SaveUserCategory {
+        private static final String BASE_URL = "/api/user-category";
+
+        @Test
+        @WithMockUser(username = "1")
+        void 유저_카테고리_저장에_성공한다() throws Exception {
+            // given
+            UserCategoryCreateRequest request = new UserCategoryCreateRequest("새로운 카테고리 이름", "새로운 카테고리 설명");
+            given(userCategorySaver.saveUserCategory(anyLong(), any(), any()))
+                    .willReturn(UserCategory.createUserCategory(request.name(), request.description(), UserFixture.BOB_BROWN.toUser(EProvider.APPLE)));
+
+            // when
+            MockHttpServletRequestBuilder requestBuilder = post(BASE_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(PREFIX_AUTH, PREFIX_BEARER + ACCESS_TOKEN)
+                    .content(objectMapper.writeValueAsString(request));
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(header().string(HttpHeaders.LOCATION, "/api/user-location?page=1&userCategory=" + URLEncoder.encode("새로운 카테고리 이름", StandardCharsets.UTF_8.toString())));
+        }
+    }
+
+private UserCategoryList createUserCategoryList() {
         User user = UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE);
 
         List<UserCategory> userCategoryList = List.of(
