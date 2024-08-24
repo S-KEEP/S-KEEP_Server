@@ -1,6 +1,7 @@
-package Skeep.backend.category.dto;
+package Skeep.backend.category.dto.response;
 
 import Skeep.backend.category.domain.UserCategory;
+import Skeep.backend.category.dto.UserCategoryDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,12 +9,6 @@ import java.util.stream.Collectors;
 public record UserCategoryList (
         List<UserCategoryDto> userCategoryDtoList
 ){
-    private record UserCategoryDto(
-            Long id,
-            String name,
-            String description
-    ) {
-    }
     public static UserCategoryList createDto(List<UserCategory> userCategoryList) {
         List<UserCategoryDto> list = userCategoryList.stream()
                 .map(userCategory -> new UserCategoryDto(

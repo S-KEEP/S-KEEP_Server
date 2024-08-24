@@ -105,6 +105,8 @@ public class ApiGlobalExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleAnyException(RuntimeException e, HttpServletRequest request) {
+        log.warn(e.getMessage());
+        log.warn(request.toString());
         return convert(GlobalErrorCode.INTERNAL_SERVER_ERROR);
     }
 

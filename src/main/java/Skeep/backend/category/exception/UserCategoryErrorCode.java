@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CategoryErrorCode implements ErrorCode {
-    INVALID_ENUM_CATEGORY(HttpStatus.BAD_REQUEST, "CATEGORY_001", "유효하지 않은 카테고리 픽스입니다."),
-    USER_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_002", "유저 카테고리를 찾을 수 없습니다.")
+public enum UserCategoryErrorCode implements ErrorCode {
+    USER_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_CATEGORY_001", "유저 카테고리를 찾을 수 없습니다."),
+    USER_CATEGORY_NOT_MATCHED(HttpStatus.NOT_FOUND, "USER_CATEGORY_002", "해당 유저의 카테고리가 아닙니다."),
     ;
 
     private final HttpStatus status;

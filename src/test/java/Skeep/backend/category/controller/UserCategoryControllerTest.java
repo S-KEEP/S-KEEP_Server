@@ -1,7 +1,8 @@
 package Skeep.backend.category.controller;
 
 import Skeep.backend.category.domain.UserCategory;
-import Skeep.backend.category.dto.UserCategoryList;
+import Skeep.backend.category.dto.UserCategoryDto;
+import Skeep.backend.category.dto.response.UserCategoryList;
 import Skeep.backend.fixture.UserCategoryFixture;
 import Skeep.backend.fixture.UserFixture;
 import Skeep.backend.global.ControllerTest;
@@ -20,8 +21,11 @@ import static Skeep.backend.fixture.TokenFixture.ACCESS_TOKEN;
 import static Skeep.backend.global.constant.Constants.PREFIX_AUTH;
 import static Skeep.backend.global.constant.Constants.PREFIX_BEARER;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,16 +33,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("[Controller Layer] -> UserCategoryController")
 class UserCategoryControllerTest extends ControllerTest {
     @Nested
-    @DisplayName("유저 카테고리 리스트 조회 API [GET /api/userCategory/list]")
+    @DisplayName("유저 카테고리 리스트 조회 API [GET /api/user-category/list]")
     class getUserCategoryList {
-        private static final String BASE_URL = "/api/userCategory/list";
+        private static final String BASE_URL = "/api/user-category/list";
 
         @Test
         @WithMockUser(username = "1")
         void 유저_카테고리_리스트_조회에_성공한다() throws Exception {
             // given
             doReturn(createUserCategoryList())
-                    .when(userCategoryService)
+                    .when(userCategoryRetriever)
                     .getUserCategoryList(any());
 
             // when
@@ -68,6 +72,31 @@ class UserCategoryControllerTest extends ControllerTest {
                     .andExpect(jsonPath("$.result.userCategoryDtoList[6].description").value("언젠간 가볼 곳"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[7].name").value("기타"))
                     .andExpect(jsonPath("$.result.userCategoryDtoList[7].description").value(""));
+        }
+    }
+
+    @Nested
+    @DisplayName("유저 카테고리 수정 API [PATCH /api/user-category]")
+    class updateUserCategory {
+        private static final String BASE_URL = "/api/user-category";
+
+        @Test
+        @WithMockUser(username = "1")
+        void 유저_카테고리_수정에_성공한다() throws Exception {
+            // given
+            UserCategoryDto userCategoryDto = new UserCategoryDto(1L, "공원/자연", "자연을 느끼고 싶을 때");
+            doNothing().when(userCategoryUpdater).updateUserCategory(anyLong(), any(UserCategoryDto.class));
+
+            // when
+            MockHttpServletRequestBuilder requestBuilder = patch(BASE_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(PREFIX_AUTH, PREFIX_BEARER + ACCESS_TOKEN)
+                    .content(objectMapper.writeValueAsString(userCategoryDto));
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andDo(print())
+                    .andExpect(status().isOk());
         }
     }
 

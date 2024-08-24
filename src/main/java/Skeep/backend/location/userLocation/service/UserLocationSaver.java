@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserLocationSaver {
-
     private final UserLocationRepository userLocationRepository;
 
     public UserLocation createUserLocation(User user) {
