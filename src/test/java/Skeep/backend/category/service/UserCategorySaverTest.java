@@ -48,4 +48,22 @@ class UserCategorySaverTest extends ServiceTest {
                 () -> assertThat(userCategories).allMatch(category -> category.getUser().getId().equals(user.getId()))
         );
     }
+
+    @Test
+    void 사용자_카테고리를_저장하다() {
+        // given
+        User user = userRepository.save(UserFixture.BOB_BROWN.toUser(EProvider.APPLE));
+
+        // when
+        UserCategory savedUserCategory = userCategorySaver.saveUserCategory(user.getId(), "NEW_CATEGORY", "NEW_CATEGORY_DESCRIPTION");
+
+        // then
+        Optional<UserCategory> findUserCategory = userCategoryRepository.findById(savedUserCategory.getId());
+        assertAll(
+                () -> assertThat(findUserCategory.isPresent()).isTrue(),
+                () -> assertThat(findUserCategory.get().getName()).isEqualTo("NEW_CATEGORY"),
+                () -> assertThat(findUserCategory.get().getDescription()).isEqualTo("NEW_CATEGORY_DESCRIPTION"),
+                () -> assertThat(findUserCategory.get().getUser()).isEqualTo(user)
+        );
+    }
 }
