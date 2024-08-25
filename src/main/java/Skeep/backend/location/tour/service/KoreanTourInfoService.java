@@ -1,6 +1,5 @@
-package Skeep.backend.tour.service;
+package Skeep.backend.location.tour.service;
 
-import Skeep.backend.tour.dto.response.TourLocationResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name="koreanTourInfoService", url="http://apis.data.go.kr/B551011/KorService1")
 public interface KoreanTourInfoService {
     @GetMapping("/locationBasedList1")
-    TourLocationResponse getLocationBasedList(
+    String getLocationBasedList(
             @RequestParam("serviceKey") String serviceKey,
             @RequestParam("numOfRows") int numOfRows,
             @RequestParam("pageNo") int pageNo,

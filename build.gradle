@@ -86,6 +86,9 @@ dependencies {
 	// Apple Private Key
 	implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.30.1'
 	implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
+
+	// xml
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.0'
 }
 
 task copyGitSubmodule(type: Copy) {

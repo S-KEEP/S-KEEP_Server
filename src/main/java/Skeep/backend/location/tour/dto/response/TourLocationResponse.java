@@ -1,4 +1,4 @@
-package Skeep.backend.tour.dto.response;
+package Skeep.backend.location.tour.dto.response;
 
 import java.util.List;
 
@@ -6,10 +6,20 @@ public record TourLocationResponse(
         Response response
 ) {
     public record Response(
+            Header header,
             Body body
     ) {
+        public record Header(
+                String resultCode,
+                String resultMsg
+        ) {
+        }
+
         public record Body(
-                Items items
+                Items items,
+                int numOfRows,
+                int pageNo,
+                int totalCount
         ) {
             public record Items(
                     List<TourLocation> item

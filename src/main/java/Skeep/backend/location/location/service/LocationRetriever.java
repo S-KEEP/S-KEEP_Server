@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class LocationRetriever {
-
     private final LocationRepository locationRepository;
 
     public Boolean existsByKakaoMapId(String kakaoMapId) {

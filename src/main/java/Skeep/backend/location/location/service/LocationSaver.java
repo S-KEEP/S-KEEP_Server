@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class LocationSaver {
-
     private final LocationRepository locationRepository;
 
     public Location saveLocation(Location location) {
