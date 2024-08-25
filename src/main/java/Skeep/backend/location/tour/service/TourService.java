@@ -70,7 +70,7 @@ public class TourService {
                         tourLocation.title(),
                         tourLocation.mapx(),
                         tourLocation.mapy(),
-                        String.join(" ", tourLocation.addr1(), tourLocation.addr2()),
+                        String.join(" ", tourLocation.addr1()),
                         tourLocation.dist(),
                         tourLocation.firstimage()
                 ))
