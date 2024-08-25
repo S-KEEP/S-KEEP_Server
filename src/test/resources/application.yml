@@ -73,3 +73,8 @@ cloud:
 
 server:
   domain: s-keep.site
+
+tour:
+  service-key:
+    encoding: abc
+    decoding: abc

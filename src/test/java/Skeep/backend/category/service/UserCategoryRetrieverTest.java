@@ -1,6 +1,6 @@
 package Skeep.backend.category.service;
 
-import Skeep.backend.category.dto.UserCategoryList;
+import Skeep.backend.category.dto.response.UserCategoryList;
 import Skeep.backend.global.ServiceTest;
 import Skeep.backend.user.domain.EProvider;
 import Skeep.backend.user.domain.User;
@@ -16,9 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("[Service Layer] -> UserCategoryService")
-class UserCategoryServiceTest extends ServiceTest {
+class UserCategoryRetrieverTest extends ServiceTest {
     @Autowired
-    private UserCategoryService userCategoryService;
+    private UserCategoryRetriever userCategoryRetriever;
 
     @Nested
     @DisplayName("유저 카테고리 리스트 조회")
@@ -39,7 +39,7 @@ class UserCategoryServiceTest extends ServiceTest {
 
         @Test
         void 유저_카테고리_리스트_조회에_성공한다() {
-            UserCategoryList userCategoryList = userCategoryService.getUserCategoryList(user.getId());
+            UserCategoryList userCategoryList = userCategoryRetriever.getUserCategoryList(user.getId());
 
             assertAll(
                     () -> assertThat(userCategoryList).isNotNull(),

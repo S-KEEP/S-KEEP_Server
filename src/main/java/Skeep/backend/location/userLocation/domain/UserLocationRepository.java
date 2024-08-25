@@ -1,5 +1,6 @@
 package Skeep.backend.location.userLocation.domain;
 
+import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,4 +40,8 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
     @Modifying
     @Query("DELETE FROM UserLocation ul WHERE ul.user = :user")
     void deleteAllByUser(@Param(value = "user") User user);
+
+    @Modifying
+    @Query("DELETE FROM UserLocation ul WHERE ul.user = :user and ul.userCategory = :userCategory")
+    void deleteAllByUserAndUserCategory(@Param(value = "user") User user, @Param(value = "userCategory")UserCategory userCategory);
 }
