@@ -34,4 +34,9 @@ public class UserLocationRetriever {
             Long id) {
         return userLocationRepository.existsByUserAndId(user, id);
     }
+
+    public UserLocation findById(Long id) {
+        return userLocationRepository.findById(id)
+                .orElseThrow(() -> BaseException.type(UserLocationErrorCode.NOT_FOUND_USER_LOCATION));
+    }
 }
