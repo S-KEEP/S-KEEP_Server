@@ -14,7 +14,7 @@ public enum EContentType {
     ACCOMMODATION(32, "숙박"),
     SHOPPING(38, "쇼핑"),
     RESTAURANT(39, "음식점"),
-    NULL(-1, "");
+    NULL(-1, "")
     ;
 
     private final int id;

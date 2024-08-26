@@ -101,7 +101,7 @@ public class TourService {
                         tourLocation.mapy(),
                         String.join(" ", tourLocation.addr1()),
                         tourLocation.dist(),
-                        tourLocation.contentid(),
+                        tourLocation.contenttypeid(),
                         tourLocation.firstimage()
                 ))
                 .collect(Collectors.toList());
@@ -113,29 +113,22 @@ public class TourService {
 
         List<KakaoResponseResult> kakaoLocationIdList = kakaoMapService.getKakaoLocationIdList(List.of(tourLocationDto.title()));
         if (kakaoLocationIdList.isEmpty()) {
-            throw BaseException.type(null);
+            throw BaseException.type(TourErrorCode.CANNOT_MATCH_KAKAO_MAP);
         }
 
         ChatGptResponse chatGptResponse = gptFeignClientService.sendRequest(createGptRequest_Category(tourLocationDto.title(), tourLocationDto.contentTypeId()));
-        System.out.println("!!!!");
-        System.out.println(chatGptResponse.text());
         ECategory eCategory = ECategory.findByName(chatGptResponse.text());
 
         Location location;
         if (locationRetriever.existsByKakaoMapId(kakaoLocationIdList.get(0).id())) {
             location = locationRetriever.findByKakaoMapId(kakaoLocationIdList.get(0).id());
         } else {
-            System.out.println(kakaoLocationIdList.get(0).id());
-            System.out.println(kakaoLocationIdList.get(0).placeName());
-            System.out.println(kakaoLocationIdList.get(0).roadAddress());
-            System.out.println(eCategory);
             location = locationSaver.saveLocation(Location.createLocation(kakaoLocationIdList.get(0).id(), kakaoLocationIdList.get(0).placeName(), kakaoLocationIdList.get(0).roadAddress(), kakaoLocationIdList.get(0).x(), kakaoLocationIdList.get(0).y(), eCategory));
         }
 
         MultipartFile multipartFile = ImageConverter.convertUrlToMultipartFile(tourLocationDto.imageUrl());
 
-        UserLocation userLocation = userLocationSaver.createUserLocation(user);
-        String fileName = s3Service.uploadToS3(userLocation.getId(), multipartFile);
+        String fileName = s3Service.uploadToS3(multipartFile);
 
         UserCategory userCategory = userCategoryRetriever.findById(userCategoryId);
         return userLocationSaver.createUserLocation(UserLocation.createUserLocation(fileName, location, user, userCategory));

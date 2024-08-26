@@ -21,7 +21,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 
 import java.io.InputStream;
 import java.time.Duration;
-import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -57,7 +57,7 @@ public class S3Service {
         return url;
     }
 
-    public String uploadToS3(Long userLocationId, MultipartFile image) {
+    public String uploadToS3(MultipartFile image) {
         String contentType = MultiFileUtil.determineImageFormat(image);
         String mimeType;
         switch (contentType) {
@@ -66,9 +66,7 @@ public class S3Service {
             default -> throw BaseException.type(GlobalErrorCode.NOT_SUPPORTED_MEDIA_TYPE_ERROR);
         }
 
-        String fileName;
-        fileName = Objects.requireNonNull(image.getOriginalFilename())
-                .split("\\.")[0] + "_" + userLocationId.toString();
+        String fileName = String.valueOf(UUID.randomUUID());
 
         InputStream inputStream = MultipartFileResource.getInputStream(image);
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
