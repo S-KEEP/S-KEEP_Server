@@ -11,5 +11,4 @@ import java.util.List;
 @Setter
 public class ScreenshotUploadDto implements Serializable {
         List<MultipartFile> file;
-
 }

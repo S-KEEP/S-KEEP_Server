@@ -17,4 +17,8 @@ public class UserLocationSaver {
                         .user(user)
                         .build());
     }
+
+    public UserLocation createUserLocation(UserLocation userLocation) {
+        return userLocationRepository.save(userLocation);
+    }
 }

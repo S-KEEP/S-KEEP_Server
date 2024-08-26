@@ -20,14 +20,12 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class GptService {
-
     @Value("${gpt.token}")
     private String gptSecretKey;
 
     private final WebClient webClient;
 
     public List<LocationAndCategory> getGptAnalyze(List<String> targetTextList) {
-
         Flux<LocationAndCategory> imageTextList = Flux.fromIterable(targetTextList)
                                                       .flatMapSequential(this::requestGpt)
                                                       .flatMap(this::parseResponse);
@@ -36,7 +34,6 @@ public class GptService {
     }
 
     public Mono<Optional<GptResponse>> requestGpt(String ocrText) {
-
         GptRequest gptRequest = makeBodyRequest(ocrText);
         log.info("gpt request: {}", gptRequest.toString());
 

@@ -1,9 +1,26 @@
 package Skeep.backend.location.tour.service;
 
+import Skeep.backend.category.domain.ECategory;
+import Skeep.backend.category.domain.UserCategory;
+import Skeep.backend.category.service.UserCategoryRetriever;
 import Skeep.backend.global.exception.BaseException;
+import Skeep.backend.global.util.ImageConverter;
+import Skeep.backend.gpt.service.GptFeignClientService;
+import Skeep.backend.gpt.service.dto.ChatGptRequest;
+import Skeep.backend.gpt.service.dto.ChatGptResponse;
+import Skeep.backend.kakaoMap.dto.response.KakaoResponseResult;
+import Skeep.backend.kakaoMap.service.KakaoMapService;
+import Skeep.backend.location.location.domain.Location;
+import Skeep.backend.location.location.service.LocationRetriever;
+import Skeep.backend.location.tour.dto.TourLocationDto;
 import Skeep.backend.location.tour.dto.response.TourLocationList;
 import Skeep.backend.location.tour.dto.response.TourLocationResponse;
 import Skeep.backend.location.tour.exception.TourErrorCode;
+import Skeep.backend.location.userLocation.domain.UserLocation;
+import Skeep.backend.location.userLocation.service.UserLocationSaver;
+import Skeep.backend.s3.service.S3Service;
+import Skeep.backend.user.domain.User;
+import Skeep.backend.user.service.UserFindService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +38,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TourService {
     private final KoreanTourInfoService koreanTourInfoService;
+    private final KakaoMapService kakaoMapService;
+    private final UserFindService userFindService;
+    private final LocationRetriever locationRetriever;
+    private final UserLocationSaver userLocationSaver;
+    private final S3Service s3Service;
+    private final GptFeignClientService gptFeignClientService;
+    private final UserCategoryRetriever userCategoryRetriever;
 
     @Value("${tour.service-key.encoding}")
     private String serviceKey;
@@ -42,7 +67,7 @@ public class TourService {
             return new TourLocationList(0, null);
         }
 
-        List<TourLocationList.TourLocationDto> tourLocationDtos = convertToLocationDtos(tourLocationResponse);
+        List<TourLocationDto> tourLocationDtos = convertToLocationDtos(tourLocationResponse);
         return new TourLocationList(tourLocationDtos.size(), tourLocationDtos);
     }
 
@@ -60,13 +85,13 @@ public class TourService {
         return tourLocationResponse;
     }
 
-    private List<TourLocationList.TourLocationDto> convertToLocationDtos(TourLocationResponse response) {
+    private List<TourLocationDto> convertToLocationDtos(TourLocationResponse response) {
         return response.response()
                 .body()
                 .items()
                 .item()
                 .stream()
-                .map(tourLocation -> new TourLocationList.TourLocationDto(
+                .map(tourLocation -> new TourLocationDto(
                         tourLocation.title(),
                         tourLocation.mapx(),
                         tourLocation.mapy(),
@@ -75,5 +100,32 @@ public class TourService {
                         tourLocation.firstimage()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public UserLocation createUserLocationByTourAPI(Long userId, TourLocationDto tourLocationDto) {
+        User user = userFindService.findUserByIdAndStatus(userId);
+
+        List<KakaoResponseResult> kakaoLocationIdList = kakaoMapService.getKakaoLocationIdList(List.of(tourLocationDto.title()));
+        if (kakaoLocationIdList.isEmpty()) {
+            throw BaseException.type(null);
+        }
+
+        Location location;
+        if (locationRetriever.existsByKakaoMapId(kakaoLocationIdList.get(0).id())) {
+            location = locationRetriever.findByKakaoMapId(kakaoLocationIdList.get(0).id());
+        } else {
+            location = Location.createLocation(kakaoLocationIdList.get(0).id(), kakaoLocationIdList.get(0).placeName(), kakaoLocationIdList.get(0).roadAddress(), ECategory.EXTRA);
+        }
+
+        MultipartFile multipartFile = ImageConverter.convertUrlToMultipartFile(tourLocationDto.imageUrl());
+
+        UserLocation userLocation = userLocationSaver.createUserLocation(user);
+        String fileName = s3Service.uploadToS3(userLocation.getId(), multipartFile);
+
+        ChatGptResponse chatGptResponse = gptFeignClientService.sendRequest(new ChatGptRequest(""));
+        UserCategory userCategory = userCategoryRetriever.findByUserAndName(user, chatGptResponse.text());
+
+        return userLocationSaver.createUserLocation(UserLocation.createUserLocation(fileName, location, user, userCategory));
     }
 }
