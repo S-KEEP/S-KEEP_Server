@@ -60,12 +60,16 @@ public class Location extends BaseTimeEntity {
             String kakaoMapId,
             String placeName,
             String roadAddress,
+            String x,
+            String y,
             ECategory fixedCategory
     ) {
         return Location.builder()
                 .kakaoMapId(kakaoMapId)
                 .placeName(placeName)
                 .roadAddress(roadAddress)
+                .x(x)
+                .y(y)
                 .fixedCategory(fixedCategory)
                 .build();
     }

@@ -6,6 +6,7 @@ public record TourLocationDto (
         String mapY,
         String address,
         String dist,
+        String contentTypeId,
         String imageUrl
 ) {
 }

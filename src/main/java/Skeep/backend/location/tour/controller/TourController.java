@@ -27,12 +27,13 @@ public class TourController {
         return ResponseEntity.ok(tourLocationList);
     }
 
-    @PostMapping("/tourism-org")
+    @PostMapping("/{userCategoryId}")
     public ResponseEntity<Void> createUserLocationWithTourAPI(
             @UserId Long userId,
-            @RequestBody @Valid TourLocationDto tourLocationDto
+            @RequestBody @Valid TourLocationDto tourLocationDto,
+            @PathVariable(value = "userCategoryId") Long userCategoryId
     ) {
-        UserLocation userLocation = tourService.createUserLocationByTourAPI(userId, tourLocationDto);
+        UserLocation userLocation = tourService.createUserLocationByTourAPI(userId, tourLocationDto, userCategoryId);
         return ResponseEntity.created(URI.create("/api/user-location/" + userLocation.getId())).build();
     }
 }

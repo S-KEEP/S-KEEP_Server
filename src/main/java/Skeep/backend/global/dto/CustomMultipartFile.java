@@ -25,7 +25,13 @@ public class CustomMultipartFile implements MultipartFile {
 
     @Override
     public String getContentType() {
-        return null;
+        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (filename.endsWith(".png")) {
+            return "image/png";
+        } else {
+            return null;
+        }
     }
 
     @Override

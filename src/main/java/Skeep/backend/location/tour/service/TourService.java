@@ -12,6 +12,8 @@ import Skeep.backend.kakaoMap.dto.response.KakaoResponseResult;
 import Skeep.backend.kakaoMap.service.KakaoMapService;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.location.service.LocationRetriever;
+import Skeep.backend.location.location.service.LocationSaver;
+import Skeep.backend.location.tour.domain.EContentType;
 import Skeep.backend.location.tour.dto.TourLocationDto;
 import Skeep.backend.location.tour.dto.response.TourLocationList;
 import Skeep.backend.location.tour.dto.response.TourLocationResponse;
@@ -30,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,7 @@ public class TourService {
     private final S3Service s3Service;
     private final GptFeignClientService gptFeignClientService;
     private final UserCategoryRetriever userCategoryRetriever;
+    private final LocationSaver locationSaver;
 
     @Value("${tour.service-key.encoding}")
     private String serviceKey;
@@ -97,13 +101,14 @@ public class TourService {
                         tourLocation.mapy(),
                         String.join(" ", tourLocation.addr1()),
                         tourLocation.dist(),
+                        tourLocation.contentid(),
                         tourLocation.firstimage()
                 ))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public UserLocation createUserLocationByTourAPI(Long userId, TourLocationDto tourLocationDto) {
+    public UserLocation createUserLocationByTourAPI(Long userId, TourLocationDto tourLocationDto, Long userCategoryId) {
         User user = userFindService.findUserByIdAndStatus(userId);
 
         List<KakaoResponseResult> kakaoLocationIdList = kakaoMapService.getKakaoLocationIdList(List.of(tourLocationDto.title()));
@@ -111,11 +116,20 @@ public class TourService {
             throw BaseException.type(null);
         }
 
+        ChatGptResponse chatGptResponse = gptFeignClientService.sendRequest(createGptRequest_Category(tourLocationDto.title(), tourLocationDto.contentTypeId()));
+        System.out.println("!!!!");
+        System.out.println(chatGptResponse.text());
+        ECategory eCategory = ECategory.findByName(chatGptResponse.text());
+
         Location location;
         if (locationRetriever.existsByKakaoMapId(kakaoLocationIdList.get(0).id())) {
             location = locationRetriever.findByKakaoMapId(kakaoLocationIdList.get(0).id());
         } else {
-            location = Location.createLocation(kakaoLocationIdList.get(0).id(), kakaoLocationIdList.get(0).placeName(), kakaoLocationIdList.get(0).roadAddress(), ECategory.EXTRA);
+            System.out.println(kakaoLocationIdList.get(0).id());
+            System.out.println(kakaoLocationIdList.get(0).placeName());
+            System.out.println(kakaoLocationIdList.get(0).roadAddress());
+            System.out.println(eCategory);
+            location = locationSaver.saveLocation(Location.createLocation(kakaoLocationIdList.get(0).id(), kakaoLocationIdList.get(0).placeName(), kakaoLocationIdList.get(0).roadAddress(), kakaoLocationIdList.get(0).x(), kakaoLocationIdList.get(0).y(), eCategory));
         }
 
         MultipartFile multipartFile = ImageConverter.convertUrlToMultipartFile(tourLocationDto.imageUrl());
@@ -123,9 +137,22 @@ public class TourService {
         UserLocation userLocation = userLocationSaver.createUserLocation(user);
         String fileName = s3Service.uploadToS3(userLocation.getId(), multipartFile);
 
-        ChatGptResponse chatGptResponse = gptFeignClientService.sendRequest(new ChatGptRequest(""));
-        UserCategory userCategory = userCategoryRetriever.findByUserAndName(user, chatGptResponse.text());
-
+        UserCategory userCategory = userCategoryRetriever.findById(userCategoryId);
         return userLocationSaver.createUserLocation(UserLocation.createUserLocation(fileName, location, user, userCategory));
+    }
+
+    private ChatGptRequest createGptRequest_Category(String placeName, String contentTypeId) {
+        String categoryNameList = Arrays.stream(ECategory.values())
+                .map(ECategory::getName)
+                .collect(Collectors.joining(","));
+
+        EContentType contentType = EContentType.findById(Integer.parseInt(contentTypeId));
+        String content = "제시문: 장소 이름을 줄께. 가장 일치하는 카테고리 중에서 하나를 골라서 알려줘. \n"
+                + "장소 이름: " + placeName + "\n"
+                + "카테고리: " + categoryNameList + "\n"
+                + "힌트: " + contentType + "/n"
+                + "답변: ";
+
+        return new ChatGptRequest(content);
     }
 }
