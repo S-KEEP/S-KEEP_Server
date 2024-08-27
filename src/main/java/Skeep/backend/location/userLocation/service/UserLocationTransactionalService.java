@@ -55,7 +55,7 @@ public class UserLocationTransactionalService {
             ECategory category
     ) {
         UserLocation userLocation = userLocationSaver.createUserLocation(currentUser);
-        String fileName = s3Service.uploadToS3(userLocation.getId(), file);
+        String fileName = s3Service.uploadToS3(file);
         Location location;
         if (locationRetriever.existsByKakaoMapId(kakaoResponseResult.id()))
             location = locationRetriever.findByKakaoMapId(kakaoResponseResult.id());

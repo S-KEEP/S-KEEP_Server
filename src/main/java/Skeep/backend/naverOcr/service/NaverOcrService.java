@@ -36,7 +36,6 @@ public class NaverOcrService {
 
 
     public List<String> getImageTextListWithFile(List<MultipartFile> imageList) {
-
         Flux<String> imageTextList = Flux.fromIterable(imageList)
                                          .flatMapSequential(this::requestOcrWithFile)
                                          .map(optionalText -> optionalText.orElse(""))
@@ -46,12 +45,10 @@ public class NaverOcrService {
     }
 
     public List<String> getImageTextListWithUrl(List<String> imageList) {
-
         Flux<String> imageTextList = Flux.fromIterable(imageList)
                                          .flatMapSequential(this::requestOcrWithUrl)
                                          .map(optionalText -> optionalText.orElse(""))
                                          .flatMap(this::parseResponse);
-
         return imageTextList.collectList().block();
     }
 
@@ -96,7 +93,6 @@ public class NaverOcrService {
     }
 
     private MultipartBodyBuilder makeRequestBodyWithFile(MultipartFile file) {
-        
         Map<String, Object> messageMap = new HashMap<>();
         messageMap.put("version", NaverOcrConstants.VERSION);
         messageMap.put("requestId", UUID.randomUUID().toString());
@@ -124,7 +120,6 @@ public class NaverOcrService {
     }
 
     private Map<String, Object> makeRequestBodyWithUrl(String imageUrl) {
-
         Map<String, Object> messageMap = new HashMap<>();
         messageMap.put("version", NaverOcrConstants.VERSION);
         messageMap.put("requestId", UUID.randomUUID().toString());
