@@ -15,3 +15,4 @@ spring:
     import:
       - classpath:/application-oauth.yml
       - classpath:/application-tour.yml
+      - classpath:/application-weather.yml
