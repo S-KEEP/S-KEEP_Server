@@ -17,4 +17,8 @@ public class LocationRetriever {
     public Location findByKakaoMapId(String kakaoMapId) {
         return locationRepository.findByKakaoMapId(kakaoMapId);
     }
+
+    public Location findByXandY(String x, String y) {
+        return locationRepository.findByXAndY(x, y).orElseGet(null);
+    }
 }
