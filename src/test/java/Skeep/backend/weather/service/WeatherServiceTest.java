@@ -4,7 +4,7 @@ import Skeep.backend.global.ServiceTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class WeathersServiceTest extends ServiceTest {
+class WeatherServiceTest extends ServiceTest {
     @Autowired
     private WeatherService weatherService;
 
