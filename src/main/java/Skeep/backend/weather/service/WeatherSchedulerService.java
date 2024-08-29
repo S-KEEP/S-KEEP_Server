@@ -31,17 +31,15 @@ import static Skeep.backend.weather.dto.response.ShortTermResponse.Response.Body
 @RequiredArgsConstructor
 public class WeatherSchedulerService {
     private final LocationRepository locationRepository;
-    private final WeatherRepository weatherRepository;
     private final WeatherService weatherService;
     private final LocationGridService locationGridService;
-
-    private LocalDate localDate;
+    private final WeatherSaver weatherSaver;
+    private final WeatherRemover weatherRemover;
 
     // 매일 아침 9시
     @Transactional
     public void updateWeather() {
-        localDate = LocalDate.now();
-        weatherRepository.deleteAll();
+        weatherRemover.deleteAll();
 
         List<Location> locationList = locationRepository.findAll();
         for (int i = 0; i < locationList.size(); i++) {
@@ -50,8 +48,10 @@ public class WeatherSchedulerService {
                 continue;
             }
 
-            analyzeShortTerm(locationList.get(i), String.valueOf(locationGrid.getGridX()), String.valueOf(locationGrid.getGridY()));
-            analyzeMiddleTerm(locationList.get(i), getRegionCode_land(locationList.get(i).getRoadAddress()), getRegionCode_ta(locationList.get(i).getRoadAddress()));
+            List<Weather> weatherList = new ArrayList<>();
+            weatherList.addAll(analyzeShortTerm(locationList.get(i), String.valueOf(locationGrid.getGridX()), String.valueOf(locationGrid.getGridY())));
+            weatherList.addAll(analyzeMiddleTerm(locationList.get(i), getRegionCode_land(locationList.get(i).getRoadAddress()), getRegionCode_ta(locationList.get(i).getRoadAddress())));
+            weatherSaver.save(weatherList);
         }
     }
 
@@ -72,15 +72,26 @@ public class WeatherSchedulerService {
     }
 
     @Transactional
-    public void analyzeShortTerm(Location location, String x, String y) {
+    public List<Weather> analyzeShortTerm(Location location, String x, String y) {
+        LocalDate localDate = LocalDate.of(2024, 8, 29);
+
         Items items = weatherService.getShortTermForecast(localDate, x, y);
         List<LocalDate> dates = getDates(0, 3);
+        List<Weather> weatherList = new ArrayList<>();
 
-        for (LocalDate date: dates) {
+        for (LocalDate date : dates) {
             String yyyyMMdd = date.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            weatherRepository.save(Weather.createWeather(location, date, getEWeatherCondition_shortTerm(items, yyyyMMdd), getTemperature_shortTerm(items, yyyyMMdd)));
+            Weather weather = Weather.createWeather(
+                    location,
+                    date,
+                    getEWeatherCondition_shortTerm(items, yyyyMMdd),
+                    getTemperature_shortTerm(items, yyyyMMdd)
+            );
+            weatherList.add(weather);
         }
+        return weatherList;
     }
+
 
     private EWeatherCondition getEWeatherCondition_shortTerm(Items items, String yyyyMMdd) {
         Item PTY = items.item().stream()
@@ -134,7 +145,9 @@ public class WeatherSchedulerService {
     }
 
     @Transactional
-    public void analyzeMiddleTerm(Location location, String regionCode_land, String regionCode_ta) {
+    public List<Weather> analyzeMiddleTerm(Location location, String regionCode_land, String regionCode_ta) {
+        LocalDate localDate = LocalDate.now();
+
         MiddleTermLandForecastResponse.Response.Body.Items.Item item_landForecast = weatherService.getMiddleTermLandForecast(localDate, regionCode_land).item().get(0);
         MiddleTermTaResponse.Response.Body.Items.Item item_ta = weatherService.getMiddleTermTa(localDate, regionCode_ta).item().get(0);
 
@@ -142,9 +155,11 @@ public class WeatherSchedulerService {
         List<String> temperatures = getTemperature_middleTerm(item_ta);
         List<LocalDate> dates = getDates(3, 11);
 
-        IntStream.range(0, dates.size()).forEach(i ->
-                weatherRepository.save(Weather.createWeather(location, dates.get(i), eWeatherConditions.get(i), temperatures.get(i)))
-        );
+        List<Weather> weatherList = IntStream.range(0, dates.size())
+                .mapToObj(i -> Weather.createWeather(location, dates.get(i), eWeatherConditions.get(i), temperatures.get(i)))
+                .collect(Collectors.toList());
+
+        return weatherList;
     }
 
     private List<String> getTemperature_middleTerm(MiddleTermTaResponse.Response.Body.Items.Item item_ta) {
@@ -176,6 +191,8 @@ public class WeatherSchedulerService {
     }
 
     private List<LocalDate> getDates(int start, int end) {
+        LocalDate localDate = LocalDate.now();
+
         return IntStream.range(start, end)
                 .mapToObj(i -> localDate.plusDays(i))
                 .collect(Collectors.toList());
