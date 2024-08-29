@@ -5,7 +5,6 @@ import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.location.domain.LocationRepository;
 import Skeep.backend.weather.domain.EWeatherCondition;
 import Skeep.backend.weather.domain.Weather;
-import Skeep.backend.weather.domain.WeatherRepository;
 import Skeep.backend.weather.domain.locationGrid.LocationGrid;
 import Skeep.backend.weather.dto.response.MiddleTermLandForecastResponse;
 import Skeep.backend.weather.dto.response.MiddleTermTaResponse;

@@ -4,7 +4,6 @@ import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.weather.dto.request.WeatherRequest;
 import Skeep.backend.weather.dto.response.WeatherListDto;
 import Skeep.backend.weather.service.WeatherLocationService;
-import Skeep.backend.weather.service.WeatherRetriever;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

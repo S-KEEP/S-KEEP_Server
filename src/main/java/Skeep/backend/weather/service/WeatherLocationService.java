@@ -1,10 +1,8 @@
 package Skeep.backend.weather.service;
 
 import Skeep.backend.location.location.domain.Location;
-import Skeep.backend.location.location.domain.LocationRepository;
 import Skeep.backend.location.location.service.LocationRetriever;
 import Skeep.backend.weather.domain.Weather;
-import Skeep.backend.weather.domain.WeatherRepository;
 import Skeep.backend.weather.dto.response.WeatherListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
