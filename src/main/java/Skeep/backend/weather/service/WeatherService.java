@@ -5,7 +5,6 @@ import Skeep.backend.weather.dto.response.MiddleTermLandForecastResponse;
 import Skeep.backend.weather.dto.response.MiddleTermTaResponse;
 import Skeep.backend.weather.dto.response.ShortTermResponse;
 import Skeep.backend.weather.exception.WeatherErrorCode;
-import Skeep.backend.weather.util.RegionUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -27,10 +26,10 @@ public class WeatherService {
     @Value("${weather.service-key.decoding}")
     private String serviceKey;
 
-    public ShortTermResponse.Response.Body.Items getShortTermForecast(String x, String y) {
+    public ShortTermResponse.Response.Body.Items getShortTermForecast(LocalDate localDate, String x, String y) {
         String response = shortTermFeignClientService.getVillageForecast(
                 serviceKey, 1000, 1, "JSON",
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "0500", x, y);
+                localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), "0500", x, y);
 
         ShortTermResponse shorTermResponse = deserializeShortTermResponse(response);
         return shorTermResponse.response().body().items();
@@ -49,12 +48,15 @@ public class WeatherService {
         return shorTermResponse;
     }
 
-    public MiddleTermLandForecastResponse.Response.Body.Items getMiddleTermLandForecast(String regionCode) {
+    public MiddleTermLandForecastResponse.Response.Body.Items getMiddleTermLandForecast(LocalDate localDate, String regionCode) {
         String response = mediumTermFeignClientService.getMidLandForecast(
                 serviceKey, 10, 1, "JSON",
                 regionCode,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "0600"
+                localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "0600"
         );
+
+        System.out.println("middle term - land response");
+        System.out.println(response);
 
         MiddleTermLandForecastResponse middleTermLandForecastResponse = deserializeMiddleTermLandForecastResponse(response);
         return middleTermLandForecastResponse.response().body().items();
@@ -73,12 +75,15 @@ public class WeatherService {
         return middleTermLandForecastResponse;
     }
 
-    public MiddleTermTaResponse.Response.Body.Items getMiddleTermTa(String regionCode) {
+    public MiddleTermTaResponse.Response.Body.Items getMiddleTermTa(LocalDate localDate, String regionCode) {
         String response = mediumTermFeignClientService.getMidTaForecast(
                 serviceKey, 10, 1, "JSON",
                 regionCode,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "0600"
+                localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "0600"
         );
+
+        System.out.println("middle term - ta response");
+        System.out.println(response);
 
         MiddleTermTaResponse middleTermTaResponse = deserializeMiddleTermTaResponse(response);
         return middleTermTaResponse.response().body().items();
