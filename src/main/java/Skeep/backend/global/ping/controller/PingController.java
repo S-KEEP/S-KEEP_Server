@@ -4,13 +4,16 @@ import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
+import Skeep.backend.weather.domain.locationGrid.LocationGrid;
+import Skeep.backend.weather.domain.locationGrid.LocationGridRepository;
+import Skeep.backend.weather.service.WeatherRetriever;
+import Skeep.backend.weather.service.WeatherSchedulerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,11 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class PingController {
     private final UserFindService userFindService;
     private final AppleService appleService;
+    private final LocationGridRepository locationGridRepository;
+    private final WeatherSchedulerService weatherSchedulerService;
+    private final WeatherRetriever weatherRetriever;
 
     @PostMapping("/login")
     public ResponseEntity<JwtDto> login(@RequestBody @Valid String serialId) {
         User user = userFindService.findUserBySerialId(serialId);
         JwtDto jwtDto = appleService.createJwtDto(user.getId(), user.getRole());
         return ResponseEntity.ok(jwtDto);
+    }
+
+    @GetMapping("/location-grid")
+    public ResponseEntity<?> getLocationGrid() {
+        List<LocationGrid> locationGrids = locationGridRepository.findAllWithin3kmRadius(126.980008333333, 37.5635694444444);
+        return ResponseEntity.ok(locationGrids);
+    }
+
+    @GetMapping("/weather")
+    public ResponseEntity<?> getWeather() {
+        weatherSchedulerService.updateWeather();
+        return ResponseEntity.ok().build();
     }
 }
