@@ -78,3 +78,9 @@ tour:
   service-key:
     encoding: abc
     decoding: abc
+
+weather:
+  service-key:
+    encoding: abc
+    decoding: abc
+
