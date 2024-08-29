@@ -35,11 +35,12 @@ public class WeatherSchedulerService {
     private final WeatherService weatherService;
     private final LocationGridService locationGridService;
 
-    private LocalDate localDate = LocalDate.now();
+    private LocalDate localDate;
 
     // 매일 아침 9시
     @Transactional
     public void updateWeather() {
+        localDate = LocalDate.now();
         weatherRepository.deleteAll();
 
         List<Location> locationList = locationRepository.findAll();
@@ -72,10 +73,8 @@ public class WeatherSchedulerService {
 
     @Transactional
     public void analyzeShortTerm(Location location, String x, String y) {
-        Items items = weatherService.getShortTermForecast(x, y);
-        List<LocalDate> dates = IntStream.range(0, 3)
-                .mapToObj(i -> localDate.plusDays(i))
-                .collect(Collectors.toList());
+        Items items = weatherService.getShortTermForecast(localDate, x, y);
+        List<LocalDate> dates = getDates(0, 3);
 
         for (LocalDate date: dates) {
             String yyyyMMdd = date.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -136,10 +135,33 @@ public class WeatherSchedulerService {
 
     @Transactional
     public void analyzeMiddleTerm(Location location, String regionCode_land, String regionCode_ta) {
-        MiddleTermLandForecastResponse.Response.Body.Items.Item item_landForecast = weatherService.getMiddleTermLandForecast(regionCode_land).item().get(0);
-        MiddleTermTaResponse.Response.Body.Items.Item item_ta = weatherService.getMiddleTermTa(regionCode_ta).item().get(0);
+        MiddleTermLandForecastResponse.Response.Body.Items.Item item_landForecast = weatherService.getMiddleTermLandForecast(localDate, regionCode_land).item().get(0);
+        MiddleTermTaResponse.Response.Body.Items.Item item_ta = weatherService.getMiddleTermTa(localDate, regionCode_ta).item().get(0);
 
-        List<EWeatherCondition> eWeatherConditions = List.of(
+        List<EWeatherCondition> eWeatherConditions = getEWeatherCondition_middleTerm(item_landForecast);
+        List<String> temperatures = getTemperature_middleTerm(item_ta);
+        List<LocalDate> dates = getDates(3, 11);
+
+        IntStream.range(0, dates.size()).forEach(i ->
+                weatherRepository.save(Weather.createWeather(location, dates.get(i), eWeatherConditions.get(i), temperatures.get(i)))
+        );
+    }
+
+    private List<String> getTemperature_middleTerm(MiddleTermTaResponse.Response.Body.Items.Item item_ta) {
+        return List.of(
+                String.valueOf(item_ta.taMax3() * 0.7 + item_ta.taMin3() * 0.3),
+                String.valueOf(item_ta.taMax4() * 0.7 + item_ta.taMin4() * 0.3),
+                String.valueOf(item_ta.taMax5() * 0.7 + item_ta.taMin5() * 0.3),
+                String.valueOf(item_ta.taMax6() * 0.7 + item_ta.taMin6() * 0.3),
+                String.valueOf(item_ta.taMax7() * 0.7 + item_ta.taMin7() * 0.3),
+                String.valueOf(item_ta.taMax8() * 0.7 + item_ta.taMin8() * 0.3),
+                String.valueOf(item_ta.taMax9() * 0.7 + item_ta.taMin9() * 0.3),
+                String.valueOf(item_ta.taMax10() * 0.7 + item_ta.taMin10() * 0.3)
+        );
+    }
+
+    private List<EWeatherCondition> getEWeatherCondition_middleTerm(MiddleTermLandForecastResponse.Response.Body.Items.Item item_landForecast) {
+        return List.of(
                         item_landForecast.wf3Pm(),
                         item_landForecast.wf4Pm(),
                         item_landForecast.wf5Pm(),
@@ -151,23 +173,11 @@ public class WeatherSchedulerService {
                 ).stream()
                 .map(EWeatherCondition::convertMiddle)
                 .collect(Collectors.toList());
+    }
 
-        List<String> temperatures = new ArrayList<>();
-        temperatures.add(String.valueOf(item_ta.taMax3() * 0.7 + item_ta.taMin3() * 0.3));
-        temperatures.add(String.valueOf(item_ta.taMax4() * 0.7 + item_ta.taMin4() * 0.3));
-        temperatures.add(String.valueOf(item_ta.taMax5() * 0.7 + item_ta.taMin5() * 0.3));
-        temperatures.add(String.valueOf(item_ta.taMax6() * 0.7 + item_ta.taMin6() * 0.3));
-        temperatures.add(String.valueOf(item_ta.taMax7() * 0.7 + item_ta.taMin7() * 0.3));
-        temperatures.add(String.valueOf(item_ta.taMax8() * 0.7 + item_ta.taMin8() * 0.3));
-        temperatures.add(String.valueOf(item_ta.taMax9() * 0.7 + item_ta.taMin9() * 0.3));
-        temperatures.add(String.valueOf(item_ta.taMax10() * 0.7 + item_ta.taMin10() * 0.3));
-
-        List<LocalDate> dates = IntStream.range(3, 11)
+    private List<LocalDate> getDates(int start, int end) {
+        return IntStream.range(start, end)
                 .mapToObj(i -> localDate.plusDays(i))
                 .collect(Collectors.toList());
-
-        for (int i = 0; i < dates.size(); i++) {
-            weatherRepository.save(Weather.createWeather(location, dates.get(i), eWeatherConditions.get(i), temperatures.get(i)));
-        }
     }
 }

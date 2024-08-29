@@ -26,9 +26,7 @@ public class WeatherService {
     @Value("${weather.service-key.decoding}")
     private String serviceKey;
 
-    private LocalDate localDate = LocalDate.now();
-
-    public ShortTermResponse.Response.Body.Items getShortTermForecast(String x, String y) {
+    public ShortTermResponse.Response.Body.Items getShortTermForecast(LocalDate localDate, String x, String y) {
         String response = shortTermFeignClientService.getVillageForecast(
                 serviceKey, 1000, 1, "JSON",
                 localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), "0500", x, y);
@@ -50,7 +48,7 @@ public class WeatherService {
         return shorTermResponse;
     }
 
-    public MiddleTermLandForecastResponse.Response.Body.Items getMiddleTermLandForecast(String regionCode) {
+    public MiddleTermLandForecastResponse.Response.Body.Items getMiddleTermLandForecast(LocalDate localDate, String regionCode) {
         String response = mediumTermFeignClientService.getMidLandForecast(
                 serviceKey, 10, 1, "JSON",
                 regionCode,
@@ -77,7 +75,7 @@ public class WeatherService {
         return middleTermLandForecastResponse;
     }
 
-    public MiddleTermTaResponse.Response.Body.Items getMiddleTermTa(String regionCode) {
+    public MiddleTermTaResponse.Response.Body.Items getMiddleTermTa(LocalDate localDate, String regionCode) {
         String response = mediumTermFeignClientService.getMidTaForecast(
                 serviceKey, 10, 1, "JSON",
                 regionCode,
