@@ -15,11 +15,11 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user-location/tourism-org")
+@RequestMapping("/api")
 public class TourController {
     private final TourService tourService;
 
-    @GetMapping("")
+    @GetMapping("/tourism-org")
     public ResponseEntity<TourLocationList> getTourLocationList(
             @RequestBody @Valid TourLocationRequest request
     ) {
@@ -27,7 +27,7 @@ public class TourController {
         return ResponseEntity.ok(tourLocationList);
     }
 
-    @PostMapping("/{userCategoryId}")
+    @PostMapping("/user-location/tourism-org/{userCategoryId}")
     public ResponseEntity<Void> createUserLocationWithTourAPI(
             @UserId Long userId,
             @RequestBody @Valid TourLocationDto tourLocationDto,
