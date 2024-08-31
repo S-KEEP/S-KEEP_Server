@@ -7,10 +7,7 @@ import Skeep.backend.weather.service.WeatherLocationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,9 +20,10 @@ public class WeatherController {
     @GetMapping
     public ResponseEntity<WeatherListDto> getWeatherList(
             @UserId Long userId,
-            @RequestBody @Valid WeatherRequest weatherRequest
+            @RequestParam(value = "x") String x,
+            @RequestParam(value = "y") String y
     ) {
-        List<WeatherListDto.WeatherDto> weatherList = weatherLocationService.getWeatherList(weatherRequest.x(), weatherRequest.y());
+        List<WeatherListDto.WeatherDto> weatherList = weatherLocationService.getWeatherList(x, y);
         return ResponseEntity.ok(new WeatherListDto(weatherList));
     }
 }
