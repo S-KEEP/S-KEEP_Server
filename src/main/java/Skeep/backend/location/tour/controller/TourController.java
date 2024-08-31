@@ -21,9 +21,10 @@ public class TourController {
 
     @GetMapping("/tourism-org")
     public ResponseEntity<TourLocationList> getTourLocationList(
-            @RequestBody @Valid TourLocationRequest request
+            @RequestParam(value = "x") String x,
+            @RequestParam(value = "y") String y
     ) {
-        TourLocationList tourLocationList = tourService.getLocationBasedList(Double.parseDouble(request.x()), Double.parseDouble(request.y()));
+        TourLocationList tourLocationList = tourService.getLocationBasedList(Double.parseDouble(x), Double.parseDouble(y));
         return ResponseEntity.ok(tourLocationList);
     }
 
