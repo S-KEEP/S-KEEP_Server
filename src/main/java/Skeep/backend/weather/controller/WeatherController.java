@@ -21,9 +21,10 @@ public class WeatherController {
     public ResponseEntity<WeatherListDto> getWeatherList(
             @UserId Long userId,
             @RequestParam(value = "x") String x,
-            @RequestParam(value = "y") String y
+            @RequestParam(value = "y") String y,
+            @RequestParam(value = "address") String address
     ) {
-        List<WeatherListDto.WeatherDto> weatherList = weatherLocationService.getWeatherList(x, y);
+        List<WeatherListDto.WeatherDto> weatherList = weatherLocationService.getWeatherList(x, y, address);
         return ResponseEntity.ok(new WeatherListDto(weatherList));
     }
 }

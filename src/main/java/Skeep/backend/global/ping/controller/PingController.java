@@ -6,6 +6,7 @@ import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.weather.domain.locationGrid.LocationGrid;
 import Skeep.backend.weather.domain.locationGrid.LocationGridRepository;
+import Skeep.backend.weather.service.WeatherLocationService;
 import Skeep.backend.weather.service.WeatherRetriever;
 import Skeep.backend.weather.service.WeatherSchedulerService;
 import jakarta.validation.Valid;
@@ -23,7 +24,6 @@ public class PingController {
     private final AppleService appleService;
     private final LocationGridRepository locationGridRepository;
     private final WeatherSchedulerService weatherSchedulerService;
-    private final WeatherRetriever weatherRetriever;
 
     @PostMapping("/login")
     public ResponseEntity<JwtDto> login(@RequestBody @Valid String serialId) {
