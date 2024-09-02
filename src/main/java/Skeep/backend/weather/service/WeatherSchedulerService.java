@@ -72,7 +72,7 @@ public class WeatherSchedulerService {
 
     @Transactional
     public List<Weather> analyzeShortTerm(Location location, String x, String y) {
-        LocalDate localDate = LocalDate.of(2024, 8, 29);
+        LocalDate localDate = LocalDate.now();
 
         Items items = weatherService.getShortTermForecast(localDate, x, y);
         List<LocalDate> dates = getDates(0, 3);

@@ -5,6 +5,8 @@ import Skeep.backend.location.location.domain.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class LocationRetriever {
@@ -18,7 +20,7 @@ public class LocationRetriever {
         return locationRepository.findByKakaoMapId(kakaoMapId);
     }
 
-    public Location findByXandY(String x, String y) {
-        return locationRepository.findByXAndY(x, y).orElseGet(null);
+    public Optional<Location> findByXandY(String x, String y) {
+        return locationRepository.findByXAndY(x, y);
     }
 }

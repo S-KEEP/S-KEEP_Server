@@ -1,16 +1,25 @@
 package Skeep.backend.weather.service;
 
+import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.location.service.LocationRetriever;
 import Skeep.backend.weather.domain.Weather;
+import Skeep.backend.weather.domain.locationGrid.LocationGrid;
+import Skeep.backend.weather.domain.locationGrid.LocationGridRepository;
 import Skeep.backend.weather.dto.response.WeatherListDto;
+import Skeep.backend.weather.exception.WeatherErrorCode;
+import Skeep.backend.weather.service.locationGrid.LocationGridService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static Skeep.backend.weather.util.RegionUtils.getRegionCode_land;
+import static Skeep.backend.weather.util.RegionUtils.getRegionCode_ta;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,19 +28,25 @@ public class WeatherLocationService {
     private final LocationRetriever locationRepository;
     private final WeatherSchedulerService weatherSchedulerService;
     private final WeatherRetriever weatherRetriever;
+    private final LocationGridService locationGridService;
 
-    public List<WeatherListDto.WeatherDto> getWeatherList(String x, String y) {
-        Location location = locationRepository.findByXandY(x, y);
+    public List<WeatherListDto.WeatherDto> getWeatherList(String x, String y, String address) {
+        Optional<Location> location = locationRepository.findByXandY(x, y);
 
-        List<Weather> weathers = new ArrayList<>();
-        if (location == null) {
-            weathers.addAll(weatherSchedulerService.analyzeShortTerm(null, x, y));
-            weathers.addAll(weatherSchedulerService.analyzeMiddleTerm(null, x, y));
+        List<Weather> weatherList = new ArrayList<>();
+        if (location.isEmpty()) {
+            LocationGrid locationGrid = locationGridService.getLocationGridWithin3kmRadius(Double.parseDouble(x), Double.parseDouble(y));
+            if (locationGrid == null) {
+                throw BaseException.type(WeatherErrorCode.CANNOT_CONVERT_GRID);
+            }
+
+            weatherList.addAll(weatherSchedulerService.analyzeShortTerm(null, String.valueOf(locationGrid.getGridX()), String.valueOf(locationGrid.getGridY())));
+            weatherList.addAll(weatherSchedulerService.analyzeMiddleTerm(null, getRegionCode_land(address), getRegionCode_ta(address)));
         } else{
-            weathers = weatherRetriever.findAllByLocation(location);
+            weatherList = weatherRetriever.findAllByLocation(location.get());
         }
 
-        return weathers.stream()
+        return weatherList.stream()
                 .map(weather -> new WeatherListDto.WeatherDto(
                         weather.getDate(),
                         weather.getWeatherCondition(),
