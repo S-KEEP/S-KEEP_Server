@@ -7,6 +7,7 @@ import java.io.*;
 public class CustomMultipartFile implements MultipartFile {
     private byte[] input;
     private String filename;
+    private String contentType;
 
     public CustomMultipartFile(byte[] input,String filename) {
         this.input = input;
@@ -25,9 +26,9 @@ public class CustomMultipartFile implements MultipartFile {
 
     @Override
     public String getContentType() {
-        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
+        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".JPG") || filename.endsWith(".JPEG")) {
             return "image/jpeg";
-        } else if (filename.endsWith(".png")) {
+        } else if (filename.endsWith(".png") || filename.endsWith("PNG")) {
             return "image/png";
         } else {
             return null;
