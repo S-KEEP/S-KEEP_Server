@@ -60,14 +60,6 @@ public class UserCategoryController {
             @RequestBody @Valid UserCategoryCreateRequest request
     ) {
         UserCategory userCategory = userCategorySaver.saveUserCategory(userId, request.name(), request.description());
-
-        String categoryName;
-        try {
-            categoryName = URLEncoder.encode(userCategory.getName(), UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            throw BaseException.type(GlobalErrorCode.UNSUPPORTED_ENCODING);
-        }
-
-        return ResponseEntity.created(URI.create("/api/user-location?page=1&userCategory=" + categoryName)).build();
+        return ResponseEntity.created(URI.create("/api/user-location?page=1&userCategoryId=" + userCategory.getId())).build();
     }
 }

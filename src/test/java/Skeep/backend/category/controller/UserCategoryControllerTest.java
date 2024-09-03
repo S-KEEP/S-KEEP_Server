@@ -137,8 +137,9 @@ class UserCategoryControllerTest extends ControllerTest {
         void 유저_카테고리_저장에_성공한다() throws Exception {
             // given
             UserCategoryCreateRequest request = new UserCategoryCreateRequest("새로운 카테고리 이름", "새로운 카테고리 설명");
+            UserCategory userCategory = new UserCategory(request.name(), request.description(), UserFixture.BOB_BROWN.toUser(EProvider.APPLE));
             given(userCategorySaver.saveUserCategory(anyLong(), any(), any()))
-                    .willReturn(UserCategory.createUserCategory(request.name(), request.description(), UserFixture.BOB_BROWN.toUser(EProvider.APPLE)));
+                    .willReturn(userCategory);
 
             // when
             MockHttpServletRequestBuilder requestBuilder = post(BASE_URL)
@@ -150,7 +151,7 @@ class UserCategoryControllerTest extends ControllerTest {
             mockMvc.perform(requestBuilder)
                     .andDo(print())
                     .andExpect(status().isCreated())
-                    .andExpect(header().string(HttpHeaders.LOCATION, "/api/user-location?page=1&userCategory=" + URLEncoder.encode("새로운 카테고리 이름", StandardCharsets.UTF_8.toString())));
+                    .andExpect(header().string(HttpHeaders.LOCATION, "/api/user-location?page=1&userCategoryId=" + null));
         }
     }
 

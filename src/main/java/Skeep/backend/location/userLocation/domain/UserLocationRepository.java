@@ -35,7 +35,11 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
                          ")",
             nativeQuery = true
     )
-    Page<UserLocation> findAllByUserIdAndUserCategory(Long userId, String userCategoryName, Pageable pageable);
+    Page<UserLocation> findAllByUserIdAndUserCategory(
+            @Param("userId") Long userId,
+            @Param("userCategoryName") String userCategoryName,
+            Pageable pageable
+    );
 
     @Modifying
     @Query("DELETE FROM UserLocation ul WHERE ul.user = :user")
@@ -43,5 +47,5 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
 
     @Modifying
     @Query("DELETE FROM UserLocation ul WHERE ul.user = :user and ul.userCategory = :userCategory")
-    void deleteAllByUserAndUserCategory(@Param(value = "user") User user, @Param(value = "userCategory")UserCategory userCategory);
+    void deleteAllByUserAndUserCategory(@Param(value = "user") User user, @Param(value = "userCategory") UserCategory userCategory);
 }
