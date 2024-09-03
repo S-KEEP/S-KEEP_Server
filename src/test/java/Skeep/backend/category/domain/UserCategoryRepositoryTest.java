@@ -33,25 +33,25 @@ public class UserCategoryRepositoryTest extends RepositoryTest {
     private List<UserCategory> userCategories = new ArrayList<>();
 
     @BeforeEach
-        public void setUp() {
-            user = userRepository.save(UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE));
+    public void setUp() {
+        user = userRepository.save(UserFixture.ALICE_JOHNSON.toUser(EProvider.APPLE));
 
-            fixtures = Arrays.asList(
-                    UserCategoryFixture.REST,
-                    UserCategoryFixture.PARK_NATURE,
-                    UserCategoryFixture.CULTURE_FESTIVAL,
-                    UserCategoryFixture.SHOPPING_DOWNTOWN,
-                    UserCategoryFixture.ACTIVITY,
-                    UserCategoryFixture.RESTAURANT,
-                    UserCategoryFixture.HISTORY,
-                    UserCategoryFixture.EXTRA
-            );
+        fixtures = Arrays.asList(
+                UserCategoryFixture.REST,
+                UserCategoryFixture.PARK_NATURE,
+                UserCategoryFixture.CULTURE_FESTIVAL,
+                UserCategoryFixture.SHOPPING_DOWNTOWN,
+                UserCategoryFixture.ACTIVITY,
+                UserCategoryFixture.RESTAURANT,
+                UserCategoryFixture.HISTORY,
+                UserCategoryFixture.EXTRA
+        );
 
-            fixtures.forEach(fixture -> {
-                UserCategory userCategory = userCategoryRepository.save(fixture.toUserCategory(user));
-                userCategories.add(userCategory);
-            });
-        }
+        fixtures.forEach(fixture -> {
+            UserCategory userCategory = userCategoryRepository.save(fixture.toUserCategory(user));
+            userCategories.add(userCategory);
+        });
+    }
 
     @Test
     void findAllById() {

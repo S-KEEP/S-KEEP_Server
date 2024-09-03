@@ -16,7 +16,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class KakaoMapService {
-
     @Value("${kakao.token}")
     private String kakaoApiSecret;
 
@@ -27,7 +26,6 @@ public class KakaoMapService {
 
 
     public List<KakaoResponseResult> getKakaoLocationIdList(List<String> locationNameList) {
-
         Flux<KakaoResponseResult> imageTextList = Flux.fromIterable(locationNameList)
                                          .flatMapSequential(this::requestKakaoMap)
                                          .flatMap(this::parseResponse);

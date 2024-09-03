@@ -21,13 +21,12 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 
 import java.io.InputStream;
 import java.time.Duration;
-import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
@@ -35,19 +34,19 @@ public class S3Service {
     private final S3Presigner s3Presigner;
 
     public String getPresignUrl(String filename) {
-        if(filename == null || filename.isEmpty()) {
+        if (filename == null || filename.isEmpty()) {
             return null;
         }
 
-        GetObjectRequest getObjectRequest= GetObjectRequest.builder()
-                                                           .bucket(bucketName)
-                                                           .key(filename)
-                                                           .build();
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(filename)
+                .build();
         GetObjectPresignRequest getObjectPresignRequest
                 = GetObjectPresignRequest.builder()
-                                         .signatureDuration(Duration.ofMinutes(10))
-                                         .getObjectRequest(getObjectRequest)
-                                         .build();
+                .signatureDuration(Duration.ofMinutes(10))
+                .getObjectRequest(getObjectRequest)
+                .build();
         PresignedGetObjectRequest presignedGetObjectRequest
                 = s3Presigner.presignGetObject(getObjectPresignRequest);
 
@@ -58,30 +57,27 @@ public class S3Service {
         return url;
     }
 
-    public String uploadToS3(Long userLocationId, MultipartFile image) {
-
+    public String uploadToS3(MultipartFile image) {
         String contentType = MultiFileUtil.determineImageFormat(image);
         String mimeType;
-        switch (contentType){
+        switch (contentType) {
             case "jpg", "jpeg" -> mimeType = MediaType.IMAGE_JPEG_VALUE;
             case "png" -> mimeType = MediaType.IMAGE_PNG_VALUE;
             default -> throw BaseException.type(GlobalErrorCode.NOT_SUPPORTED_MEDIA_TYPE_ERROR);
         }
 
-        String fileName;
-        fileName = Objects.requireNonNull(image.getOriginalFilename())
-                                               .split("\\.")[0] +  "_" + userLocationId.toString();
+        String fileName = String.valueOf(UUID.randomUUID());
 
         InputStream inputStream = MultipartFileResource.getInputStream(image);
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                                                            .bucket(bucketName)
-                                                            .key(fileName)
-                                                            .contentType(mimeType)
-                                                            .build();
+                .bucket(bucketName)
+                .key(fileName)
+                .contentType(mimeType)
+                .build();
         PutObjectResponse putObjectResponse = s3Client.putObject(
-                                                    putObjectRequest,
-                                                    RequestBody.fromInputStream(inputStream, image.getSize())
-                                              );
+                putObjectRequest,
+                RequestBody.fromInputStream(inputStream, image.getSize())
+        );
 
         log.info("s3 업로드 성공");
         log.info("fileName = {}", fileName);
