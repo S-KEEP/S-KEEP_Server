@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +54,7 @@ public class TourService {
     @Value("${tour.service-key.encoding}")
     private String serviceKey;
 
-    private static int numOfRows = 3;
+    private static int numOfRows = 20;
     private static int pageNo = 1;
     private static String mobileOS = "ETC";
     private static String mobileApp = "SKEEP";
@@ -104,7 +105,14 @@ public class TourService {
                         tourLocation.contenttypeid(),
                         tourLocation.firstimage()
                 ))
+                .filter(this::validateKakaoMap)
+                .limit(3)
                 .collect(Collectors.toList());
+    }
+
+    private Boolean validateKakaoMap(TourLocationDto tourLocationDto) {
+        List<KakaoResponseResult> kakaoLocationIdList = kakaoMapService.getKakaoLocationIdList(List.of(tourLocationDto.title()));
+        return !kakaoLocationIdList.isEmpty() && !Objects.equals(kakaoLocationIdList.get(0).id(), "");
     }
 
     @Transactional
