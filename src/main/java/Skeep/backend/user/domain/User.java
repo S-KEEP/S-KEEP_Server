@@ -25,6 +25,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "name", nullable = false, updatable = false)
     private String name;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     @Embedded
     private Email email;
 
@@ -69,6 +72,10 @@ public class User extends BaseTimeEntity {
                 .role(role)
                 .provider(EProvider.APPLE)
                 .build();
+    }
+
+    public void updateFcmToken(final String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public void updateStatus(final EStatus status) {
