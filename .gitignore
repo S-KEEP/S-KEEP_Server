@@ -9,7 +9,10 @@
 src/main/resources/application-prod.yml
 src/main/resources/application-local.yml
 src/main/resources/application-oauth.yml
+src/main/resources/application-tour.yml
+src/main/resources/application-weather.yml
 src/main/resources/AuthKey_WNM333A5H4.p8
+src/main/resources/skeep-fcm.json
 
 .idea
 HELP.md

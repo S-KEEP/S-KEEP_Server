@@ -51,6 +51,8 @@ public enum GlobalErrorCode implements ErrorCode {
     INSUFFICIENT_STORAGE(HttpStatus.INSUFFICIENT_STORAGE, "RESPONSE_003", "서버의 용량이 부족해 요청에 실패했습니다."),
     UNSUPPORTED_ENCODING(HttpStatus.INTERNAL_SERVER_ERROR, "RESPONSE_004", "지원하지 않는 인코딩입니다."),
     CANNOT_CONVERT_IMAGE(HttpStatus.INTERNAL_SERVER_ERROR, "RESPONSE_005", "이미지 변환에 실패했습니다."),
+    FIREBASE_JSON_EMPTY(HttpStatus.INTERNAL_SERVER_ERROR, "RESPONSE_006", "FCM JSON 파일을 읽지 못하였습니다."),
+    FCM_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "RESPONSE_007", "FCM 전송을 실패하였습니다."),
     ;
 
     private final HttpStatus status;

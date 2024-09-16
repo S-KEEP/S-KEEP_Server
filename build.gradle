@@ -89,6 +89,9 @@ dependencies {
 
 	// xml
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.0'
+
+	// Firebase
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 task copyGitSubmodule(type: Copy) {
