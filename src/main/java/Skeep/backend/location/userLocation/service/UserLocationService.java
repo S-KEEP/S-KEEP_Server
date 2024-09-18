@@ -2,6 +2,7 @@ package Skeep.backend.location.userLocation.service;
 
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryRepository;
+import Skeep.backend.category.service.UserCategoryRetriever;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
@@ -39,11 +40,12 @@ public class UserLocationService {
     private final UserLocationUpdater userLocationUpdater;
     private final UserLocationRemover userLocationRemover;
     private final S3Service s3Service;
+    private final UserCategoryRetriever userCategoryRetriever;
     private final UserCategoryRepository userCategoryRepository;
 
     public UserLocationListDto getUserLocationListByUserCategory(
             Long userId,
-            String userCategory,
+            Long userCategoryId,
             int page
     ) {
         // Request 검증 로직
@@ -51,11 +53,13 @@ public class UserLocationService {
 
         if (page < 1)
             throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
+
+        UserCategory currentUserCategory = userCategoryRetriever.findById(userCategoryId);
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<UserLocation> userLocationPage
                 = userLocationRetriever.findAllByUserIdAndUserCategory(
                                                 currentUser.getId(),
-                                                userCategory,
+                                                currentUserCategory.getName(),
                                                 pageable
                                         );
         if (page != 1 && page > userLocationPage.getTotalPages())
@@ -75,8 +79,11 @@ public class UserLocationService {
                             )
                 ).toList();
 
+        UserCategoryDto userCategoryDto = UserCategoryDto.of(currentUserCategory);
+
         return UserLocationListDto.of(
                 userLocationDtoList,
+                userCategoryDto,
                 userLocationPage.getTotalElements(),
                 userLocationPage.getTotalPages()
         );
