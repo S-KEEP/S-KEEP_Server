@@ -25,9 +25,8 @@ public class UserLocationController {
             @RequestParam(value = "userCategoryId") Long userCategoryId,
             @RequestParam(value = "page") int page
     ) {
-        UserCategory userCategory = userCategoryRetriever.findById(userCategoryId);
         return ResponseEntity.ok(
-                userLocationService.getUserLocationListByUserCategory(userId, userCategory.getName(), page)
+                userLocationService.getUserLocationListByUserCategory(userId, userCategoryId, page)
         );
     }
 

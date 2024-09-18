@@ -10,6 +10,8 @@ import java.util.List;
 public record UserLocationListDto(
         @JsonProperty("userLocationList")
         List<UserLocationDto> userLocationDtoList,
+        @JsonProperty("userCategory")
+        UserCategoryDto userCategoryDto,
         @JsonProperty("totalElement")
         Long totalElement,
         @JsonProperty("totalPage")
@@ -17,11 +19,13 @@ public record UserLocationListDto(
 ) implements Serializable {
     public static UserLocationListDto of(
             final List<UserLocationDto> userLocationDtoList,
+            final UserCategoryDto userCategoryDto,
             final Long totalElement,
             final int totalPage
     ) {
         return UserLocationListDto.builder()
                                   .userLocationDtoList(userLocationDtoList)
+                                  .userCategoryDto(userCategoryDto)
                                   .totalElement(totalElement)
                                   .totalPage(totalPage)
                                   .build();
