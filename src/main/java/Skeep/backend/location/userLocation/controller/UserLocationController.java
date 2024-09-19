@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user-location")
 public class UserLocationController {
     private final UserLocationService userLocationService;
-    private final UserCategoryRetriever userCategoryRetriever;
 
     @GetMapping
     public ResponseEntity<?> getUserLocationList(
