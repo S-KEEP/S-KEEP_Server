@@ -1,6 +1,5 @@
 package Skeep.backend.location.userLocation.controller;
 
-import Skeep.backend.category.service.UserCategoryRetriever;
 import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchListDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchWithCategoryDto;
