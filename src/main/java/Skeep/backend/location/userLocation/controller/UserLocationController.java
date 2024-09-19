@@ -1,7 +1,5 @@
 package Skeep.backend.location.userLocation.controller;
 
-import Skeep.backend.category.domain.UserCategory;
-import Skeep.backend.category.service.UserCategoryRetriever;
 import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchListDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchWithCategoryDto;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user-location")
 public class UserLocationController {
     private final UserLocationService userLocationService;
-    private final UserCategoryRetriever userCategoryRetriever;
 
     @GetMapping
     public ResponseEntity<?> getUserLocationList(
