@@ -28,6 +28,11 @@ public class UserCategoryRetriever {
                 .orElseThrow(() -> BaseException.type(UserCategoryErrorCode.USER_CATEGORY_NOT_FOUND));
     }
 
+    public UserCategory findByUserAndId(User user, Long id) {
+        return userCategoryRepository.findByUserAndId(user, id)
+                .orElseThrow(() -> BaseException.type(UserCategoryErrorCode.USER_CATEGORY_NOT_MATCHED));
+    }
+
     public UserCategory findByUserAndName(User user,String name) {
         return userCategoryRepository.findByUserAndName(user, name)
                 .orElseThrow(() -> BaseException.type(UserCategoryErrorCode.USER_CATEGORY_NOT_FOUND));

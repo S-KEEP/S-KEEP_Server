@@ -13,6 +13,7 @@ public interface UserCategoryRepository extends JpaRepository<UserCategory, Long
     // query method
     List<UserCategory> findAllByUserId(Long userId);
     Optional<UserCategory> findByUserAndName(User user, String name);
+    Optional<UserCategory> findByUserAndId(User user, Long id);
     void deleteById(Long id);
 
     // @Query

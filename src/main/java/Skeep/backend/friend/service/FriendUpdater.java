@@ -1,18 +1,17 @@
 package Skeep.backend.friend.service;
 
 import Skeep.backend.friend.domain.Friend;
-import Skeep.backend.friend.domain.FriendRepository;
+import Skeep.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class FriendSaver {
-    private final FriendRepository friendRepository;
+public class FriendUpdater {
 
     @Transactional
-    public Friend save(Friend friend) {
-        return friendRepository.save(friend);
+    public void connectFriend(Friend friend, User user) {
+        friend.connectFriend(user);
     }
 }

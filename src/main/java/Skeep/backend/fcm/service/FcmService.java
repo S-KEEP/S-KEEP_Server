@@ -18,7 +18,7 @@ public class FcmService {
 
         String token = fcmTestRequestDto.token();
 
-        sendNotification(Boolean.FALSE, token, "테스트 >.0", "얏호~ 성공~", "category", "/category/205");
+        sendNotification(Boolean.FALSE, token, "테스트 >.0", "얏호~ 성공~", 6L, "category", "/category/205");
 
         return null;
     }
@@ -28,6 +28,7 @@ public class FcmService {
             String token,
             String title,
             String body,
+            Long id,
             String type,
             String url
     ) {
@@ -49,7 +50,7 @@ public class FcmService {
                             )
                             .build();
         FcmNotificationResponseDto fcmNotificationResponseDto
-                = FcmNotificationResponseDto.of(type, url);
+                = FcmNotificationResponseDto.of(id, type, url);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String fcmNotificationResponseJson;

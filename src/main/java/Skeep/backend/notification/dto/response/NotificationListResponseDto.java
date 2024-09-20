@@ -8,13 +8,17 @@ import java.util.List;
 @Builder
 public record NotificationListResponseDto(
         @JsonProperty(value = "notificationList")
-        List<NotificationResponseDto> notificationResponseDtoList
+        List<NotificationResponseDto> notificationResponseDtoList,
+        @JsonProperty(value = "totalPage")
+        int totalPage
 ) {
     public static NotificationListResponseDto of(
-            List<NotificationResponseDto> notificationResponseDtoList
+            final List<NotificationResponseDto> notificationResponseDtoList,
+            final int totalPage
     ) {
         return NotificationListResponseDto.builder()
                                           .notificationResponseDtoList(notificationResponseDtoList)
+                                          .totalPage(totalPage)
                                           .build();
     }
 }
