@@ -24,6 +24,7 @@ public class FriendService {
     private final FriendRetriever friendRetriever;
     private final FriendSaver friendSaver;
     private final FriendUpdater friendUpdater;
+    private final FriendRemover friendRemover;
     private final UserFindService userFindService;
 
     public FriendTokenResponseDto createFriendAndToken(Long userId) {
@@ -87,5 +88,17 @@ public class FriendService {
                 friendResponseDto,
                 friendPage.getTotalPages()
         );
+    }
+
+    public void deleteFriend(Long userId, Long targetId) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+        User targetUser = userFindService.findUserByIdAndStatus(targetId);
+
+        if (friendRetriever.existsByUser1AndUser2(targetUser, currentUser))
+            friendRemover.deleteByUser1AndUser2(targetUser, currentUser);
+        else if (friendRetriever.existsByUser1AndUser2(currentUser, targetUser))
+            friendRemover.deleteByUser1AndUser2(currentUser, targetUser);
+        else
+            throw BaseException.type(FriendErrorCode.FRIEND_NOT_FOUND);
     }
 }

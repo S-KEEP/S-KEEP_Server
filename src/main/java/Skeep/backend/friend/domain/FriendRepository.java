@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface FriendRepository extends JpaRepository<Friend, Long> {
     Optional<Friend> findByToken(String token);
     Boolean existsByUser1AndUser2(User user1, User user2);
+    void deleteByUser1AndUser2(User user1, User user2);
 }

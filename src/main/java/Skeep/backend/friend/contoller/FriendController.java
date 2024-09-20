@@ -40,4 +40,13 @@ public class FriendController {
                 friendService.createFriendAndToken(userId)
         );
     }
+
+    @DeleteMapping("/user/{targetId}")
+    public ResponseEntity<Void> deleteFriend(
+            @UserId Long userId,
+            @PathVariable(value = "targetId") Long targetId
+    ) {
+        friendService.deleteFriend(userId, targetId);
+        return ResponseEntity.noContent().build();
+    }
 }
