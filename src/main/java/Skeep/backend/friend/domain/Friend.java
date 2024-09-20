@@ -22,25 +22,29 @@ public class Friend extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user1_id", nullable = false)
-    private User user1_id;
+    private User user1;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user2_id")
-    private User user2_id;
+    private User user2;
 
-    @Column(name = "token", nullable = false)
+    @Column(name = "token", unique = true, nullable = false)
     private String token;
 
     @Builder
-    public Friend(final User user1_id, final String token) {
-        this.user1_id = user1_id;
+    public Friend(final User user1, final String token) {
+        this.user1 = user1;
         this.token = token;
     }
 
-    public static Friend createFriend(final User user1_id, final String token) {
+    public static Friend createFriend(final User user1, final String token) {
         return Friend.builder()
-                     .user1_id(user1_id)
+                     .user1(user1)
                      .token(token)
                      .build();
+    }
+
+    public void connectFriend(final User user2) {
+        this.user2 = user2;
     }
 }
