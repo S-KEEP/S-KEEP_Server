@@ -7,6 +7,8 @@ import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.dto.UserSecurityForm;
 import Skeep.backend.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,5 +45,9 @@ public class UserFindService {
     public User findUserByIdAndStatus(final Long userId) {
         return userRepository.findByIdAndStatus(userId, EStatus.ACTIVATED)
                 .orElseThrow(() -> BaseException.type(UserErrorCode.DEACTIVATED_USER));
+    }
+
+    public Page<User> findAllUserInFriend(User user, Pageable pageable) {
+        return userRepository.findAllByUserInFriend(user.getId(), pageable);
     }
 }

@@ -2,14 +2,10 @@ package Skeep.backend.notification.service;
 
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.notification.domain.BaseNotification.NotificationProjection;
-import Skeep.backend.notification.domain.CategoryNotification.CategoryNotification;
-import Skeep.backend.notification.domain.UserLocationNotification.UserLocationNotification;
 import Skeep.backend.notification.dto.request.NotificationCheckRequestDto;
 import Skeep.backend.notification.dto.response.NotificationListResponseDto;
 import Skeep.backend.notification.dto.response.NotificationResponseDto;
 import Skeep.backend.notification.exception.NotificationErrorCode;
-import Skeep.backend.notification.service.CategoryNotification.CategoryNotificationUpdater;
-import Skeep.backend.notification.service.UserLocationNotification.UserLocationNotificationUpdater;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +46,10 @@ public class NotificationService {
                                   .map(NotificationResponseDto::of)
                                   .toList();
 
-        return NotificationListResponseDto.of(notificationResponseDtoList);
+        return NotificationListResponseDto.of(
+                notificationResponseDtoList,
+                notificationProjectionPage.getTotalPages()
+        );
     }
 
     public Void checkNotification(
