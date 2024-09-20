@@ -3,6 +3,7 @@ package Skeep.backend.location.userLocation.service;
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.category.service.UserCategoryRetriever;
+import Skeep.backend.friend.service.FriendRetriever;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
@@ -42,6 +43,7 @@ public class UserLocationService {
     private final S3Service s3Service;
     private final UserCategoryRetriever userCategoryRetriever;
     private final UserCategoryRepository userCategoryRepository;
+    private final FriendRetriever friendRetriever;
 
     public UserLocationListDto getUserLocationListByUserCategory(
             Long userId,
@@ -220,5 +222,55 @@ public class UserLocationService {
             userLocationRemover.deleteByUserIdAndId(currentUser, userLocationId);
         else
             throw BaseException.type(UserLocationErrorCode.MISMATCH_USER_AND_USER_LOCATION);
+    }
+
+    public UserLocationListDto getFriendUserLocationListWithUserCategory(
+            Long userId,
+            Long targetId,
+            Long userCategoryId,
+            int page
+    ) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+        User targetUser = userFindService.findUserByIdAndStatus(targetId);
+
+        if (!friendRetriever.existsByCrossUserCheck(currentUser, targetUser))
+            throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+
+        if (page < 1)
+            throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
+
+        UserCategory targetUserCategory = userCategoryRetriever.findByUserAndId(targetUser, userCategoryId);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<UserLocation> userLocationPage
+                = userLocationRetriever.findAllByUserIdAndUserCategory(
+                targetUser.getId(),
+                targetUserCategory.getName(),
+                pageable
+        );
+        if (page != 1 && page > userLocationPage.getTotalPages())
+            throw BaseException.type(UserLocationErrorCode.INVALID_PAGE_USER_LOCATION);
+
+        List<UserLocation> userLocationList = userLocationPage.getContent();
+
+        // TODO: query 계속 날리는 부분 추후에 성능 개선
+        List<UserLocationDto> userLocationDtoList =
+                userLocationList.stream().map(
+                        userLocation ->
+                                UserLocationDto.of(
+                                        userLocation.getId(),
+                                        s3Service.getPresignUrl(userLocation.getFileName()),
+                                        LocationDto.of(userLocation.getLocation()),
+                                        UserCategoryDto.of(userLocation.getUserCategory())
+                                )
+                ).toList();
+
+        UserCategoryDto userCategoryDto = UserCategoryDto.of(targetUserCategory);
+
+        return UserLocationListDto.of(
+                userLocationDtoList,
+                userCategoryDto,
+                userLocationPage.getTotalElements(),
+                userLocationPage.getTotalPages()
+        );
     }
 }
