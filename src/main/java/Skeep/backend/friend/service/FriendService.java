@@ -2,14 +2,20 @@ package Skeep.backend.friend.service;
 
 import Skeep.backend.friend.domain.Friend;
 import Skeep.backend.friend.dto.request.FriendConnectRequestDto;
+import Skeep.backend.friend.dto.response.FriendListResponseDto;
+import Skeep.backend.friend.dto.response.FriendResponseDto;
 import Skeep.backend.friend.dto.response.FriendTokenResponseDto;
 import Skeep.backend.friend.exception.FriendErrorCode;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -55,5 +61,31 @@ public class FriendService {
         friendUpdater.connectFriend(currentFriend, currentUser);
 
         return null;
+    }
+
+    public FriendListResponseDto getFriendList(
+            Long userId,
+            int page
+    ) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+
+        if (page < 1)
+            throw BaseException.type(FriendErrorCode.INVALID_PAGE_FRIEND);
+
+        Pageable pageable = PageRequest.of(page - 1, 2);
+        Page<User> friendPage = userFindService.findAllUserInFriend(currentUser, pageable);
+
+        if (page != 1 && page > friendPage.getTotalPages())
+            throw BaseException.type(FriendErrorCode.INVALID_PAGE_FRIEND);
+
+        List<User> friendList = friendPage.getContent();
+        List<FriendResponseDto> friendResponseDto = friendList.stream()
+                                                              .map(FriendResponseDto::of)
+                                                              .toList();
+
+        return FriendListResponseDto.of(
+                friendResponseDto,
+                friendPage.getTotalPages()
+        );
     }
 }

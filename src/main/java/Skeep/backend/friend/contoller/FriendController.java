@@ -14,6 +14,16 @@ public class FriendController {
 
     private final FriendService friendService;
 
+    @GetMapping
+    public ResponseEntity<?> getFriendList(
+            @UserId Long userId,
+            @RequestParam(value = "page") int page
+    ) {
+        return ResponseEntity.ok(
+                friendService.getFriendList(userId, page)
+        );
+    }
+
     @PatchMapping
     public ResponseEntity<Void> connectFriend(
             @UserId Long userId,

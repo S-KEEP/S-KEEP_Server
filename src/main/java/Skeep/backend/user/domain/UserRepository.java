@@ -1,6 +1,8 @@
 package Skeep.backend.user.domain;
 
 import Skeep.backend.user.dto.UserSecurityForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +23,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.modifiedDate < :date and u.status = :status")
     List<User> findUsersNotModifiedSince(@Param("date") LocalDateTime date, @Param("status") EStatus status);
+
+    @Query(
+            value = "SELECT u.* " +
+                    "FROM friend f " +
+                    "LEFT JOIN users u ON (f.user1_id = u.id AND f.user2_id IS NOT NULL AND f.user2_id = :userId) " +
+                    "OR (f.user2_id = u.id AND f.user1_id = :userId) " +
+                    "WHERE (f.user1_id = :userId OR f.user2_id = :userId)",
+            countQuery = "SELECT COUNT(*) " +
+                    "FROM friend f " +
+                    "LEFT JOIN users u ON (f.user1_id = u.id AND f.user2_id IS NOT NULL AND f.user2_id = :userId) " +
+                    "OR (f.user2_id = u.id AND f.user1_id = :userId) " +
+                    "WHERE (f.user1_id = :userId OR f.user2_id = :userId)",
+            nativeQuery = true
+    )
+    Page<User> findAllByUserInFriend(Long userId, Pageable pageable);
 
     @Modifying
     @Transactional
