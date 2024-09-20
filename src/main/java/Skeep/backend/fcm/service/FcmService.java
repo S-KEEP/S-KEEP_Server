@@ -2,8 +2,11 @@ package Skeep.backend.fcm.service;
 
 import Skeep.backend.fcm.constant.FcmContants;
 import Skeep.backend.fcm.dto.request.FcmTestRequestDto;
+import Skeep.backend.fcm.dto.response.FcmNotificationResponseDto;
+import Skeep.backend.fcm.exception.FcmErrorCode;
 import Skeep.backend.global.exception.BaseException;
-import Skeep.backend.global.exception.GlobalErrorCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,30 +18,50 @@ public class FcmService {
 
         String token = fcmTestRequestDto.token();
 
-        sendNotification(Boolean.FALSE, token, "테스트 >.0", "얏호~ 성공~");
+        sendNotification(Boolean.FALSE, token, "테스트 >.0", "얏호~ 성공~", "category", "/category/205");
 
         return null;
     }
 
-    private void sendNotification(Boolean isScheduling, String token, String title, String body) {
+    private void sendNotification(
+            Boolean isScheduling,
+            String token,
+            String title,
+            String body,
+            String type,
+            String url
+    ) {
         Notification notification = Notification.builder()
                                                 .setTitle(title)
                                                 .setBody(body)
                                                 .build();
 
-        ApnsConfig apnsConfig = ApnsConfig.builder()
-                                          .setAps(Aps.builder()
-                                                     .setAlert(ApsAlert.builder()
-                                                                       .setTitle(title)
-                                                                       .setBody(body)
-                                                                       .build()
-                                                     )
-                                                     .setSound(FcmContants.NOTIFICATION_DEFAULT_SOUND)
-                                                     .build()
-                                          )
-                                          .build();
+        ApnsConfig apnsConfig
+                = ApnsConfig.builder()
+                            .setAps(Aps.builder()
+                                       .setAlert(ApsAlert.builder()
+                                                         .setTitle(title)
+                                                         .setBody(body)
+                                                         .build()
+                                       )
+                                       .setSound(FcmContants.NOTIFICATION_DEFAULT_SOUND)
+                                       .build()
+                            )
+                            .build();
+        FcmNotificationResponseDto fcmNotificationResponseDto
+                = FcmNotificationResponseDto.of(type, url);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String fcmNotificationResponseJson;
+        try {
+            fcmNotificationResponseJson = objectMapper.writeValueAsString(fcmNotificationResponseDto);
+        } catch (JsonProcessingException e) {
+            log.info("fail to write fcm data");
+            throw BaseException.type(FcmErrorCode.FCM_DATA_WRITE_FAIL);
+        }
 
         Message message = Message.builder()
+                                 .putData("data", fcmNotificationResponseJson)
                                  .setToken(token)
                                  .setNotification(notification)
                                  .setApnsConfig(apnsConfig)
@@ -51,7 +74,7 @@ public class FcmService {
             e.printStackTrace();
             log.info("fail to sent message");
             if (!isScheduling)
-                throw BaseException.type(GlobalErrorCode.FCM_FAIL);
+                throw BaseException.type(FcmErrorCode.FCM_FAIL);
         }
     }
 }
