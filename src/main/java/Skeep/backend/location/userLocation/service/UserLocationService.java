@@ -273,4 +273,28 @@ public class UserLocationService {
                 userLocationPage.getTotalPages()
         );
     }
+
+    public UserLocationDto getFriendUserLocationRetrieve(
+            Long userId,
+            Long targetId,
+            Long userLocationId
+    ) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+        User targetUser = userFindService.findUserByIdAndStatus(targetId);
+
+        if (!friendRetriever.existsByCrossUserCheck(currentUser, targetUser))
+            throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+
+        UserLocation targetLocation
+                = userLocationRetriever.findByUserAndId(targetUser, userLocationId);
+        Location location = targetLocation.getLocation();
+        UserCategory userCategory = targetLocation.getUserCategory();
+
+        return UserLocationDto.of(
+                userLocationId,
+                s3Service.getPresignUrl(targetLocation.getFileName()),
+                LocationDto.of(location),
+                UserCategoryDto.of(userCategory)
+        );
+    }
 }

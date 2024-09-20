@@ -102,4 +102,19 @@ public class UserLocationController {
                 )
         );
     }
+
+    @GetMapping("/user/{targetId}/user-location/{userLocationId}")
+    public ResponseEntity<?> getFriendUserLocationRetrieve(
+            @UserId Long userId,
+            @PathVariable(value = "targetId") Long targetId,
+            @PathVariable(value = "userLocationId") Long userLocationId
+    ) {
+        return ResponseEntity.ok(
+                userLocationService.getFriendUserLocationRetrieve(
+                        userId,
+                        targetId,
+                        userLocationId
+                )
+        );
+    }
 }
