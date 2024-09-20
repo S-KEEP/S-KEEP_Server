@@ -37,7 +37,7 @@ public class Friend extends BaseTimeEntity {
         this.token = token;
     }
 
-    public static Friend creatFriend(final User user1_id, final String token) {
+    public static Friend createFriend(final User user1_id, final String token) {
         return Friend.builder()
                      .user1_id(user1_id)
                      .token(token)

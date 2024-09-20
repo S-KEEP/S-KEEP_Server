@@ -19,7 +19,7 @@ public class FriendService {
         User currentUser = userFindService.findUserByIdAndStatus(userId);
         String token = UUID.randomUUID().toString();
 
-        friendSaver.save(Friend.creatFriend(currentUser, token));
+        friendSaver.save(Friend.createFriend(currentUser, token));
 
         return FriendTokenResponseDto.of(token);
     }
