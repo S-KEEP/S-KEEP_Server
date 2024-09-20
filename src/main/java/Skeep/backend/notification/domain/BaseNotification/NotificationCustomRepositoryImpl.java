@@ -41,10 +41,10 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
                                                         .toList();
 
         String countQuery = "SELECT COUNT(*) FROM (" +
-                "(SELECT id FROM users_location_notification WHERE user_id = :userId) " +
-                "UNION ALL " +
-                "(SELECT id FROM category_notification WHERE user_id = :userId)" +
-                ") AS total";
+                            "(SELECT id FROM users_location_notification WHERE user_id = :userId) " +
+                            "UNION ALL " +
+                            "(SELECT id FROM category_notification WHERE user_id = :userId)" +
+                            ") AS total";
         Query countNativeQuery = entityManager.createNativeQuery(countQuery);
         countNativeQuery.setParameter("userId", userId);
 
