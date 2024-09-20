@@ -24,4 +24,11 @@ public class FriendRetriever {
     public Boolean existsByUser1AndUser2(User user1, User user2) {
         return friendRepository.existsByUser1AndUser2(user1, user2);
     }
+
+    public Boolean existsByCrossUserCheck(User user1, User user2) {
+        if (existsByUser1AndUser2(user1, user2) || existsByUser1AndUser2(user2, user1))
+            return Boolean.TRUE;
+        else
+            throw BaseException.type(FriendErrorCode.FRIEND_NOT_FOUND);
+    }
 }
