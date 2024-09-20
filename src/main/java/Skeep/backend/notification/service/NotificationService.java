@@ -50,7 +50,10 @@ public class NotificationService {
                                   .map(NotificationResponseDto::of)
                                   .toList();
 
-        return NotificationListResponseDto.of(notificationResponseDtoList);
+        return NotificationListResponseDto.of(
+                notificationResponseDtoList,
+                notificationProjectionPage.getTotalPages()
+        );
     }
 
     public Void checkNotification(
