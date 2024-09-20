@@ -23,7 +23,7 @@ public class NotificationController {
     }
 
     @PatchMapping("/check")
-    public ResponseEntity<?> checkNotification(
+    public ResponseEntity<Void> checkNotification(
             @UserId Long userId,
             @RequestBody NotificationCheckRequestDto notificationCheckRequestDto
     ) {
