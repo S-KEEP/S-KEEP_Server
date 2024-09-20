@@ -24,8 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
     private final NotificationRetriever notificationRetriever;
-    private final CategoryNotificationUpdater categoryNotificationUpdater;
-    private final UserLocationNotificationUpdater userLocationNotificationUpdater;
+    private final NotificationUpdater notificationUpdater;
     private final UserFindService userFindService;
 
     public NotificationListResponseDto getNotificationList(
@@ -63,11 +62,7 @@ public class NotificationService {
         String type = notificationCheckRequestDto.type();
 
         Object notification = notificationRetriever.getNotification(currentUser, id, type);
-
-        if (notification instanceof CategoryNotification)
-            categoryNotificationUpdater.updateIsCheck((CategoryNotification) notification);
-        else if (notification instanceof UserLocationNotification)
-            userLocationNotificationUpdater.updateIsChecked((UserLocationNotification) notification);
+        notificationUpdater.updateNotification(notification);
 
         return null;
     }
