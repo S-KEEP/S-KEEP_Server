@@ -45,7 +45,7 @@ public class FcmService {
                                                          .setBody(body)
                                                          .build()
                                        )
-                                       .setSound(FcmContants.NOTIFICATION_DEFAULT_SOUND)
+                                       .setSound(FcmConstants.NOTIFICATION_DEFAULT_SOUND)
                                        .build()
                             )
                             .build();
