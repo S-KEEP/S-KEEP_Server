@@ -72,7 +72,7 @@ public class TourService {
             return new TourLocationList(0, null);
         }
 
-        List<TourLocationDto> tourLocationDtos = convertToLocationDtos(tourLocationResponse);
+        List<TourLocationDto> tourLocationDtos = convertToLocationDtos(tourLocationResponse, String.valueOf(mapX), String.valueOf(mapY));
         return new TourLocationList(tourLocationDtos.size(), tourLocationDtos);
     }
 
@@ -90,7 +90,7 @@ public class TourService {
         return tourLocationResponse;
     }
 
-    private List<TourLocationDto> convertToLocationDtos(TourLocationResponse response) {
+    private List<TourLocationDto> convertToLocationDtos(TourLocationResponse response, String mapX, String mapY) {
         return response.response()
                 .body()
                 .items()
@@ -106,6 +106,7 @@ public class TourService {
                         tourLocation.firstimage()
                 ))
                 .filter(this::validateKakaoMap)
+                .filter(tourLocation -> !(tourLocation.mapX().equals(mapX) && tourLocation.mapY().equals(mapY)))
                 .limit(3)
                 .collect(Collectors.toList());
     }
