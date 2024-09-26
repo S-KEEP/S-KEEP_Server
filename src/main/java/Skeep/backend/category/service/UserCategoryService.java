@@ -8,8 +8,10 @@ import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserCategoryService {
     private final UserCategoryRetriever userCategoryRetriever;

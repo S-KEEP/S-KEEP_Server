@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface CategoryNotificationRepository extends JpaRepository<CategoryNotification, Long> {
     List<CategoryNotification> findAllByUser(User user);
     Optional<CategoryNotification> findByUserAndId(User user, Long id);
+    void deleteByUser(User user);
 }

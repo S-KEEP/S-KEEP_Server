@@ -7,8 +7,9 @@ import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class FriendRetriever {
     private final FriendRepository friendRepository;

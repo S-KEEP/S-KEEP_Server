@@ -22,7 +22,12 @@ public class UserCategoryRemover {
     private final UserCategoryRepository userCategoryRepository;
 
     @Transactional
-    public void deleteUserCategory(Long userId, Long userCategoryId) {
+    public void deleteByUser(User user) {
+        userCategoryRepository.deleteAllByUser(user);
+    }
+
+    @Transactional
+    public void deleteByUserIdAndUserCategoryId(Long userId, Long userCategoryId) {
         User user = userFindService.findById(userId);
         UserCategory userCategory = userCategoryRetriever.findById(userCategoryId);
 
