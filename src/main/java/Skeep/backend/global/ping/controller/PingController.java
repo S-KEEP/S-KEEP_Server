@@ -2,14 +2,10 @@ package Skeep.backend.global.ping.controller;
 
 import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.global.dto.JwtDto;
-import Skeep.backend.global.exception.BaseException;
-import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.weather.domain.locationGrid.LocationGrid;
 import Skeep.backend.weather.domain.locationGrid.LocationGridRepository;
-import Skeep.backend.weather.service.WeatherLocationService;
-import Skeep.backend.weather.service.WeatherRetriever;
 import Skeep.backend.weather.service.WeatherSchedulerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

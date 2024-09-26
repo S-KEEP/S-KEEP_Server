@@ -1,14 +1,11 @@
 package Skeep.backend.user.service;
 
 import Skeep.backend.auth.jwt.service.JwtTokenService;
-import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.category.service.UserCategoryRemover;
 import Skeep.backend.friend.service.FriendRemover;
-import Skeep.backend.location.userLocation.domain.UserLocationRepository;
 import Skeep.backend.location.userLocation.service.UserLocationRemover;
 import Skeep.backend.notification.service.NotificationRemover;
 import Skeep.backend.user.domain.User;
-import Skeep.backend.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

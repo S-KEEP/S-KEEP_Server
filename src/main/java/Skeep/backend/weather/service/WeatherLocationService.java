@@ -5,7 +5,6 @@ import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.location.service.LocationRetriever;
 import Skeep.backend.weather.domain.Weather;
 import Skeep.backend.weather.domain.locationGrid.LocationGrid;
-import Skeep.backend.weather.domain.locationGrid.LocationGridRepository;
 import Skeep.backend.weather.dto.response.WeatherListDto;
 import Skeep.backend.weather.exception.WeatherErrorCode;
 import Skeep.backend.weather.service.locationGrid.LocationGridService;
