@@ -9,11 +9,13 @@ public class Constants {
     public static String PREFIX_AUTH = "Authorization";
 
     public static List<String> NO_NEED_AUTH = List.of(
+            "/api/s3",
             "/api/auth/apple/login",
             "/api/auth/jwt/reissue",
             "/api/auth/apple/revoke",
             "/api/ping/login",
             "/api/ping/login/test",
+            "/api/picks",
             "/swagger-ui/index.html",
             "/swagger-ui/swagger-ui-standalone-preset.js",
             "/swagger-ui/swagger-initializer.js",

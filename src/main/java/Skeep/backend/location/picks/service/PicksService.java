@@ -4,13 +4,13 @@ import Skeep.backend.category.domain.ECategory;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.kakaoMap.dto.response.KakaoResponseResult;
 import Skeep.backend.kakaoMap.service.KakaoMapService;
-import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.picks.domain.Picks;
 import Skeep.backend.location.picks.domain.PicksRepository;
 import Skeep.backend.location.picks.dto.request.PicksRequest;
-import Skeep.backend.location.tour.dto.TourLocationDto;
-import Skeep.backend.location.tour.dto.response.TourLocationList;
+import Skeep.backend.location.picks.dto.response.PicksDto;
+import Skeep.backend.location.picks.dto.response.PicksDtoList;
 import Skeep.backend.location.tour.exception.TourErrorCode;
+import Skeep.backend.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +23,7 @@ import java.util.List;
 public class PicksService {
     private final PicksRepository picksRepository;
     private final KakaoMapService kakaoMapService;
+    private final S3Service s3Service;
 
     @Transactional
     public void save(PicksRequest request) {
@@ -43,20 +44,25 @@ public class PicksService {
                 ));
     }
 
-    public TourLocationList findAll() {
-        return new TourLocationList(
+    public PicksDtoList findAll() {
+        return new PicksDtoList(
                 picksRepository.findAll().size(),
                 picksRepository.findAll().stream()
-                        .map(pick -> new TourLocationDto(
+                        .map(pick -> new PicksDto(
                                 pick.getPlaceName(),
+                                pick.getRoadAddress(),
                                 pick.getX(),
                                 pick.getY(),
-                                pick.getRoadAddress(),
-                                null,
-                                null,
-                                pick.getFileName()
+                                s3Service.getPresignUrl(pick.getFileName()),
+                                pick.getFixedCategory().getName(),
+                                pick.getEditorName()
                         ))
                         .toList()
         );
+    }
+
+    @Transactional
+    public void deleteAll() {
+        picksRepository.deleteAll();;
     }
 }

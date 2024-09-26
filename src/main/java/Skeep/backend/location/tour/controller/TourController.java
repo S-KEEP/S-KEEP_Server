@@ -2,7 +2,6 @@ package Skeep.backend.location.tour.controller;
 
 import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.location.tour.dto.TourLocationDto;
-import Skeep.backend.location.tour.dto.request.TourLocationRequest;
 import Skeep.backend.location.tour.dto.response.TourLocationList;
 import Skeep.backend.location.tour.service.TourService;
 import Skeep.backend.location.userLocation.domain.UserLocation;
