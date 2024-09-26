@@ -1,10 +1,8 @@
 package Skeep.backend.weather.service;
 
-import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.weather.dto.response.MiddleTermLandForecastResponse;
 import Skeep.backend.weather.dto.response.MiddleTermTaResponse;
 import Skeep.backend.weather.dto.response.ShortTermResponse;
-import Skeep.backend.weather.exception.WeatherErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,6 +31,12 @@ public class WeatherService {
                 localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), "0500", x, y);
 
         ShortTermResponse shorTermResponse = deserializeShortTermResponse(response);
+        System.out.println("*************");
+        System.out.println(shorTermResponse);
+        if (shorTermResponse == null || Objects.equals(shorTermResponse.response().header().resultCode(), "03")) {
+            return null;
+        }
+
         return shorTermResponse.response().body().items();
     }
 
@@ -43,7 +48,7 @@ public class WeatherService {
         try {
             shorTermResponse = objectMapper.readValue(response, ShortTermResponse.class);
         } catch (JsonProcessingException e) {
-            throw BaseException.type(WeatherErrorCode.CANNOT_CONVERT_RESPONSE);
+            return null;
         }
         return shorTermResponse;
     }
@@ -59,6 +64,9 @@ public class WeatherService {
         System.out.println(response);
 
         MiddleTermLandForecastResponse middleTermLandForecastResponse = deserializeMiddleTermLandForecastResponse(response);
+        if (Objects.equals(middleTermLandForecastResponse.response().header().resultCode(), "03")) {
+            return null;
+        }
         return middleTermLandForecastResponse.response().body().items();
     }
 
@@ -70,7 +78,7 @@ public class WeatherService {
         try {
             middleTermLandForecastResponse = objectMapper.readValue(response, MiddleTermLandForecastResponse.class);
         } catch (JsonProcessingException e) {
-            throw BaseException.type(WeatherErrorCode.CANNOT_CONVERT_RESPONSE);
+            return null;
         }
         return middleTermLandForecastResponse;
     }
@@ -97,7 +105,7 @@ public class WeatherService {
         try {
             middleTermTaResponse = objectMapper.readValue(response, MiddleTermTaResponse.class);
         } catch (JsonProcessingException e) {
-            throw BaseException.type(WeatherErrorCode.CANNOT_CONVERT_RESPONSE);
+            return null;
         }
         return middleTermTaResponse;
     }

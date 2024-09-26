@@ -13,6 +13,7 @@ import Skeep.backend.weather.exception.WeatherErrorCode;
 import Skeep.backend.weather.service.locationGrid.LocationGridService;
 import Skeep.backend.weather.util.RegionUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +36,8 @@ public class WeatherSchedulerService {
     private final WeatherSaver weatherSaver;
     private final WeatherRemover weatherRemover;
 
-    // 매일 아침 9시
     @Transactional
+    @Scheduled(cron = "0 00 8 * * *")
     public void updateWeather() {
         weatherRemover.deleteAll();
 
@@ -75,6 +76,10 @@ public class WeatherSchedulerService {
         LocalDate localDate = LocalDate.now();
 
         Items items = weatherService.getShortTermForecast(localDate, x, y);
+        if (items == null) {
+            return new ArrayList<>();
+        }
+
         List<LocalDate> dates = getDates(0, 3);
         List<Weather> weatherList = new ArrayList<>();
 
@@ -90,7 +95,6 @@ public class WeatherSchedulerService {
         }
         return weatherList;
     }
-
 
     private EWeatherCondition getEWeatherCondition_shortTerm(Items items, String yyyyMMdd) {
         Item PTY = items.item().stream()
@@ -147,10 +151,14 @@ public class WeatherSchedulerService {
     public List<Weather> analyzeMiddleTerm(Location location, String regionCode_land, String regionCode_ta) {
         LocalDate localDate = LocalDate.now();
 
-        MiddleTermLandForecastResponse.Response.Body.Items.Item item_landForecast = weatherService.getMiddleTermLandForecast(localDate, regionCode_land).item().get(0);
+        MiddleTermLandForecastResponse.Response.Body.Items item_landForecast = weatherService.getMiddleTermLandForecast(localDate, regionCode_land);
+        if (item_landForecast == null) {
+            return new ArrayList<>();
+        }
+
         MiddleTermTaResponse.Response.Body.Items.Item item_ta = weatherService.getMiddleTermTa(localDate, regionCode_ta).item().get(0);
 
-        List<EWeatherCondition> eWeatherConditions = getEWeatherCondition_middleTerm(item_landForecast);
+        List<EWeatherCondition> eWeatherConditions = getEWeatherCondition_middleTerm(item_landForecast.item().get(0));
         List<String> temperatures = getTemperature_middleTerm(item_ta);
         List<LocalDate> dates = getDates(3, 11);
 

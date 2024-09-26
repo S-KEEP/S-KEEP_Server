@@ -1,6 +1,5 @@
 package Skeep.backend.weather.controller;
 
-import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.weather.dto.response.WeatherListDto;
 import Skeep.backend.weather.service.WeatherLocationService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ public class WeatherController {
 
     @GetMapping
     public ResponseEntity<WeatherListDto> getWeatherList(
-            @UserId Long userId,
             @RequestParam(value = "x") String x,
             @RequestParam(value = "y") String y,
             @RequestParam(value = "address") String address
