@@ -59,6 +59,7 @@ public class AppleService {
         return createJwtDto(userSecurityForm.getId(), userSecurityForm.getRole());
     }
 
+    @Transactional
     public JwtDto createJwtDto(Long userId, ERole role) {
         JwtDto jwtDto = jwtUtil.generateTokens(userId, role);
         jwtTokenService.updateRefreshToken(userId, jwtDto.refreshToken());
@@ -67,7 +68,11 @@ public class AppleService {
 
     @Transactional
     public User signUp(String appleSerialId, AppleLoginRequest.AppleUser user) {
-        return userService.saveAppleUser(appleSerialId, user.name().firstName() + user.name().lastName(), user.email());
+        if (user.name().firstName().matches("[a-zA-Z]+") && user.name().lastName().matches("[a-zA-Z]+")) {
+            return userService.saveAppleUser(appleSerialId, user.name().firstName() + user.name().lastName(), user.email());
+        } else {
+            return userService.saveAppleUser(appleSerialId,  user.name().lastName() + user.name().firstName(), user.email());
+        }
     }
 
     public String getAppleSerialId(String identityToken) {
