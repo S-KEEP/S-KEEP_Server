@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record FcmTestRequestDto(
         @JsonProperty("token")
-        String token
+        String token,
+        @JsonProperty("isCategory")
+        Boolean isCategory
 ) {
 }

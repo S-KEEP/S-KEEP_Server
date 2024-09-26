@@ -37,4 +37,8 @@ public class UserCategoryRetriever {
         return userCategoryRepository.findByUserAndName(user, name)
                 .orElseThrow(() -> BaseException.type(UserCategoryErrorCode.USER_CATEGORY_NOT_FOUND));
     }
+
+    public List<UserCategory> findAllByUser(User user) {
+        return userCategoryRepository.findAllByUserId(user.getId());
+    }
 }

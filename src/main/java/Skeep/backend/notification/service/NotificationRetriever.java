@@ -1,9 +1,8 @@
 package Skeep.backend.notification.service;
 
 import Skeep.backend.global.exception.BaseException;
-import Skeep.backend.notification.domain.BaseNotification.NotificationCustomRepositoryImpl;
+import Skeep.backend.notification.domain.BaseNotification.NotificationCustomRepository;
 import Skeep.backend.notification.domain.BaseNotification.NotificationProjection;
-import Skeep.backend.notification.domain.CategoryNotification.CategoryNotification;
 import Skeep.backend.notification.exception.NotificationErrorCode;
 import Skeep.backend.notification.service.CategoryNotification.CategoryNotificationRetriever;
 import Skeep.backend.notification.service.UserLocationNotification.UserLocationNotificationRetriever;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class NotificationRetriever {
     private final CategoryNotificationRetriever categoryNotificationRetriever;
     private final UserLocationNotificationRetriever userLocationNotificationRetriever;
-    private final NotificationCustomRepositoryImpl notificationCustomRepositoryImpl;
+    private final NotificationCustomRepository notificationCustomRepository;
 
     public Page<NotificationProjection> getNotificationList(
             User user,
@@ -27,7 +26,7 @@ public class NotificationRetriever {
         int limit = pageable.getPageSize();
         int offset = (int) pageable.getOffset();
 
-        return notificationCustomRepositoryImpl.findAllByUserId(user.getId(), limit, offset, pageable);
+        return notificationCustomRepository.findAllByUserId(user.getId(), limit, offset, pageable);
     }
 
     public Object getNotification(

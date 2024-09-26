@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -55,5 +57,13 @@ public class UserFindService {
 
     public Page<User> findAllUserInFriend(User user, Pageable pageable) {
         return userRepository.findAllByUserInFriend(user.getId(), pageable);
+    }
+
+    public List<User> findWholeByUserInFriendWithNoPage(User user) {
+        return userRepository.findWholeByUserInFriendWithNoPage(user.getId());
+    }
+
+    public List<User> findAllByFcmTokenIsNotNull() {
+        return userRepository.findAllByFcmTokenIsNotNull();
     }
 }

@@ -8,6 +8,7 @@ import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.userLocation.domain.UserLocation;
+import Skeep.backend.location.userLocation.dto.request.FriendUserLocationCreateRequestDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationImagePatchDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchListDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchWithCategoryDto;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 public class UserLocationService {
     private final ScreenshotService screenshotService;
     private final UserFindService userFindService;
+    private final UserLocationSaver userLocationSaver;
     private final UserLocationRetriever userLocationRetriever;
     private final UserLocationUpdater userLocationUpdater;
     private final UserLocationRemover userLocationRemover;
@@ -295,6 +297,41 @@ public class UserLocationService {
                 s3Service.getPresignUrl(targetLocation.getFileName()),
                 LocationDto.of(location),
                 UserCategoryDto.of(userCategory)
+        );
+    }
+
+    @Transactional
+    public FriendUserLocationCreate createFriendUserLocation(
+            Long userId,
+            Long targetId,
+            FriendUserLocationCreateRequestDto friendUserLocationCreateRequestDto
+    ) {
+        User currentUser = userFindService.findUserByIdAndStatus(userId);
+        User targetUser = userFindService.findUserByIdAndStatus(targetId);
+        Long targetLocationId = friendUserLocationCreateRequestDto.targetLocationId();
+        Long userCategoryId = friendUserLocationCreateRequestDto.userCategoryId();
+
+        if (!friendRetriever.existsByCrossUserCheck(currentUser, targetUser))
+            throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+
+        UserLocation targetUserLocation
+                = userLocationRetriever.findByUserAndId(targetUser, targetLocationId);
+        UserCategory currentUserCategory
+                = userCategoryRetriever.findByUserAndId(currentUser, userCategoryId);
+
+        UserLocation newCurrentUserLocation
+                = UserLocation.createUserLocation(
+                                    targetUserLocation.getFileName(),
+                                    targetUserLocation.getLocation(),
+                                    currentUser,
+                                    currentUserCategory
+                );
+
+        UserLocation savedUserLocation = userLocationSaver.createUserLocation(newCurrentUserLocation);
+        String uriString = "/user-location/" + savedUserLocation.getId().toString();
+
+        return FriendUserLocationCreate.of(
+            URI.create(uriString)
         );
     }
 }

@@ -1,8 +1,10 @@
 package Skeep.backend.location.userLocation.controller;
 
 import Skeep.backend.global.annotation.UserId;
+import Skeep.backend.location.userLocation.dto.request.FriendUserLocationCreateRequestDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchListDto;
 import Skeep.backend.location.userLocation.dto.request.UserLocationPatchWithCategoryDto;
+import Skeep.backend.location.userLocation.dto.response.FriendUserLocationCreate;
 import Skeep.backend.location.userLocation.dto.response.UserLocationCreate;
 import Skeep.backend.location.userLocation.service.UserLocationService;
 import Skeep.backend.screenshot.dto.request.ScreenshotUploadDto;
@@ -116,5 +118,22 @@ public class UserLocationController {
                         userLocationId
                 )
         );
+    }
+
+    @PostMapping("/user/{targetId}/user-location")
+    public ResponseEntity<Void> createFriendUserLocation(
+            @UserId Long userId,
+            @PathVariable(value = "targetId") Long targetId,
+            @RequestBody FriendUserLocationCreateRequestDto friendUserLocationCreateRequestDto
+            ) {
+        FriendUserLocationCreate friendUserLocationCreate
+                = userLocationService.createFriendUserLocation(
+                                        userId,
+                                        targetId,
+                                        friendUserLocationCreateRequestDto
+                                     );
+        return ResponseEntity.created(
+                friendUserLocationCreate.uri()
+        ).build();
     }
 }
