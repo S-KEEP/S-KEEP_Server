@@ -31,21 +31,24 @@ public class FcmService {
         String token = fcmTestRequestDto.token();
         Boolean isCategory = fcmTestRequestDto.isCategory();
         String typeCategory = "category";
-//        String urlCategory = "/category/205";
         String typeUserLocation = "userLocation";
-//        String urlUserLocation = "/detail/65";
         String url;
         String title;
         String body;
         User yusinUser = userFindService.findUserByIdAndStatus(14L);
 
         if (isCategory) {
-            Long id = 6L;
+            Long id = 200L;
             UserCategory userCategory = userCategoryRetriever.findById(id);
             title = yusinUser.getName() + FcmConstants.CATEGORY_TITLE_1
                     + userCategory.getName() + FcmConstants.CATEGORY_TITLE_2;
             body = FcmConstants.CATEGORY_BODY;
-            url = FcmConstants.CATEGORY_URL;
+            url = FcmConstants.CATEGORY_URL + userCategory.getId().toString();
+
+            log.info("CATEGORY @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            log.info("title : {}", title);
+            log.info("body : {}", body);
+            log.info("url : {}", url);
 
             sendNotification(
                     Boolean.FALSE,
@@ -57,12 +60,17 @@ public class FcmService {
                     url
             );
         } else {
-            Long id = 5L;
+            Long id = 65L;
             UserLocation userLocation = userLocationRetriever.findById(id);
             title = yusinUser.getName() + FcmConstants.USER_LOCATION_TITLE_1
                     + userLocation.getLocation().getPlaceName() + FcmConstants.USER_LOCATION_TITLE_2;
             body = "9월 30일" + FcmConstants.USER_LOCATION_BODY;
-            url = FcmConstants.USER_LOCATION_URL;
+            url = FcmConstants.USER_LOCATION_URL + userLocation.getId().toString();
+
+            log.info("USERLOCATION @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            log.info("title : {}", title);
+            log.info("body : {}", body);
+            log.info("url : {}", url);
 
             sendNotification(
                     Boolean.FALSE,
