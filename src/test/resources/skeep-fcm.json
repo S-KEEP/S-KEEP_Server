@@ -1,0 +1,14 @@
+{
+  "type": "abc",
+  "project_id": "abc",
+  "private_key_id": "abc",
+  "private_key": "abc",
+  "client_email": "abc",
+  "client_id": "abc",
+  "auth_uri": "abc",
+  "token_uri": "abc",
+  "auth_provider_x509_cert_url": "abc",
+  "client_x509_cert_url": "abc",
+  "universe_domain": "abc"
+}
+

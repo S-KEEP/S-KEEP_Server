@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UserLocationNotificationRepository extends JpaRepository<UserLocationNotification, Long> {
     List<UserLocationNotification> findAllByUser(User user);
     Optional<UserLocationNotification> findByUserAndId(User user, Long id);
+    void deleteByUser(User user);
 }

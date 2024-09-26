@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 public class UserLocationRemover {
     private final UserLocationRepository userLocationRepository;
 
+    public void deleteByUser(User user) {
+        userLocationRepository.deleteAllByUser(user);
+    }
+
     public void deleteByUserIdAndId(User user, Long userLocationId) {
         userLocationRepository.deleteByUserAndId(user, userLocationId);
     }
