@@ -2,6 +2,7 @@ package Skeep.backend.user.service;
 
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.user.domain.EStatus;
+import Skeep.backend.user.domain.Email;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.dto.UserSecurityForm;
@@ -36,6 +37,11 @@ public class UserFindService {
 
     public User findUserBySerialId(String serialId) {
         return userRepository.findBySerialId(serialId)
+                .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(Email.createEmail(email))
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
     }
 

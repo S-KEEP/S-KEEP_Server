@@ -17,8 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static Skeep.backend.fixture.TokenFixture.ACCESS_TOKEN;
@@ -114,7 +112,7 @@ class UserCategoryControllerTest extends ControllerTest {
             // given
             doNothing()
                     .when(userCategoryRemover)
-                    .deleteUserCategory(anyLong(), anyLong());
+                    .deleteByUserIdAndUserCategoryId(anyLong(), anyLong());
 
             // when
             MockHttpServletRequestBuilder requestBuilder = delete(BASE_URL, 1L)

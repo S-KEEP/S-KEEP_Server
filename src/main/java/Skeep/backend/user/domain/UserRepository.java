@@ -62,4 +62,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
     Optional<User> findByIdAndStatus(Long id, EStatus status);
     List<User> findAllByFcmTokenIsNotNull();
+    Optional<User> findByEmail(Email email);
 }
