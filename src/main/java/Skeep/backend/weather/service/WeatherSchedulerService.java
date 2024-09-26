@@ -36,7 +36,6 @@ public class WeatherSchedulerService {
     private final WeatherSaver weatherSaver;
     private final WeatherRemover weatherRemover;
 
-    // 매일 아침 8시
     @Transactional
     @Scheduled(cron = "0 00 8 * * *")
     public void updateWeather() {
