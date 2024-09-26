@@ -20,7 +20,6 @@ public class WeatherController {
 
     @GetMapping
     public ResponseEntity<WeatherListDto> getWeatherList(
-            @UserId Long userId,
             @RequestParam(value = "x") String x,
             @RequestParam(value = "y") String y,
             @RequestParam(value = "address") String address
