@@ -18,6 +18,7 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
     boolean existsByUserAndId(User user, Long id);
     void deleteByUserAndId(User user, Long id);
     List<UserLocation> findAllByUser(User user);
+    Long countByUserCategory(UserCategory userCategory);
 
     // @Query
     @Query(

@@ -1,5 +1,6 @@
 package Skeep.backend.location.userLocation.service;
 
+import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.location.userLocation.domain.UserLocation;
 import Skeep.backend.location.userLocation.domain.UserLocationRepository;
@@ -38,5 +39,9 @@ public class UserLocationRetriever {
     public UserLocation findById(Long id) {
         return userLocationRepository.findById(id)
                 .orElseThrow(() -> BaseException.type(UserLocationErrorCode.NOT_FOUND_USER_LOCATION));
+    }
+
+    public Long countByUserCategory(UserCategory userCategory) {
+        return userLocationRepository.countByUserCategory(userCategory);
     }
 }
