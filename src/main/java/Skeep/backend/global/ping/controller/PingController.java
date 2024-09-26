@@ -13,6 +13,7 @@ import Skeep.backend.weather.service.WeatherRetriever;
 import Skeep.backend.weather.service.WeatherSchedulerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/ping")
 public class PingController {
+    @Value("${test.email}")
+    private String testEmail;
+
     private final UserFindService userFindService;
     private final AppleService appleService;
     private final LocationGridRepository locationGridRepository;
@@ -36,7 +40,10 @@ public class PingController {
 
     @PostMapping("/login/test")
     public ResponseEntity<JwtDto> login() {
-        throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+//        throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+        User user = userFindService.findUserByEmail(testEmail);
+        JwtDto jwtDto = appleService.createJwtDto(user.getId(), user.getRole());
+        return ResponseEntity.ok(jwtDto);
     }
 
     @GetMapping("/location-grid")
