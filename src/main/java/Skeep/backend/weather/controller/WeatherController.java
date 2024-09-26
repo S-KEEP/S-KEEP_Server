@@ -1,6 +1,5 @@
 package Skeep.backend.weather.controller;
 
-import Skeep.backend.global.annotation.UserId;
 import Skeep.backend.weather.dto.response.WeatherListDto;
 import Skeep.backend.weather.service.WeatherLocationService;
 import lombok.RequiredArgsConstructor;

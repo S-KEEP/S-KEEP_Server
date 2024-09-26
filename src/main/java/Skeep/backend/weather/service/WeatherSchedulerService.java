@@ -13,6 +13,7 @@ import Skeep.backend.weather.exception.WeatherErrorCode;
 import Skeep.backend.weather.service.locationGrid.LocationGridService;
 import Skeep.backend.weather.util.RegionUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +36,9 @@ public class WeatherSchedulerService {
     private final WeatherSaver weatherSaver;
     private final WeatherRemover weatherRemover;
 
-    // 매일 아침 9시
+    // 매일 아침 8시
     @Transactional
+    @Scheduled(cron = "0 00 8 * * *")
     public void updateWeather() {
         weatherRemover.deleteAll();
 
@@ -94,7 +96,6 @@ public class WeatherSchedulerService {
         }
         return weatherList;
     }
-
 
     private EWeatherCondition getEWeatherCondition_shortTerm(Items items, String yyyyMMdd) {
         Item PTY = items.item().stream()

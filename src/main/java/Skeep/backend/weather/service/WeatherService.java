@@ -1,10 +1,8 @@
 package Skeep.backend.weather.service;
 
-import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.weather.dto.response.MiddleTermLandForecastResponse;
 import Skeep.backend.weather.dto.response.MiddleTermTaResponse;
 import Skeep.backend.weather.dto.response.ShortTermResponse;
-import Skeep.backend.weather.exception.WeatherErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,8 +31,9 @@ public class WeatherService {
                 localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), "0500", x, y);
 
         ShortTermResponse shorTermResponse = deserializeShortTermResponse(response);
+        System.out.println("*************");
         System.out.println(shorTermResponse);
-        if (Objects.equals(shorTermResponse.response().header().resultCode(), "03")) {
+        if (shorTermResponse == null || Objects.equals(shorTermResponse.response().header().resultCode(), "03")) {
             return null;
         }
 
