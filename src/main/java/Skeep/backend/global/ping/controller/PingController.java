@@ -2,6 +2,8 @@ package Skeep.backend.global.ping.controller;
 
 import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.global.dto.JwtDto;
+import Skeep.backend.global.exception.BaseException;
+import Skeep.backend.global.exception.GlobalErrorCode;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.weather.domain.locationGrid.LocationGrid;
@@ -36,10 +38,10 @@ public class PingController {
 
     @PostMapping("/login/test")
     public ResponseEntity<JwtDto> login() {
-//        throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
-        User user = userFindService.findUserByEmail(testEmail);
-        JwtDto jwtDto = appleService.createJwtDto(user.getId(), user.getRole());
-        return ResponseEntity.ok(jwtDto);
+        throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+//        User user = userFindService.findUserByEmail(testEmail);
+//        JwtDto jwtDto = appleService.createJwtDto(user.getId(), user.getRole());
+//        return ResponseEntity.ok(jwtDto);
     }
 
     @GetMapping("/location-grid")
