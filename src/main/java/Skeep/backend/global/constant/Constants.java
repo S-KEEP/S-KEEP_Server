@@ -14,6 +14,8 @@ public class Constants {
             "/api/auth/jwt/reissue",
             "/api/auth/apple/revoke",
             "/api/ping",
+            "/api/ping/login",
+            "/api/ping/login/test",
             "/api/picks",
             "/swagger-ui/index.html",
             "/swagger-ui/swagger-ui-standalone-preset.js",
