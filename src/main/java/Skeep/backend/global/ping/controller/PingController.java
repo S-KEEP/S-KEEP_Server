@@ -4,6 +4,8 @@ import Skeep.backend.auth.apple.service.AppleService;
 import Skeep.backend.global.dto.JwtDto;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.global.exception.GlobalErrorCode;
+import Skeep.backend.location.location.domain.LocationRepository;
+import Skeep.backend.location.location.service.LocationRetriever;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import Skeep.backend.weather.domain.locationGrid.LocationGrid;
@@ -28,6 +30,7 @@ public class PingController {
     private final AppleService appleService;
     private final LocationGridRepository locationGridRepository;
     private final WeatherSchedulerService weatherSchedulerService;
+    private final LocationRepository locationRepository;
 
     @PostMapping("/login")
     public ResponseEntity<JwtDto> login(@RequestBody @Valid String serialId) {
@@ -54,5 +57,10 @@ public class PingController {
     public ResponseEntity<?> getWeather() {
         weatherSchedulerService.updateWeather();
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/location-list")
+    public ResponseEntity<?> getLocationList() {
+        return ResponseEntity.ok(locationRepository.findAll());
     }
 }
