@@ -16,6 +16,3 @@ spring:
       - classpath:/application-oauth.yml
       - classpath:/application-tour.yml
       - classpath:/application-weather.yml
-
-server:
-  port: 8081
