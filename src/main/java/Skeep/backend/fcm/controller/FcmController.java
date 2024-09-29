@@ -21,6 +21,6 @@ public class FcmController {
             @UserId Long userId,
             @RequestBody FcmTestRequestDto fcmTestRequestDto
     ) {
-        return ResponseEntity.ok(fcmService.testNotification(fcmTestRequestDto));
+        return ResponseEntity.ok(fcmService.testNotification(userId, fcmTestRequestDto));
     }
 }
