@@ -37,7 +37,7 @@ class UserCategoryRemoverTest extends ServiceTest {
         UserCategory userCategory2 = userCategoryRepository.save(ACTIVITY.toUserCategory(user2));
 
         // when - then
-        assertThatThrownBy(() -> userCategoryRemover.deleteUserCategory(user1.getId(), userCategory2.getId()))
+        assertThatThrownBy(() -> userCategoryRemover.deleteByUserIdAndUserCategoryId(user1.getId(), userCategory2.getId()))
                 .isInstanceOf(BaseException.class)
                 .hasMessageContaining(UserCategoryErrorCode.USER_CATEGORY_NOT_MATCHED.getMessage());
     }
@@ -49,7 +49,7 @@ class UserCategoryRemoverTest extends ServiceTest {
         userCategoryRepository.save(ACTIVITY.toUserCategory(user));
 
         // when
-        userCategoryRemover.deleteUserCategory(user.getId(), 1L);
+        userCategoryRemover.deleteByUserIdAndUserCategoryId(user.getId(), 1L);
 
         // then
         List<UserCategory> userCategoryList = userCategoryRepository.findAllByUserId(user.getId());

@@ -1,10 +1,11 @@
 package Skeep.backend.user.service;
 
 import Skeep.backend.auth.jwt.service.JwtTokenService;
-import Skeep.backend.category.domain.UserCategoryRepository;
-import Skeep.backend.location.userLocation.domain.UserLocationRepository;
+import Skeep.backend.category.service.UserCategoryRemover;
+import Skeep.backend.friend.service.FriendRemover;
+import Skeep.backend.location.userLocation.service.UserLocationRemover;
+import Skeep.backend.notification.service.NotificationRemover;
 import Skeep.backend.user.domain.User;
-import Skeep.backend.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,11 @@ public class UserWithdrawalService {
     private final UserFindService userFindService;
     private final JwtTokenService jwtTokenService;
 
-    private final UserRepository userRepository;
-    private final UserLocationRepository userLocationRepository;
-    private final UserCategoryRepository userCategoryRepository;
-
+    private final UserRemover userRemover;
+    private final NotificationRemover notificationRemover;
+    private final UserLocationRemover userLocationRemover;
+    private final UserCategoryRemover userCategoryRemover;
+    private final FriendRemover friendRemover;
 
     @Transactional
     public void withdrawal(Long userId) {
@@ -27,8 +29,12 @@ public class UserWithdrawalService {
 
         User user = userFindService.findById(userId);
 
-        userLocationRepository.deleteAllByUser(user);
-        userCategoryRepository.deleteAllByUser(user);
-        userRepository.delete(user);
+        notificationRemover.deleteByUser(user);
+
+        userLocationRemover.deleteByUser(user);
+        userCategoryRemover.deleteByUser(user);
+        friendRemover.deleteByUser(user);
+
+        userRemover.deleteUser(user);
     }
 }

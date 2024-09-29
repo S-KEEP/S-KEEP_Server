@@ -15,4 +15,10 @@ public class FriendRemover {
     public void deleteByUser1AndUser2(User user1, User user2) {
         friendRepository.deleteByUser1AndUser2(user1, user2);
     }
+
+    @Transactional
+    public void deleteByUser(User user) {
+        friendRepository.deleteByUser1(user);
+        friendRepository.deleteByUser2(user);
+    }
 }

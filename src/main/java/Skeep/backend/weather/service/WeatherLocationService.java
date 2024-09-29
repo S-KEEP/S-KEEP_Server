@@ -5,7 +5,6 @@ import Skeep.backend.location.location.domain.Location;
 import Skeep.backend.location.location.service.LocationRetriever;
 import Skeep.backend.weather.domain.Weather;
 import Skeep.backend.weather.domain.locationGrid.LocationGrid;
-import Skeep.backend.weather.domain.locationGrid.LocationGridRepository;
 import Skeep.backend.weather.dto.response.WeatherListDto;
 import Skeep.backend.weather.exception.WeatherErrorCode;
 import Skeep.backend.weather.service.locationGrid.LocationGridService;
@@ -13,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static Skeep.backend.weather.util.RegionUtils.getRegionCode_land;
@@ -31,10 +28,10 @@ public class WeatherLocationService {
     private final LocationGridService locationGridService;
 
     public List<WeatherListDto.WeatherDto> getWeatherList(String x, String y, String address) {
-        Optional<Location> location = locationRepository.findByXandY(x, y);
+        Location location = locationRepository.findByXandY(x, y).orElse(null);
+        List<Weather> weatherList = weatherRetriever.findAllByLocation(location);
 
-        List<Weather> weatherList = new ArrayList<>();
-        if (location.isEmpty()) {
+        if (location == null || weatherList.size() == 0) {
             LocationGrid locationGrid = locationGridService.getLocationGridWithin3kmRadius(Double.parseDouble(x), Double.parseDouble(y));
             if (locationGrid == null) {
                 throw BaseException.type(WeatherErrorCode.CANNOT_CONVERT_GRID);
@@ -42,8 +39,6 @@ public class WeatherLocationService {
 
             weatherList.addAll(weatherSchedulerService.analyzeShortTerm(null, String.valueOf(locationGrid.getGridX()), String.valueOf(locationGrid.getGridY())));
             weatherList.addAll(weatherSchedulerService.analyzeMiddleTerm(null, getRegionCode_land(address), getRegionCode_ta(address)));
-        } else{
-            weatherList = weatherRetriever.findAllByLocation(location.get());
         }
 
         return weatherList.stream()

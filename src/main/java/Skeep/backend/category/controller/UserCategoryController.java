@@ -42,7 +42,7 @@ public class UserCategoryController {
             @UserId Long userId,
             @PathVariable("userCategoryId") Long userCategoryId
     ) {
-        userCategoryRemover.deleteUserCategory(userId, userCategoryId);
+        userCategoryRemover.deleteByUserIdAndUserCategoryId(userId, userCategoryId);
         return ResponseEntity.ok().build();
     }
 

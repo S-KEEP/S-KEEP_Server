@@ -70,6 +70,17 @@ public class FriendService {
     ) {
         User currentUser = userFindService.findUserByIdAndStatus(userId);
 
+        if (page == 0) {
+            List<User> friendList = userFindService.findWholeByUserInFriendWithNoPage(currentUser);
+            List<FriendResponseDto> friendResponseDto = friendList.stream()
+                    .map(FriendResponseDto::of)
+                    .toList();
+            return FriendListResponseDto.of(
+                    friendResponseDto,
+                    0
+            );
+        }
+
         if (page < 1)
             throw BaseException.type(FriendErrorCode.INVALID_PAGE_FRIEND);
 

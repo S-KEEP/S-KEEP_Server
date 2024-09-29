@@ -2,6 +2,7 @@ package Skeep.backend.user.service;
 
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.user.domain.EStatus;
+import Skeep.backend.user.domain.Email;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.domain.UserRepository;
 import Skeep.backend.user.dto.UserSecurityForm;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,6 +40,11 @@ public class UserFindService {
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
     }
 
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(Email.createEmail(email))
+                .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
+    }
+
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> BaseException.type(UserErrorCode.NOT_FOUND_USER));
@@ -49,5 +57,13 @@ public class UserFindService {
 
     public Page<User> findAllUserInFriend(User user, Pageable pageable) {
         return userRepository.findAllByUserInFriend(user.getId(), pageable);
+    }
+
+    public List<User> findWholeByUserInFriendWithNoPage(User user) {
+        return userRepository.findWholeByUserInFriendWithNoPage(user.getId());
+    }
+
+    public List<User> findAllByFcmTokenIsNotNull() {
+        return userRepository.findAllByFcmTokenIsNotNull();
     }
 }

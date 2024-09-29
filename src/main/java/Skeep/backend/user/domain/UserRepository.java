@@ -29,15 +29,28 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "FROM friend f " +
                     "LEFT JOIN users u ON (f.user1_id = u.id AND f.user2_id IS NOT NULL AND f.user2_id = :userId) " +
                     "OR (f.user2_id = u.id AND f.user1_id = :userId) " +
-                    "WHERE (f.user1_id = :userId OR f.user2_id = :userId)",
+                    "WHERE (f.user1_id = :userId OR f.user2_id = :userId)" +
+                    "AND u.id IS NOT NULL",
             countQuery = "SELECT COUNT(*) " +
-                    "FROM friend f " +
-                    "LEFT JOIN users u ON (f.user1_id = u.id AND f.user2_id IS NOT NULL AND f.user2_id = :userId) " +
-                    "OR (f.user2_id = u.id AND f.user1_id = :userId) " +
-                    "WHERE (f.user1_id = :userId OR f.user2_id = :userId)",
+                         "FROM friend f " +
+                         "LEFT JOIN users u ON (f.user1_id = u.id AND f.user2_id IS NOT NULL AND f.user2_id = :userId) " +
+                         "OR (f.user2_id = u.id AND f.user1_id = :userId) " +
+                         "WHERE (f.user1_id = :userId OR f.user2_id = :userId)" +
+                         "AND u.id IS NOT NULL",
             nativeQuery = true
     )
     Page<User> findAllByUserInFriend(Long userId, Pageable pageable);
+
+    @Query(
+            value = "SELECT u.* " +
+                    "FROM friend f " +
+                    "LEFT JOIN users u ON (f.user1_id = u.id AND f.user2_id IS NOT NULL AND f.user2_id = :userId) " +
+                    "OR (f.user2_id = u.id AND f.user1_id = :userId) " +
+                    "WHERE (f.user1_id = :userId OR f.user2_id = :userId)" +
+                    "AND u.id IS NOT NULL",
+            nativeQuery = true
+    )
+    List<User> findWholeByUserInFriendWithNoPage(Long userId);
 
     @Modifying
     @Transactional
@@ -48,4 +61,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findBySerialId(String serialId);
     Optional<User> findById(Long id);
     Optional<User> findByIdAndStatus(Long id, EStatus status);
+    List<User> findAllByFcmTokenIsNotNull();
+    Optional<User> findByEmail(Email email);
 }

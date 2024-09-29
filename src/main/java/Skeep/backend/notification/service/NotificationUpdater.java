@@ -6,6 +6,7 @@ import Skeep.backend.notification.service.CategoryNotification.CategoryNotificat
 import Skeep.backend.notification.service.UserLocationNotification.UserLocationNotificationUpdater;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class NotificationUpdater {
     private final CategoryNotificationUpdater categoryNotificationUpdater;
     private final UserLocationNotificationUpdater userLocationNotificationUpdater;
 
+    @Transactional
     public void updateNotification(Object notification) {
         if (notification instanceof CategoryNotification)
             categoryNotificationUpdater.updateIsCheck((CategoryNotification) notification);

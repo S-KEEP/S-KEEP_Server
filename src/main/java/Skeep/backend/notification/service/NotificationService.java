@@ -32,7 +32,7 @@ public class NotificationService {
         if (page < 1)
             throw BaseException.type(NotificationErrorCode.INVALID_PAGE_NOTIFICATION);
 
-        Pageable pageable = PageRequest.of(page - 1, 2);
+        Pageable pageable = PageRequest.of(page - 1, 10);
         Page<NotificationProjection> notificationProjectionPage
                 = notificationRetriever.getNotificationList(currentUser, pageable);
 

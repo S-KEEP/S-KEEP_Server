@@ -13,6 +13,7 @@ src/main/resources/application-tour.yml
 src/main/resources/application-weather.yml
 src/main/resources/AuthKey_WNM333A5H4.p8
 src/main/resources/skeep-fcm.json
+src/test/resources/skeep-fcm.json
 
 .idea
 HELP.md
