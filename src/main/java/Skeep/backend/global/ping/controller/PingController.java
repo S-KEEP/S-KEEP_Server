@@ -41,10 +41,10 @@ public class PingController {
 
     @PostMapping("/login/test")
     public ResponseEntity<JwtDto> login() {
-        throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
-//        User user = userFindService.findUserByEmail(testEmail);
-//        JwtDto jwtDto = appleService.createJwtDto(user.getId(), user.getRole());
-//        return ResponseEntity.ok(jwtDto);
+//        throw BaseException.type(GlobalErrorCode.INTERNAL_SERVER_ERROR);
+        User user = userFindService.findUserByEmail(testEmail);
+        JwtDto jwtDto = appleService.createJwtDto(user.getId(), user.getRole());
+        return ResponseEntity.ok(jwtDto);
     }
 
     @GetMapping("/location-grid")
