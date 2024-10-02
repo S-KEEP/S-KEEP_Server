@@ -1,6 +1,7 @@
 package Skeep.backend.category.service;
 
 import Skeep.backend.category.domain.UserCategory;
+import Skeep.backend.category.domain.UserCategoryMostUserLocationProjection;
 import Skeep.backend.category.domain.UserCategoryRepository;
 import Skeep.backend.category.dto.response.UserCategoryList;
 import Skeep.backend.category.exception.UserCategoryErrorCode;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,5 +42,9 @@ public class UserCategoryRetriever {
 
     public List<UserCategory> findAllByUser(User user) {
         return userCategoryRepository.findAllByUserId(user.getId());
+    }
+
+    public Optional<UserCategoryMostUserLocationProjection> findTopCategoryWithMostUserLocations(User user) {
+        return userCategoryRepository.findTopCategoryWithMostUserLocations(user.getId());
     }
 }
