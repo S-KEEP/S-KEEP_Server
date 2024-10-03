@@ -86,8 +86,6 @@ public class FcmService {
             );
         }
 
-//        sendNotification(Boolean.FALSE, token, "테스트 >.0", "얏호~ 성공~", 6L, "category", "/category/205");
-
         return null;
     }
 
