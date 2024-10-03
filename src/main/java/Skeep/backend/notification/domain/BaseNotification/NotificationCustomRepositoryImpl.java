@@ -19,11 +19,11 @@ public class NotificationCustomRepositoryImpl implements NotificationCustomRepos
 
     @Override
     public Page<NotificationProjection> findAllByUserId(Long userId, int limit, int offset, Pageable pageable) {
-        String query = "(SELECT id, title, type, is_checked, created_date " +
+        String query = "(SELECT id, title, body, type, is_checked, created_date " +
                        "FROM users_location_notification " +
                        "WHERE user_id = :userId) " +
                        "UNION ALL " +
-                       "(SELECT id, title, type, is_checked, created_date " +
+                       "(SELECT id, title, body, type, is_checked, created_date " +
                        "FROM category_notification " +
                        "WHERE user_id = :userId) " +
                        "ORDER BY created_date DESC " +

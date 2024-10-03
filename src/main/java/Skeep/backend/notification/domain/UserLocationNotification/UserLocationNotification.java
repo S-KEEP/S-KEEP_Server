@@ -26,6 +26,7 @@ public class UserLocationNotification extends Notification {
     public static UserLocationNotification createUserLocationNotification(
             final UserLocation userLocation,
             final String title,
+            final String body,
             final String type,
             final Boolean isChecked,
             final User user
@@ -33,6 +34,7 @@ public class UserLocationNotification extends Notification {
         return UserLocationNotification.builder()
                                        .userLocation(userLocation)
                                        .title(title)
+                                       .body(body)
                                        .type(type)
                                        .isChecked(isChecked)
                                        .user(user)

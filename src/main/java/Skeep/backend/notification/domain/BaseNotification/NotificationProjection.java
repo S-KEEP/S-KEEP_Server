@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public record NotificationProjection(
         Long id,
         String title,
+        String body,
         String type,
         Boolean isChecked,
         LocalDateTime createdDate
@@ -19,9 +20,10 @@ public record NotificationProjection(
         return NotificationProjection.builder()
                 .id(((Number) objects[0]).longValue())
                 .title((String) objects[1])
-                .type((String) objects[2])
-                .isChecked((Boolean) objects[3])
-                .createdDate(((Timestamp) objects[4]).toLocalDateTime())
+                .body((String) objects[2])
+                .type((String) objects[3])
+                .isChecked((Boolean) objects[4])
+                .createdDate(((Timestamp) objects[5]).toLocalDateTime())
                 .build();
     }
 }
