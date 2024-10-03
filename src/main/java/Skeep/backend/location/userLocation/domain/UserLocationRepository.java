@@ -42,6 +42,28 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
             Pageable pageable
     );
 
+    @Query(
+            value = "SELECT ul.id as userLocationId, l.place_name as locationPlaceName, w.date as weatherDate " +
+                    "FROM users_location ul " +
+                    "JOIN location l ON ul.location_id = l.id " +
+                    "JOIN weather w ON w.location_id = l.id " +
+                    "WHERE ul.user_id = :userId " +
+                    "AND ul.created_date >= CURRENT_DATE - INTERVAL 4 DAY " +
+                    "AND w.date = (" +
+                    "SELECT MIN(w2.date)" +
+                    "FROM weather w2 " +
+                    "WHERE w2.location_id = l.id " +
+                    "AND w2.weather_condition NOT IN ('SNOW', 'RAIN', 'RAIN_AND_SNOW') " +
+                    "AND w2.temperature < 35 " +
+                    "AND w2.temperature > -12 " +
+                    "AND w2.date > CURRENT_DATE" +
+                    ")" +
+                    "ORDER BY ul.created_date DESC " +
+                    "LIMIT 1",
+            nativeQuery = true
+    )
+    Optional<UserLocationRecommendProjection> findUserLocationRecommendByUserIdAndWeatherAndCreatedDate(Long userId);
+
     @Modifying
     @Query("DELETE FROM UserLocation ul WHERE ul.user = :user")
     void deleteAllByUser(@Param(value = "user") User user);
