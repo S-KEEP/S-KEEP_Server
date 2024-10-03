@@ -49,8 +49,4 @@ public class UserLocationRetriever {
     ) {
         return userLocationRepository.findUserLocationRecommendByUserIdAndWeatherAndCreatedDate(user.getId());
     }
-
-    public Long countByUserCategory(UserCategory userCategory) {
-        return userLocationRepository.countByUserCategory(userCategory);
-    }
 }
