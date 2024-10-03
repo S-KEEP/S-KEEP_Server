@@ -3,6 +3,7 @@ package Skeep.backend.location.userLocation.service;
 import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.global.exception.BaseException;
 import Skeep.backend.location.userLocation.domain.UserLocation;
+import Skeep.backend.location.userLocation.domain.UserLocationRecommendProjection;
 import Skeep.backend.location.userLocation.domain.UserLocationRepository;
 import Skeep.backend.location.userLocation.exception.UserLocationErrorCode;
 import Skeep.backend.user.domain.User;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -41,7 +44,9 @@ public class UserLocationRetriever {
                 .orElseThrow(() -> BaseException.type(UserLocationErrorCode.NOT_FOUND_USER_LOCATION));
     }
 
-    public Long countByUserCategory(UserCategory userCategory) {
-        return userLocationRepository.countByUserCategory(userCategory);
+    public Optional<UserLocationRecommendProjection> findUserLocationRecommendByUserIdAndWeatherAndCreatedDate(
+            User user
+    ) {
+        return userLocationRepository.findUserLocationRecommendByUserIdAndWeatherAndCreatedDate(user.getId());
     }
 }

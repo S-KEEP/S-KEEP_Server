@@ -39,11 +39,13 @@ public class UserLocation extends BaseTimeEntity {
 
     @Builder
     public UserLocation(
+            final Long id,
             final String fileName,
             final Location location,
             final User user,
             final UserCategory userCategory
     ) {
+        this.id = id;
         this.fileName = fileName;
         this.location = location;
         this.user = user;
@@ -62,6 +64,14 @@ public class UserLocation extends BaseTimeEntity {
                 .user(user)
                 .userCategory(userCategory)
                 .build();
+    }
+
+    public static UserLocation createUserLocation(
+            final Long id
+    ) {
+        return UserLocation.builder()
+                           .id(id)
+                           .build();
     }
 
     public void updateUserLocation(
