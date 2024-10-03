@@ -48,7 +48,7 @@ public class NotificationScheduleService {
             String url = FcmConstants.CATEGORY_URL
                     + userCategoryNameAndUserLocationCount.getUserCategoryId().toString();
 
-            log.info("user : {} fcm 호출", user.getName());
+            log.info("user(UserCategory) : {} fcm 호출", user.getName());
             fcmService.sendNotification(
                     Boolean.TRUE,
                     user.getFcmToken(),
@@ -58,7 +58,7 @@ public class NotificationScheduleService {
                     "category",
                     url
             );
-            log.info("user : {} fcm 끝", user.getName());
+            log.info("user(UserCategory) : {} fcm 끝", user.getName());
         });
     }
 }
