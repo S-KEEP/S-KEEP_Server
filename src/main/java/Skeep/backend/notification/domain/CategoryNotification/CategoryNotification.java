@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @DynamicUpdate
@@ -21,7 +23,7 @@ public class CategoryNotification extends Notification {
     @JoinColumn(name = "user_category_id")
     private UserCategory userCategory;
 
-    public CategoryNotification createCategoryNotification(
+    public static CategoryNotification createCategoryNotification(
             final UserCategory userCategory,
             final String title,
             final String type,
@@ -34,6 +36,7 @@ public class CategoryNotification extends Notification {
                 .type(type)
                 .isChecked(isChecked)
                 .user(user)
+                .createdDate(LocalDateTime.now())
                 .build();
     }
 }

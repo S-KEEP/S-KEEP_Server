@@ -86,8 +86,6 @@ public class FcmService {
             );
         }
 
-//        sendNotification(Boolean.FALSE, token, "테스트 >.0", "얏호~ 성공~", 6L, "category", "/category/205");
-
         return null;
     }
 
@@ -141,7 +139,6 @@ public class FcmService {
             String response = FirebaseMessaging.getInstance().send(message);
             log.info("Successfully sent message: {}", response);
         } catch (Exception e) {
-            e.printStackTrace();
             log.info("fail to sent message");
             if (!isScheduling)
                 throw BaseException.type(FcmErrorCode.FCM_FAIL);
