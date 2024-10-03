@@ -27,7 +27,7 @@ public record NotificationResponseDto(
         return NotificationResponseDto.builder()
                 .id(notification.id())
                 .title(notification.title())
-                .body("야호")
+                .body(notification.body())
                 .type(notification.type())
                 .isChecked(notification.isChecked())
                 .createdDate(notification.createdDate())

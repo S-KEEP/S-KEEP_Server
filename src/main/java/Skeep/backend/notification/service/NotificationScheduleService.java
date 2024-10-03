@@ -67,6 +67,7 @@ public class NotificationScheduleService {
                     = CategoryNotification.createCategoryNotification(
                             tempUserCategory,
                             title,
+                            body,
                             NotificationConstants.CATEGORY_TYPE,
                             Boolean.FALSE,
                             user
@@ -123,6 +124,7 @@ public class NotificationScheduleService {
                     = UserLocationNotification.createUserLocationNotification(
                             tempUserLocation,
                             title,
+                            body,
                             NotificationConstants.USER_LOCATION_TYPE,
                             Boolean.FALSE,
                             user

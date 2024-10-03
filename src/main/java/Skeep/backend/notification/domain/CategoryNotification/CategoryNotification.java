@@ -26,17 +26,19 @@ public class CategoryNotification extends Notification {
     public static CategoryNotification createCategoryNotification(
             final UserCategory userCategory,
             final String title,
+            final String body,
             final String type,
             final Boolean isChecked,
             final User user
     ) {
         return CategoryNotification.builder()
-                .userCategory(userCategory)
-                .title(title)
-                .type(type)
-                .isChecked(isChecked)
-                .user(user)
-                .createdDate(LocalDateTime.now())
-                .build();
+                                   .userCategory(userCategory)
+                                   .title(title)
+                                   .body(body)
+                                   .type(type)
+                                   .isChecked(isChecked)
+                                   .user(user)
+                                   .createdDate(LocalDateTime.now())
+                                   .build();
     }
 }

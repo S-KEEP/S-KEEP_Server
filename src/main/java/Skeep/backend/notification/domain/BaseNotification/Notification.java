@@ -24,6 +24,9 @@ public class Notification {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "body")
+    private String body;
+
     @Column(name = "type")
     private String type;
 
