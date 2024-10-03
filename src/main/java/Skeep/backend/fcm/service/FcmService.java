@@ -139,7 +139,6 @@ public class FcmService {
             String response = FirebaseMessaging.getInstance().send(message);
             log.info("Successfully sent message: {}", response);
         } catch (Exception e) {
-            e.printStackTrace();
             log.info("fail to sent message");
             if (!isScheduling)
                 throw BaseException.type(FcmErrorCode.FCM_FAIL);
