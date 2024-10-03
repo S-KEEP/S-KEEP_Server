@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @DynamicUpdate
@@ -21,7 +23,7 @@ public class UserLocationNotification extends Notification {
     @JoinColumn(name = "user_location_id")
     private UserLocation userLocation;
 
-    public UserLocationNotification createUserLocationNotification(
+    public static UserLocationNotification createUserLocationNotification(
             final UserLocation userLocation,
             final String title,
             final String type,
@@ -34,6 +36,7 @@ public class UserLocationNotification extends Notification {
                                        .type(type)
                                        .isChecked(isChecked)
                                        .user(user)
+                                       .createdDate(LocalDateTime.now())
                                        .build();
     }
 }

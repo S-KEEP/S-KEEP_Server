@@ -32,20 +32,35 @@ public class UserCategory extends BaseTimeEntity {
 
     @Builder
     public UserCategory(
+            final Long id,
             final String name,
             final String description,
             final User user
     ) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.user = user;
     }
 
     public static UserCategory createUserCategory(
-            String name,
-            String description,
-            User user) {
-        return new UserCategory(name, description, user);
+            final String name,
+            final String description,
+            final User user
+    ) {
+        return UserCategory.builder()
+                           .name(name)
+                           .description(description)
+                           .user(user)
+                           .build();
+    }
+
+    public static UserCategory createUserCategory(
+            final Long id
+    ) {
+        return UserCategory.builder()
+                           .id(id)
+                           .build();
     }
 
     public void updateUserCategory(

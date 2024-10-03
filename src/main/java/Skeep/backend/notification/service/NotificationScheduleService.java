@@ -1,11 +1,16 @@
 package Skeep.backend.notification.service;
 
+import Skeep.backend.category.domain.UserCategory;
 import Skeep.backend.category.domain.UserCategoryMostUserLocationProjection;
 import Skeep.backend.category.service.UserCategoryRetriever;
 import Skeep.backend.fcm.constant.FcmConstants;
 import Skeep.backend.fcm.service.FcmService;
+import Skeep.backend.location.userLocation.domain.UserLocation;
 import Skeep.backend.location.userLocation.domain.UserLocationRecommendProjection;
 import Skeep.backend.location.userLocation.service.UserLocationRetriever;
+import Skeep.backend.notification.constant.NotificationConstants;
+import Skeep.backend.notification.domain.CategoryNotification.CategoryNotification;
+import Skeep.backend.notification.domain.UserLocationNotification.UserLocationNotification;
 import Skeep.backend.user.domain.User;
 import Skeep.backend.user.service.UserFindService;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +32,10 @@ public class NotificationScheduleService {
     private final UserFindService userFindService;
     private final UserCategoryRetriever userCategoryRetriever;
     private final UserLocationRetriever userLocationRetriever;
+    private final NotificationSaver notificationSaver;
 
     @Async
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     public void sendCategoryNotification() {
         List<User> userList = userFindService.findAllByFcmTokenIsNotNull();
 
@@ -53,6 +59,20 @@ public class NotificationScheduleService {
             String url = FcmConstants.CATEGORY_URL
                     + userCategoryNameAndUserLocationCount.getUserCategoryId().toString();
 
+            UserCategory tempUserCategory
+                    = UserCategory.createUserCategory(
+                            userCategoryNameAndUserLocationCount.getUserCategoryId()
+                    );
+            CategoryNotification categoryNotification
+                    = CategoryNotification.createCategoryNotification(
+                            tempUserCategory,
+                            title,
+                            NotificationConstants.CATEGORY_TYPE,
+                            Boolean.FALSE,
+                            user
+                    );
+            notificationSaver.saveNotification(categoryNotification);
+
             log.info("user(UserCategory) : {} fcm 호출", user.getName());
             fcmService.sendNotification(
                     Boolean.TRUE,
@@ -74,7 +94,6 @@ public class NotificationScheduleService {
 
         log.info("userList : {}", userList);
 
-        // 가장 최근에 저장한 명소의 날씨가 제일 좋은 빠른 날
         userList.forEach(user -> {
 
             Optional<UserLocationRecommendProjection> userLocationRecommendProjection
@@ -95,6 +114,20 @@ public class NotificationScheduleService {
 
             String url = FcmConstants.USER_LOCATION_URL
                             + userLocationNameAndUserLocationCount.getUserLocationId().toString();
+
+            UserLocation tempUserLocation =
+                    UserLocation.createUserLocation(
+                            userLocationNameAndUserLocationCount.getUserLocationId()
+                    );
+            UserLocationNotification userLocationNotification
+                    = UserLocationNotification.createUserLocationNotification(
+                            tempUserLocation,
+                            title,
+                            NotificationConstants.USER_LOCATION_TYPE,
+                            Boolean.FALSE,
+                            user
+                    );
+            notificationSaver.saveNotification(userLocationNotification);
 
             log.info("user(UserLocation) : {} fcm 호출", user.getName());
             fcmService.sendNotification(
